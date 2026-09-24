@@ -71,7 +71,7 @@
 
 ## 📌 Fase 6: Deploy na Vercel & Validação Final
 
-- [ ] **Task 6.1:** Criar repositório GitHub privado `RodrigoBahia10/onstream_catalogo`.
+- [x] **Task 6.1:** Criar repositório GitHub privado `RodrigoBahia10/onstream_catalogo`.
 - [ ] **Task 6.2:** Vincular o projeto na Vercel (CLI ou painel web):
   - Configurar as variáveis de ambiente (`NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_WHATSAPP_NUMBER`).
 - [ ] **Task 6.3:** Testes em dispositivos reais:
