@@ -62,6 +62,7 @@ export type Database = {
           fonte_id: number | null
           grupo: string
           id: number
+          is_adult: boolean
           logo_url: string | null
           nome: string
           sync_id: string | null
@@ -75,6 +76,7 @@ export type Database = {
           fonte_id?: number | null
           grupo?: string
           id?: number
+          is_adult?: boolean
           logo_url?: string | null
           nome: string
           sync_id?: string | null
@@ -88,6 +90,7 @@ export type Database = {
           fonte_id?: number | null
           grupo?: string
           id?: number
+          is_adult?: boolean
           logo_url?: string | null
           nome?: string
           sync_id?: string | null

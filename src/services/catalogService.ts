@@ -121,16 +121,42 @@ async function fetchFromSupabase(
     }
   }
 
-  // Ordenação
-  const sortCol =
-    params.sort_by === "nome"
-      ? "nome"
-      : params.sort_by === "ano"
-      ? "ano"
-      : "criado_em";
-  const ascending = params.sort_dir === "asc";
+  // Lógica de Ordenação
+  let sortCol = params.sort_by || "criado_em";
+  let ascending = params.sort_dir === "asc";
 
-  query = query.order(sortCol, { ascending }).range(from, to);
+  if (params.type === "canais") {
+    // Canais normais primeiro (is_adult = false), conteúdo adulto (is_adult = true) estritamente no final
+    query = query.order("is_adult", { ascending: true });
+
+    if (params.sort_by === "nome") {
+      query = query.order("nome", { ascending });
+    } else {
+      query = query.order("nome", { ascending: true });
+    }
+  } else if (params.type === "filmes") {
+    // Filmes adicionados mais recentemente no topo (criado_em DESC, id DESC)
+    if (!params.sort_by || params.sort_by === "criado_em") {
+      sortCol = "criado_em";
+      ascending = false;
+      query = query.order("criado_em", { ascending: false }).order("id", { ascending: false });
+    } else if (params.sort_by === "ano") {
+      query = query.order("ano", { ascending, nullsFirst: false }).order("id", { ascending: false });
+    } else {
+      query = query.order("nome", { ascending });
+    }
+  } else {
+    // Séries: mais recentes no topo por padrão
+    if (!params.sort_by || params.sort_by === "criado_em") {
+      sortCol = "criado_em";
+      ascending = false;
+      query = query.order("criado_em", { ascending: false }).order("id", { ascending: false });
+    } else {
+      query = query.order(params.sort_by, { ascending });
+    }
+  }
+
+  query = query.range(from, to);
 
   // Executa busca de dados e busca de filtros em paralelo
   const [dataResult, filtersResult] = await Promise.all([
@@ -170,6 +196,14 @@ async function fetchFromSupabase(
 
   const uniqueGrupos = Array.from(new Set(cleanGrupos)) as string[];
 
+  // Garante que categorias adultas (XXX, etc.) fiquem sempre no final da lista de filtros
+  const isAdultCategory = (cat: string) =>
+    /xxx|adult|playboy|sexy|sextreme|venus|hot|for man/i.test(cat);
+
+  const normalGrupos = uniqueGrupos.filter((g) => !isAdultCategory(g));
+  const adultGrupos = uniqueGrupos.filter((g) => isAdultCategory(g));
+  const orderedGrupos = [...normalGrupos, ...adultGrupos];
+
   return {
     total_records: totalRecords,
     total_pages: totalPages,
@@ -177,7 +211,7 @@ async function fetchFromSupabase(
     limit,
     data: normalizedData,
     filters: {
-      grupos: uniqueGrupos,
+      grupos: orderedGrupos,
       anos: filterData.anos || [],
     },
     sort: {
@@ -246,6 +280,15 @@ export async function fetchCatalog(
       .map((g) => g.replace(/^(FILMES|CANAIS|SÉRIES):\s*/i, "").trim())
       .filter((g) => g && g !== "ERROR" && g !== "DEMO");
 
+    const uniqueFallbackGrupos = Array.from(new Set(cleanGrupos)) as string[];
+    const isAdult = (cat: string) =>
+      /xxx|adult|playboy|sexy|sextreme|venus|hot|for man/i.test(cat);
+
+    const orderedFallbackGrupos = [
+      ...uniqueFallbackGrupos.filter((g) => !isAdult(g)),
+      ...uniqueFallbackGrupos.filter((g) => isAdult(g)),
+    ];
+
     return {
       total_records: json.total_records || 0,
       total_pages: json.total_pages || 0,
@@ -253,7 +296,7 @@ export async function fetchCatalog(
       limit: json.limit || 36,
       data: normalizedData,
       filters: {
-        grupos: Array.from(new Set(cleanGrupos)),
+        grupos: orderedFallbackGrupos,
         anos: json.filters?.anos || [],
       },
       sort: json.sort || { by: "criado_em", dir: "desc" },
