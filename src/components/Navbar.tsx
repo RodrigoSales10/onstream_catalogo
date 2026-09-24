@@ -1,0 +1,93 @@
+"use client";
+
+import React from "react";
+import { ContentType } from "@/types/catalog";
+import { Tv, Film, Clapperboard, Sparkles, MessageCircle } from "lucide-react";
+import { buildWhatsAppLink } from "@/services/catalogService";
+
+interface NavbarProps {
+  activeType: ContentType;
+  onTypeChange: (type: ContentType) => void;
+  totalRecords?: number;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  activeType,
+  onTypeChange,
+  totalRecords,
+}) => {
+  const whatsappUrl = buildWhatsAppLink();
+
+  const navItems: { type: ContentType; label: string; icon: React.ReactNode }[] = [
+    { type: "canais", label: "Canais ao Vivo", icon: <Tv className="w-4 h-4" /> },
+    { type: "filmes", label: "Filmes", icon: <Film className="w-4 h-4" /> },
+    { type: "series", label: "Séries", icon: <Clapperboard className="w-4 h-4" /> },
+  ];
+
+  return (
+    <header className="sticky top-0 z-40 w-full glass-panel border-b border-white/10 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+          {/* Brand Logo */}
+          <div className="flex items-center gap-3 cursor-pointer select-none">
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+              <Sparkles className="w-5 h-5 text-black animate-pulse" />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white font-sans">
+                  ON<span className="text-cyan-400">STREAM</span>
+                </span>
+                <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  4K
+                </span>
+              </div>
+              <span className="text-[10px] text-zinc-400 hidden sm:block tracking-wide">
+                Vitrine Oficial de Conteúdos
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation Tabs (Desktop & Tablet) */}
+          <nav className="flex items-center p-1 rounded-xl bg-slate-900/80 border border-white/5 shadow-inner">
+            {navItems.map((item) => {
+              const isActive = activeType === item.type;
+              return (
+                <button
+                  key={item.type}
+                  onClick={() => onTypeChange(item.type)}
+                  className={`flex items-center gap-2 px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 select-none ${
+                    isActive
+                      ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(0,229,255,0.4)] font-bold"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {item.icon}
+                  <span className="hidden xs:inline">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* WhatsApp CTA (Desktop) */}
+          <div className="hidden md:flex items-center gap-3">
+            {typeof totalRecords === "number" && totalRecords > 0 && (
+              <span className="text-xs text-zinc-400 font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
+                {totalRecords.toLocaleString("pt-BR")} títulos
+              </span>
+            )}
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-[#25d366] text-black hover:bg-[#1ebd56] transition-all duration-200 shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:scale-105 active:scale-95"
+            >
+              <MessageCircle className="w-4 h-4 fill-black" />
+              <span>Teste Grátis 6h</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
