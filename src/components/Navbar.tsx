@@ -2,8 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ContentType } from "@/types/catalog";
-import { Tv, Film, Clapperboard, MessageCircle, Heart } from "lucide-react";
+import { Tv, Film, Clapperboard, MessageCircle, Heart, HelpCircle } from "lucide-react";
 import { buildWhatsAppLink } from "@/services/catalogService";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -42,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-white/10 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-3 sm:gap-4">
           {/* Brand Logo Oficial OnStream */}
           <div
             onClick={() => onTypeChange("filmes")}
@@ -105,18 +106,31 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* WhatsApp CTA (Desktop) */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Actions & Suporte Link */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Link para a Central de Suporte */}
+            <Link
+              href="/suporte"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-cyan-500/30 text-cyan-300 hover:text-white transition-all shadow-sm hover:border-cyan-400"
+              title="Central de Ajuda, Tutoriais e Aplicativos"
+            >
+              <HelpCircle className="w-4 h-4 text-cyan-400" />
+              <span className="hidden md:inline">Ajuda & Apps</span>
+            </Link>
+
+            {/* Total de títulos (Desktop) */}
             {typeof totalRecords === "number" && totalRecords > 0 && (
-              <span className="text-xs text-zinc-400 font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
+              <span className="hidden lg:inline-block text-xs text-zinc-400 font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
                 {totalRecords.toLocaleString("pt-BR")} títulos
               </span>
             )}
+
+            {/* WhatsApp CTA */}
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-[#25d366] text-black hover:bg-[#1ebd56] transition-all duration-200 shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:scale-105 active:scale-95"
+              className="hidden sm:flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-[#25d366] text-black hover:bg-[#1ebd56] transition-all duration-200 shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:scale-105 active:scale-95"
             >
               <MessageCircle className="w-4 h-4 fill-black" />
               <span>Teste Grátis 6h</span>
@@ -127,3 +141,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
