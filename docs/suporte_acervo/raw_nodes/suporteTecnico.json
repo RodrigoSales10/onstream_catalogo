@@ -1,0 +1,14 @@
+{
+  "title": "Suporte Técnico Geral",
+  "parent": "root",
+  "description": "Soluções para problemas comuns como travamentos, bloqueio de operadora e tutoriais de DNS.",
+  "children": [
+    "procedimentoPadrao",
+    "verdades_sobre_internet",
+    "isolamento_de_problemas",
+    "inimigos_do_sinal_wifi",
+    "dnsOtimizacao",
+    "bloqueioOperadora",
+    "qualidadeRede"
+  ]
+}

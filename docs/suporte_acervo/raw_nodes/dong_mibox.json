@@ -1,0 +1,18 @@
+{
+  "id": "dong_mibox",
+  "title": "Instalação: Mi Stick / Mi Box / Android TV",
+  "parent": "inst_dongle",
+  "description": "Tutorial para dispositivos Xiaomi e qualquer TV Box com Play Store.",
+  "content": {
+    "type": "appList",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-emerald-600/10 border-l-4 border-emerald-500 p-6 rounded-r-2xl mb-8'><p class='text-emerald-400 font-bold text-sm flex items-center gap-2'><i class='fab fa-android'></i> Android TV / Xiaomi</p><p class='text-gray-400 text-xs mt-1'>Siga o vídeo para instalar o Downloader e depois utilize os códigos abaixo para baixar nossos apps.</p></div><div class='aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-800 bg-black mb-10'><video class='w-full h-full' controls><source src='/shared_assets/videos_tutoriais/apps/downloader_android_tv.mp4' type='video/mp4'></video></div><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl mb-6'><h4 class='text-blue-400 font-black uppercase text-xs tracking-widest'>Catálogo de Aplicativos</h4><p class='text-gray-400 text-[10px] mt-1'>Todos os apps abaixo são compatíveis com seu dispositivo Xiaomi/Android.</p></div></div>",
+    "data_list": [
+      { "name": "TP PRO", "description": "Interface Cinema Premium. O mais recomendado.", "icon": "/shared_assets/logo/logo-tppro.webp", "url": "https://loja.toptv.app/apk/tppro.apk", "downloader": "4558350", "badge": "Oficial" },
+      { "name": "HD Player", "description": "O clássico estável e gratuito.", "icon": "/shared_assets/logo/logo-hd-player.png", "url": "https://loja.toptv.app/apk/hd-player.apk", "downloader": "2621880" },
+      { "name": "XCIPTV v7", "description": "Versão robusta e personalizável.", "icon": "/shared_assets/logo/logo-xciptv.png", "url": "https://loja.toptv.app/apk/xciptv-7-0.apk", "downloader": "6885576" },
+      { "name": "TOPTV Lite", "description": "Versão leve para hardware básico.", "icon": "/shared_assets/logo/logo-toptv.png", "url": "https://loja.toptv.app/apk/toptv.apk", "downloader": "5833942" },
+      { "name": "NatPlayer", "description": "Minimalismo e simplicidade.", "icon": "/shared_assets/logo/logo-natplayer.webp", "url": "https://loja.toptv.app/apk/NatPlayer.apk", "downloader": "1673071" },
+      { "name": "Strimo", "description": "Interface amigável para família.", "icon": "/shared_assets/logo/logo-strimo.webp", "url": "https://loja.toptv.app/apk/strimo.apk", "downloader": "7332910" }
+    ]
+  }
+}

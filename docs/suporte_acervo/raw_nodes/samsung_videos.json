@@ -1,0 +1,35 @@
+{
+  "title": "Vídeos de Suporte Samsung",
+  "parent": "tv_samsung",
+  "description": "Tutoriais avançados, soluções de erros e dicas para sua Smart TV Samsung.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {
+        "title": "Problemas com Wi-Fi?",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/Como-resolver-tv-samsung-NAO-CONECTA-WIFI.mp4",
+        "description": "Siga este passo a passo se a sua TV Samsung parou de conectar na rede."
+      },
+      {
+        "title": "Mudar Região (Série J)",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/trocar-regiao-samsung-serie-j.mp4",
+        "description": "Procedimento de troca de região para modelos Samsung Série J (2015)."
+      },
+      {
+        "title": "Erro Smart Hub (Série J)",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/resolver-erro-smart-hub-samsung-serie-j.mp4",
+        "description": "Corrija o erro que impede a loja de carregar aplicativos na Série J."
+      },
+      {
+        "title": "Reset Samsung Antiga",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/reset-samsung-antiga.mp4",
+        "description": "Como realizar o reset de fábrica em modelos Samsung anteriores ao Tizen."
+      },
+      {
+        "title": "Método Avançado Samsung",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/metodo-avancado-samsung-tizen.mp4",
+        "description": "Dicas e truques adicionais para otimizar sua experiência no sistema Tizen."
+      }
+    ]
+  }
+}

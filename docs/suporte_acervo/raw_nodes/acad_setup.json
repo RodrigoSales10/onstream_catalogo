@@ -1,0 +1,6 @@
+{
+  "title": "Primeiros Passos",
+  "parent": "academiaRevendedor",
+  "description": "O guia essencial para colocar sua operação no ar.",
+  "children": ["guia_inicial", "aula_config_servidor", "dicionario_termos"]
+}

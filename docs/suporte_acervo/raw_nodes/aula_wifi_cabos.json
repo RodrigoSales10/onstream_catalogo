@@ -1,0 +1,40 @@
+{
+  "title": "WiFi, Cabos e Interferências",
+  "parent": "qualidadeRede",
+  "description": "Como melhorar o sinal do WiFi e escolher o cabo correto para sua TV.",
+  "content": {
+    "type": "videoPlaylist",
+    "data_list": [
+      {
+        "title": "O Sinal WiFi e as Paredes",
+        "src": "/shared_assets/videos_tutoriais/rede/wifi_paredes.mp4",
+        "description": "Veja como obstáculos físicos destroem a qualidade do seu sinal sem fio.",
+        "keywords": "wifi, sinal, parede, obstaculo, fraco"
+      },
+      {
+        "title": "WiFi 2.4 GHz vs 5 GHz",
+        "src": "/shared_assets/videos_tutoriais/rede/wifi_24_vs_5ghz.mp4",
+        "description": "Aprenda a diferença entre as frequências e qual usar na sua Smart TV.",
+        "keywords": "5ghz, wifi, frequencia, rapido, alcance"
+      },
+      {
+        "title": "Interferência de Dispositivos",
+        "src": "/shared_assets/videos_tutoriais/rede/interferencia_dispositivos.mp4",
+        "description": "Saiba quais eletrônicos na sua casa podem estar derrubando sua internet.",
+        "keywords": "interferencia, microondas, telefone, wifi caindo"
+      },
+      {
+        "title": "Repetidores WiFi",
+        "src": "/shared_assets/videos_tutoriais/rede/repetidores_wifi.mp4",
+        "description": "Entenda como funcionam os repetidores e por que eles nem sempre são a melhor opção.",
+        "keywords": "repetidor, extensor, aumentar wifi, sinal"
+      },
+      {
+        "title": "Tipos de Cabo Ethernet",
+        "src": "/shared_assets/videos_tutoriais/rede/cabos_ethernet.mp4",
+        "description": "Descubra qual cabo usar (Cat5, Cat6) para garantir a máxima velocidade via cabo.",
+        "keywords": "cabo de rede, ethernet, rj45, cat6, cat5e"
+      }
+    ]
+  }
+}

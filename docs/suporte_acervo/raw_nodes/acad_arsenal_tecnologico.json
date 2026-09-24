@@ -1,0 +1,13 @@
+{
+  "title": "Arsenal Tecnológico & Automação",
+  "parent": "academiaRevendedor",
+  "description": "Domine as ferramentas avançadas do Gestor: Ibope, Inteligência Geográfica, Guia de Esportes e Vitrine de Hardware.",
+  "children": [
+    "aula_ibope",
+    "aula_mapa",
+    "aula_guia_esportes",
+    "aula_minha_store",
+    "aula_guia_tv",
+    "aula_auditor_series"
+  ]
+}

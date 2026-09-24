@@ -1,0 +1,16 @@
+{
+  "title": "Computador",
+  "parent": "lojaAppsRecomendados",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "os_selection",
+      "title": "Qual o sistema do seu computador?",
+      "items": [
+        { "label": "Windows", "icon": "fa-windows", "node": "comp_windows" },
+        { "label": "macOS (Apple)", "icon": "fa-apple", "node": "comp_macos" },
+        { "label": "Linux", "icon": "fa-linux", "node": "comp_linux" }
+      ]
+    }
+  ]
+}

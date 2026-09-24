@@ -1,0 +1,8 @@
+{
+    "id": "aula_automacao_renovacoes",
+    "title": "Automação de Renovações",
+    "description": "O fim da confirmação manual. Saiba como o robô trabalha por você.",
+    "content": {
+        "data": "<iframe src='/content/tutoriais/automacao-renovacoes.html' class='w-full h-[2000px] border-0 rounded-3xl bg-transparent overflow-hidden' scrolling='no'></iframe>"
+    }
+}

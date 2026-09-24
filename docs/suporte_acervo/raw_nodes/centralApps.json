@@ -1,0 +1,14 @@
+{
+  "title": "Central de Aplicativos",
+  "parent": "root",
+  "description": "Encontre e baixe nossos aplicativos recomendados, tutoriais de instalação e vídeos de funcionalidades.",
+  "children": [
+    "biblioteca_apps",
+    "lojaAppsRecomendados",
+    "nossaLojaOnline",
+    "downloadDireto",
+    "ativacaoSite",
+    "duvidasMetodosExtras",
+    "videosApp"
+  ]
+}

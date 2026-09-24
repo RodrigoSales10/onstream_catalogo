@@ -1,0 +1,61 @@
+{
+  "title": "Aplicativos para iPhone (iOS)",
+  "parent": "inst_smartphone",
+  "description": "Os melhores players para iPhone. Escolha entre opções gratuitas ou premium.",
+  "content": {
+    "type": "appList",
+    "data": [
+      {
+        "name": "Smarters Player Lite",
+        "badge": "⭐ MAIS USADO",
+        "description": "Aplicativo 100% gratuito e muito estável.",
+        "icon": "/shared_assets/logo/logo-smarters-lite.webp",
+        "url": "https://apps.apple.com/br/app/smarters-player-lite/id1628995509"
+      },
+      {
+        "name": "XP IPTV",
+        "badge": "✅ COMPLETO",
+        "description": "Gratuito com anúncios. Disponível para todos os aparelhos Apple.",
+        "icon": "/shared_assets/logo/logo-apple.webp",
+        "url": "https://apps.apple.com/us/app/xp-iptv/id6744047936"
+      },
+      {
+        "name": "9Xtream",
+        "description": "Interface moderna. Gratuito com anúncios (opção de remover).",
+        "icon": "/shared_assets/logo/logo-apple.webp",
+        "url": "https://apps.apple.com/us/app/9xtream-download-play-iptv/id6504282945"
+      },
+      {
+        "name": "BLINK PLAYER PRO",
+        "description": "Player rápido. Gratuito com anúncios.",
+        "icon": "/shared_assets/logo/logo-blink_player.webp",
+        "url": "https://apps.apple.com/us/app/blink-player-pro/id1635779666"
+      },
+      {
+        "name": "IPTV Plus",
+        "description": "Requer cadastro por e-mail. Design refinado.",
+        "icon": "/shared_assets/logo/logo-apple.webp",
+        "url": "https://apps.apple.com/us/app/iptv-plus/id6746158627"
+      },
+      {
+        "name": "VU IPTV PLAYER",
+        "description": "Totalmente gratuito e sem complicações.",
+        "icon": "/shared_assets/logo/logo-apple.webp",
+        "url": "https://apps.apple.com/us/app/vu-iptv-player/id6526480705"
+      },
+      {
+        "name": "IPTV Stream Player",
+        "description": "Excelente estabilidade para iPhone e iPad.",
+        "icon": "/shared_assets/logo/logo-apple.webp",
+        "url": "https://apps.apple.com/br/app/iptv-stream-player/id6479939671"
+      },
+      {
+        "name": "IBO Pro",
+        "badge": "💎 PREMIUM",
+        "description": "Um dos melhores players da atualidade.",
+        "icon": "/shared_assets/logo/logo-ibo-player.png",
+        "url": "https://apps.apple.com/br/app/ibo-pro-player/id6449647925"
+      }
+    ]
+  }
+}

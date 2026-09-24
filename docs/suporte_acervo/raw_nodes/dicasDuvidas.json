@@ -1,0 +1,20 @@
+{
+  "id": "dicasDuvidas",
+  "title": "Dicas e Dúvidas",
+  "parent": null,
+  "description": "Informações essenciais sobre seu portal, limites de telas e soluções rápidas para o dia a dia.",
+  "children": [
+    "como_abrir_chamado",
+    "manual_regras_renovacao",
+    "entenda_vencimento_mensal",
+    "menuClientesHub",
+    "aula_telas_simultaneas",
+    "entenda_qualidades_canais",
+    "duvida_sincronismo_conteudo",
+    "centralEsportes",
+    "dicionario_termos",
+    "cliente_agenda_esportiva",
+    "cliente_guia_tv",
+    "cliente_auditor_series"
+  ]
+}

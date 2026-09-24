@@ -1,0 +1,14 @@
+{
+  "id": "centralEsportes",
+  "title": "Central de Esportes",
+  "parent": "dicasDuvidas",
+  "description": "Tudo sobre transmissões ao vivo, canais PPV e eventos esportivos.",
+  "type": "grid",
+  "items": [
+    {
+      "node": "duvida_ppv",
+      "label": "Sistema PPV",
+      "icon": "fa-trophy"
+    }
+  ]
+}

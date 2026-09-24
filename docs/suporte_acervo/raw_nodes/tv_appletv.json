@@ -1,0 +1,9 @@
+{
+  "title": "Apple TV",
+  "parent": "inst_smarttv",
+  "description": "Tutorial para dispositivos Apple TV.",
+  "content": {
+    "type": "text",
+    "data": "<h3>Instalação em Apple TV</h3><p>A Apple TV possui excelentes players na App Store.</p><br><h4>Apps Recomendados:</h4><ul><li><b>Lily Player</b> (Gratuito e muito bom)</li><li><b>IBO Pro Player</b> (Premium e ultra rápido)</li><li><b>Smarters Player Lite</b> (Clássico e estável)</li></ul><p>Basta baixar um deles e inserir os dados XC (URL, Usuário e Senha) fornecidos no seu teste.</p>"
+  }
+}

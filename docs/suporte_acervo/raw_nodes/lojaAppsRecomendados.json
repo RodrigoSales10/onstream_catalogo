@@ -1,0 +1,14 @@
+{
+  "title": "Instalações",
+  "parent": "centralApps",
+  "description": "Escolha o tipo de dispositivo que você deseja configurar agora.",
+  "type": "grid",
+  "items": [
+    { "label": "Smart TV", "icon": "fa-tv", "node": "inst_smarttv" },
+    { "label": "TV Box / Stick", "icon": "fa-box-open", "node": "inst_dongle" },
+    { "label": "Smartphone", "icon": "fa-mobile-screen-button", "node": "inst_smartphone" },
+    { "label": "Tablet", "icon": "fa-tablet-screen-button", "node": "inst_smartphone" },
+    { "label": "Computador", "icon": "fa-laptop", "node": "inst_computador" },
+    { "label": "Videogames", "icon": "fa-gamepad", "node": "inst_consoles" }
+  ]
+}

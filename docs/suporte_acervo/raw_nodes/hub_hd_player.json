@@ -1,0 +1,10 @@
+{
+  "title": "HD Player - Central de Ajuda",
+  "parent": "bibliotecaApps",
+  "description": "Selecione o que você precisa fazer com o HD Player.",
+  "children": [
+    "tutorial_hd_player",
+    "hd_player_uso",
+    "hd_player_suporte"
+  ]
+}

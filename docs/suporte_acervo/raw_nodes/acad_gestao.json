@@ -1,0 +1,17 @@
+{
+  "title": "Gestão & Segurança",
+  "parent": "academiaRevendedor",
+  "description": "Mantenha sua base limpa e protegida contra fraudes.",
+  "children": [
+    "aula_reporte_conteudo",
+    "aula_modulo_master_revendas",
+    "aula_automacao_renovacoes",
+    "aula_ajuste_excecao",
+    "aula_ferramentas_clientes",
+    "aula_guardiao_seguranca",
+    "aula_renovacao_cliente",
+    "aula_vincular_mestre_apps",
+    "aula_agenda_revenda",
+    "aula_gerenciar_telas"
+  ]
+}

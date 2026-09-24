@@ -1,0 +1,12 @@
+{
+  "title": "INSTALAÇÃO VIA DEVELOP",
+  "parent": "tv_samsung",
+  "children": [
+    "samsung_dev_d",
+    "samsung_dev_e",
+    "samsung_dev_f",
+    "samsung_dev_h",
+    "samsung_dev_j",
+    "samsung_dev_ip"
+  ]
+}

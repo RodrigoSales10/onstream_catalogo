@@ -1,0 +1,76 @@
+{
+  "title": "Vídeos de Aplicativos",
+  "parent": "centralApps",
+  "description": "Uma coleção de vídeos demonstrando as principais funcionalidades e truques de cada um dos nossos aplicativos.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {
+        "title": "Ativar App Duplecast",
+        "src": "/shared_assets/videos_tutoriais/apps/ativar_app_duplecast.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplecast_ativar.jpg",
+        "description": "Como ativar o aplicativo Duplecast."
+      },
+      {
+        "title": "Bloquear Canais Adultos DuplexPlay",
+        "src": "/shared_assets/videos_tutoriais/apps/bloquear-canais-adultos-duplexplay.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplexplay_bloquear.jpg",
+        "description": "Passo a passo para bloquear canais adultos no DuplexPlay."
+      },
+      {
+        "title": "ClouDDy - Cadastro e Lista",
+        "src": "/shared_assets/videos_tutoriais/apps/clouddy-cadastro-colocar-lista-ativar-app.mp4",
+        "poster": "/shared_assets/posters/placeholder_clouddy_cadastro.jpg",
+        "description": "Como fazer o cadastro, adicionar lista e ativar o app ClouDDy."
+      },
+      {
+        "title": "Como Usar App Duplecast",
+        "src": "/shared_assets/videos_tutoriais/apps/como_usar_app_duplecast.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplecast_usar.jpg",
+        "description": "Guia completo de uso do aplicativo Duplecast."
+      },
+      {
+        "title": "Como Usar App DuplexPlay",
+        "src": "/shared_assets/videos_tutoriais/apps/como_usar_app_duplexplay.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplexplay_usar.jpg",
+        "description": "Guia completo de uso do aplicativo DuplexPlay."
+      },
+      {
+        "title": "Como Usar App TOPTV",
+        "src": "/shared_assets/videos_tutoriais/apps/como_usar_app_toptv.mp4",
+        "poster": "/shared_assets/posters/placeholder_toptv_usar.jpg",
+        "description": "Guia completo de uso do aplicativo TOPTV."
+      },
+      {
+        "title": "Downloader Android TV",
+        "src": "/shared_assets/videos_tutoriais/apps/downloader_android_tv.mp4",
+        "poster": "/shared_assets/posters/placeholder_downloader_android.jpg",
+        "description": "Como usar o Downloader em Android TVs."
+      },
+      {
+        "title": "Downloader Firestick",
+        "src": "/shared_assets/videos_tutoriais/apps/downloader_firestick.mp4",
+        "poster": "/shared_assets/posters/placeholder_downloader_firestick.jpg",
+        "description": "Como usar o Downloader no Firestick."
+      },
+      {
+        "title": "Enviar Lista Duplecast",
+        "src": "/shared_assets/videos_tutoriais/apps/enviar-lista-duplecast.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplecast_lista.jpg",
+        "description": "Como enviar sua lista de canais para o Duplecast."
+      },
+      {
+        "title": "Enviar Lista DuplexPlay",
+        "src": "/shared_assets/videos_tutoriais/apps/enviar-lista-duplexplay.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplexplay_lista.jpg",
+        "description": "Como enviar sua lista de canais para o DuplexPlay."
+      },
+      {
+        "title": "Favoritos DuplexPlay",
+        "src": "/shared_assets/videos_tutoriais/apps/favoritos-duplexplay.mp4",
+        "poster": "/shared_assets/posters/placeholder_duplexplay_favoritos.jpg",
+        "description": "Como gerenciar seus canais favoritos no DuplexPlay."
+      }
+    ]
+  }
+}

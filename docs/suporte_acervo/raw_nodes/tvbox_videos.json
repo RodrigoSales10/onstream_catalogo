@@ -1,0 +1,22 @@
+{
+  "title": "Vídeos de Suporte para TV Box",
+  "parent": "inst_dongle",
+  "description": "Tutoriais em vídeo para otimizar o desempenho e resetar sua TV Box.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {
+        "title": "TV Box - Melhorar Desempenho",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/tvbox-melhorar-desempenho.mp4",
+        "poster": "/shared_assets/posters/placeholder_tvbox_desempenho.jpg",
+        "description": "Dicas para otimizar o desempenho da sua TV Box."
+      },
+      {
+        "title": "TV Box - Reset",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/tvbox-reset.mp4",
+        "poster": "/shared_assets/posters/placeholder_tvbox_reset.jpg",
+        "description": "Como realizar o reset de fábrica na sua TV Box."
+      }
+    ]
+  }
+}

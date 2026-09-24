@@ -1,0 +1,14 @@
+{
+  "id": "comp_macos",
+  "title": "Computador: macOS (Apple)",
+  "parent": "inst_computador",
+  "description": "Players recomendados e acesso via navegador para computadores Apple.",
+  "content": {
+    "type": "appList",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-[#1c2128] border-l-4 border-white p-6 rounded-r-2xl mb-8'><p class='text-white font-bold text-sm flex items-center gap-2'><i class='fab fa-apple'></i> Apple macOS</p><p class='text-gray-400 text-xs mt-1'>Utilize o ClouDDy nativo ou o nosso Web Player otimizado para o Safari.</p></div></div>",
+    "data_list": [
+      { "name": "ClouDDy macOS", "description": "Versão premium com suporte a aceleração de hardware.", "icon": "/shared_assets/logo/logo-clouddy.webp", "url": "https://loja.toptv.app/app_desktop/clouddy.dmg" },
+      { "name": "Web Player", "description": "Streaming via Safari ou Chrome sem instalação.", "icon": "/shared_assets/logo/logo-toptv-player.png", "url": "https://player.toptv.app", "badge": "Sem Instalação" }
+    ]
+  }
+}

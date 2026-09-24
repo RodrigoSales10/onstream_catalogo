@@ -1,0 +1,16 @@
+{
+  "id": "inst_consoles",
+  "title": "Videogames (Consoles)",
+  "parent": "lojaAppsRecomendados",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "console_selection",
+      "title": "Qual o seu console?",
+      "items": [
+        { "label": "Xbox One / Series", "icon": "fa-xbox", "node": "xbox_one" },
+        { "label": "PlayStation 4 / 5", "image": "/shared_assets/logo/logo-playstation.png", "node": "playstation_inst" }
+      ]
+    }
+  ]
+}

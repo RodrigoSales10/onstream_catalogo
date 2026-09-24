@@ -1,0 +1,17 @@
+{
+  "id": "comp_windows",
+  "title": "Computador: Windows",
+  "parent": "inst_computador",
+  "description": "Aplicativos oficiais e players recomendados para Windows 10 e 11.",
+  "content": {
+    "type": "appList",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl mb-8'><p class='text-blue-400 font-bold text-sm flex items-center gap-2'><i class='fab fa-windows'></i> Microsoft Windows</p><p class='text-gray-400 text-xs mt-1'>Baixe nossos players oficiais ou utilize o Web Player diretamente no seu navegador.</p></div></div>",
+    "data_list": [
+      { "name": "TOPTV Windows", "description": "Player oficial otimizado com interface nativa.", "icon": "/shared_assets/logo/logo-toptv.png", "url": "https://loja.toptv.app/app_desktop/toptv_pc.exe", "badge": "Oficial" },
+      { "name": "IBO Player Pro", "description": "Alta performance. Aplicativo pago pelo cliente.", "icon": "/shared_assets/logo/logo-ibo-player-pro.png", "url": "https://loja.toptv.app/app_desktop/ib%20pro%20v2.0.6.0.exe", "badge": "Pago" },
+      { "name": "PassPlus Windows", "description": "Versão estável com suporte a múltiplas rotas.", "icon": "/shared_assets/logo/logo-passplus.avif", "url": "https://loja.toptv.app/app_desktop/passplus-windows.exe" },
+      { "name": "ClouDDy", "description": "Alta performance e estabilidade extrema.", "icon": "/shared_assets/logo/logo-clouddy.webp", "url": "https://loja.toptv.app/app_desktop/clouddy.exe" },
+      { "name": "Web Player", "description": "Assista agora no seu navegador sem instalar nada.", "icon": "/shared_assets/logo/logo-toptv-player.png", "url": "https://player.toptv.app", "badge": "Sem Instalação" }
+    ]
+  }
+}

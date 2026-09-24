@@ -1,0 +1,6 @@
+{
+  "title": "Financeiro & Pagamentos",
+  "parent": "academiaRevendedor",
+  "description": "Controle seus lucros e automatize seus recebimentos.",
+  "children": ["aula_pix_automatico", "aula_lancamento_inteligente", "aula_central_financeira", "aula_analytics_pro_bi"]
+}

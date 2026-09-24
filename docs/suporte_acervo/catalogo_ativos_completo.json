@@ -1,0 +1,109 @@
+{
+  "apks": {},
+  "desktop": {
+    "windows": [
+      {
+        "name": "ClouDDy",
+        "desc": "Aplicativo pago diretamente ao desenvolvedor.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/clouddy.exe"
+      },
+      {
+        "name": "Extreme InfiniTV",
+        "desc": "Interface moderna e fluida para usuários exigentes.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/Extreme.InfiniTV_1.6.0_x64-setup.exe"
+      },
+      {
+        "name": "Flix Pro Player",
+        "desc": "Rápido e leve.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/Flix%20Pro%20Player%20v1.1.1.0.exe"
+      },
+      {
+        "name": "IPTVnator",
+        "desc": "Open source e completo.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/iptvnator-0.21.0-windows-x64-setup.exe"
+      },
+      {
+        "name": "PassPlus TV",
+        "desc": "Tecnologia exclusiva para evitar travamentos de operadora.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/passplus-windows.exe"
+      },
+      {
+        "name": "TOP Player",
+        "desc": "Assista no navegador com nosso Web Player oficial do Grupo Gestão TOP.",
+        "url": "https://player.toptv.app"
+      },
+      {
+        "name": "TOPTV PC",
+        "desc": "Player exclusivo para Windows.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/toptv_pc.exe"
+      },
+      {
+        "name": "VU Player Pro PC",
+        "desc": "Estabilidade máxima.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/vuplayerpro.exe"
+      }
+    ],
+    "macos": [
+      {
+        "name": "ClouDDy",
+        "desc": "Aplicativo pago diretamente ao desenvolvedor.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/clouddy.dmg"
+      },
+      {
+        "name": "Extreme InfiniTV",
+        "desc": "Interface moderna e fluida para usuários exigentes.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/Extreme.InfiniTV_1.6.0_universal.dmg"
+      },
+      {
+        "name": "IPTVnator",
+        "desc": "Open source e completo.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/iptvnator-0.21.0-mac-arm64.dmg"
+      },
+      {
+        "name": "PassPlus TV",
+        "desc": "Tecnologia exclusiva para evitar travamentos de operadora.",
+        "url": "https://loja.toptv.app/shared_assets/apk/passplus-tv.apk"
+      },
+      {
+        "name": "TOP Player",
+        "desc": "Assista no navegador com nosso Web Player oficial do Grupo Gestão TOP.",
+        "url": "https://player.toptv.app"
+      }
+    ],
+    "linux": [
+      {
+        "name": "Extreme InfiniTV",
+        "desc": "Interface moderna e fluida para usuários exigentes.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/Extreme.InfiniTV_1.6.0_amd64.AppImage"
+      },
+      {
+        "name": "IPTVnator",
+        "desc": "Open source e completo.",
+        "url": "https://loja.toptv.app/shared_assets/app_desktop/iptvnator-0.21.0-linux-amd64.deb"
+      },
+      {
+        "name": "PassPlus TV",
+        "desc": "Tecnologia exclusiva para evitar travamentos de operadora.",
+        "url": "https://loja.toptv.app/shared_assets/apk/passplus-tv.apk"
+      },
+      {
+        "name": "TOP Player",
+        "desc": "Assista no navegador com nosso Web Player oficial do Grupo Gestão TOP.",
+        "url": "https://player.toptv.app"
+      }
+    ]
+  },
+  "videos": {
+    "Como usar o HD Player": {
+      "node_id": "hd_player_uso",
+      "url": "https://suporte.toptv.app/shared_assets/videos_tutoriais/apps/como-usar-hd-player.mp4",
+      "poster": "/shared_assets/logo/logo-hd-player.png"
+    },
+    "HD Player - Login via Código": {
+      "node_id": "tutorial_hd_player",
+      "url": "https://suporte.toptv.app/shared_assets/videos_tutoriais/apps/como_logar_hd_player.mp4",
+      "poster": "/shared_assets/posters/poster_hd_login.jpg"
+    }
+  },
+  "tutoriais": []
+}

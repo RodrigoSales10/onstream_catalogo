@@ -1,0 +1,9 @@
+{
+  "title": "Hot Player",
+  "parent": "ativacaoSite",
+  "description": "Tutorial de ativação para o aplicativo Hot Player.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-10'><div class='bg-red-600/10 border-l-4 border-red-500 p-6 rounded-r-2xl mb-8'><p class='text-red-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-fire'></i> Hot Player</p><p class='text-gray-400 text-xs mt-1'>Excelente para Smart TVs LG. Ativação via MAC.</p></div><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>1</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Obter MAC</h4><p class='text-sm text-gray-300 mb-4'>Anote o <b>MAC Address</b> que aparece ao abrir o app.</p></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>2</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Portal Hot</h4><div class='bg-black/40 p-4 rounded-xl border border-dashed border-gray-700 text-center'><a href='https://hotplayer.app/upload' target='_blank' class='text-blue-400 font-mono'>hotplayer.app/upload</a></div></section></div>"
+  }
+}

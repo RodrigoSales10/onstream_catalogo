@@ -1,0 +1,6 @@
+{
+  "title": "Automação & WhatsApp",
+  "parent": "academiaRevendedor",
+  "description": "Domine o robô de cobrança e o atendimento automático.",
+  "children": ["aula_conciliador_whatsapp", "aula_evolution_api", "aula_whatsapp_seguro", "aula_chatbot_pro", "aula_ia_gemini", "aula_quick_message", "aula_chatbot_acoes", "aula_chatbot_botao_flutuante", "aula_chatbot_modelos", "aula_reguas_cobranca"]
+}

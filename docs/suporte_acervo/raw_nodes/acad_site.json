@@ -1,0 +1,6 @@
+{
+  "title": "Site & Identidade",
+  "parent": "academiaRevendedor",
+  "description": "Configure seu subdomínio e integre o gerador no seu site.",
+  "children": ["aula_subdominios", "aula_widget_site"]
+}

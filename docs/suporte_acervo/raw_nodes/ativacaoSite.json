@@ -1,0 +1,19 @@
+{
+  "title": "Ativação via Site",
+  "parent": "centralApps",
+  "description": "Escolha o aplicativo abaixo para ver como enviar sua lista de canais via site oficial.",
+  "type": "grid",
+  "items": [
+    { "label": "SmartOne", "image": "/shared_assets/logo/logo-smartone.webp", "node": "app_smartone" },
+    { "label": "IBO Player", "image": "/shared_assets/logo/logo-ibo.webp", "node": "app_iboplayer" },
+    { "label": "ClouDDy", "image": "/shared_assets/logo/logo-clouddy.webp", "node": "app_clouddy" },
+    { "label": "Bay IPTV", "image": "/shared_assets/logo/logo-bay-iptv.webp", "node": "app_bayiptv" },
+    { "label": "Flix IPTV", "image": "/shared_assets/logo/logo-flix-iptv.jpg", "node": "app_flixiptv" },
+    { "label": "Set IPTV", "image": "/shared_assets/logo/logo-setiptv.png", "node": "app_setiptv" },
+    { "label": "Duplecast", "image": "/shared_assets/logo/logo-duplecast.png", "node": "app_duplecast" },
+    { "label": "SS IPTV", "image": "/shared_assets/logo/logo-ssiptv.png", "node": "app_ssiptv" },
+    { "label": "Nanomid", "image": "/shared_assets/logo/logo-nanomid.webp", "node": "app_nanomid" },
+    { "label": "Bob Player", "image": "/shared_assets/logo/logo-bob-player.png", "node": "app_bobplayer" },
+    { "label": "Hot Player", "image": "/shared_assets/logo/logo-hot-player.png", "node": "app_hotplayer" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "LG NetCast (Antiga)",
+  "parent": "tv_lg",
+  "description": "Tutorial para Smart TVs LG mais antigas (Modelos antes de 2014).",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-10'><div class='bg-red-600/10 border-l-4 border-red-500 p-6 rounded-r-2xl mb-8'><p class='text-red-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-exclamation-triangle'></i> Sistema Limitado</p><p class='text-gray-400 text-xs mt-1'>Modelos antigos não aceitam novos aplicativos. A única solução é o método de DNS.</p></div><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>1</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Configuração de Rede</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Vá em <b>Configurações</b> > <b>Rede</b> > <b>Ligação de Rede</b> > <b>Configurações Avançadas</b>.</p></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>2</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Alterar DNS</h4><div class='bg-black/40 border border-dashed border-gray-700 p-6 rounded-3xl text-center shadow-xl'><p class='text-[10px] font-black text-blue-400 uppercase mb-2'>Insira este IP no DNS</p><h2 class='text-2xl font-black text-white tracking-tighter'>45.139.122.240</h2></div></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>3</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>App Gatilho</h4><p class='text-sm text-gray-300'>Após salvar o DNS, abra o aplicativo <b>SSIPTV</b> ou <b>Smart STB</b> na loja da TV.</p></section></div>"
+  }
+}

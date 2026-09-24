@@ -1,0 +1,9 @@
+{
+  "title": "Samsung Série J (2015)",
+  "parent": "samsung_develop",
+  "description": "Tutorial de instalação via IP para Smart TVs Samsung Série J.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl mb-8'><p class='text-blue-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-code'></i> Modo Develop (Série J)</p><p class='text-gray-400 text-xs mt-1'>A Série J exige um login especial de desenvolvedor. Siga o vídeo abaixo atentamente.</p></div><div class='aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-800 bg-black mb-10'><video class='w-full h-full' controls><source src='/shared_assets/videos_tutoriais/aparelhos/samsung-develop-serie-j.mp4' type='video/mp4'></video></div><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>1</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Menu de Sistema</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Vá em <b>Menu</b> > <b>Smart Hub</b> > <b>Conta da Samsung</b> e faça login com o usuário <strong class='text-white'>develop</strong>.</p></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>2</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Sincronização</h4><p class='text-sm text-gray-300 leading-relaxed'>Após logar, vá na grade de apps, mantenha OK pressionado, selecione <b>IP Setting</b> e depois <b>Start User App Sync</b>.</p></section></div>"
+  }
+}

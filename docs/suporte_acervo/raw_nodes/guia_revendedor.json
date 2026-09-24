@@ -1,0 +1,13 @@
+{
+  "title": "Manual do Revendedor de Sucesso",
+  "parent": "areaRevendedor",
+  "description": "Tudo o que você precisa saber para sair do zero e construir uma base sólida de clientes.",
+  "children": [
+    "rev_mentalidade",
+    "rev_vendas",
+    "rev_atendimento",
+    "rev_financeiro",
+    "rev_divulgacao",
+    "guiaMarketingSEO"
+  ]
+}

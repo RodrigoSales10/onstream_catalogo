@@ -1,0 +1,16 @@
+{
+  "title": "Configuração TCL",
+  "parent": "inst_smarttv",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "system_selection",
+      "title": "Qual o sistema da sua TV TCL?",
+      "items": [
+        { "label": "Android / Google TV", "icon": "fa-android", "node": "tv_android" },
+        { "label": "Roku TV", "image": "/shared_assets/logo/logo-roku.jfif", "node": "instalacao_roku" },
+        { "label": "Semp TCL (Antiga)", "icon": "fa-tv", "node": "netrange_universal" }
+      ]
+    }
+  ]
+}

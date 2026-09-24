@@ -1,0 +1,9 @@
+{
+  "title": "Samsung Série E (2012)",
+  "parent": "samsung_develop",
+  "description": "Tutorial de instalação via IP para Smart TVs Samsung Série E.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl mb-8'><p class='text-blue-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-code'></i> Modo Develop (Série E)</p><p class='text-gray-400 text-xs mt-1'>Siga o vídeo abaixo para habilitar o modo desenvolvedor e sincronizar os apps via IP.</p></div><div class='aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-800 bg-black mb-10'><video class='w-full h-full' controls><source src='/shared_assets/videos_tutoriais/aparelhos/metodo-develop-samsung-serie-e-2012.mp4' type='video/mp4'></video></div><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>1</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Login Develop</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Aperte o botão <b>Smart Hub</b>, vá em <b>Login</b> e use o usuário <strong class='text-white'>develop</strong> (senha em branco ou 000000).</p></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>2</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Configurar IP de Sincronização</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Vá em <b>Configurações</b> > <b>Desenvolvimento</b> > <b>Configurar IP</b> e digite nosso IP de servidor (solicite ao suporte o IP atualizado).</p></section></div>"
+  }
+}

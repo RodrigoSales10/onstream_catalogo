@@ -1,0 +1,11 @@
+{
+  "id": "menuClientesHub",
+  "title": "Portal do Cliente: Guia Completo",
+  "parent": "dicasDuvidas",
+  "description": "Tudo sobre como usar seu painel exclusivo para pagamentos, pedidos e gestão de sua conta.",
+  "children": [
+    "manual_portal_cliente",
+    "portal_cliente_pedidos",
+    "portal_cliente_destaques"
+  ]
+}

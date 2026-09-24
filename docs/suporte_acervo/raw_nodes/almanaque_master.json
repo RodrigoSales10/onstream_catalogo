@@ -1,0 +1,14 @@
+{
+  "title": "Elite Master: O Almanaque do Sucesso",
+  "parent": "root",
+  "description": "Conteúdo avançado para Masters. Estratégias de recrutamento, gestão de rede e automação em larga escala.",
+  "children": [
+    "aula_bot_ecosistema",
+    "master_mentalidade",
+    "master_recrutamento",
+    "master_onboarding_dinamico",
+    "master_gestao_financeira",
+    "master_suporte_avancado",
+    "master_automacao_escala"
+  ]
+}

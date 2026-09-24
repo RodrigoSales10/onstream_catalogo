@@ -1,0 +1,10 @@
+{
+  "id": "marketing_seo_tecnico",
+  "title": "A Arte das Palavras-Chave de Ataque",
+  "parent": "guiaMarketingSEO",
+  "description": "Estratégias de SEO prático e palavras-chave.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-6'><div class='bg-emerald-600/10 p-4 border border-emerald-500/20 rounded-2xl'><p class='text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2'>SEO Prático</p><h2 class='text-xl font-black text-white'>Palavras de Ataque e Relevância</h2></div><div class='grid grid-cols-1 gap-6'><div class='bg-gray-800/30 p-6 rounded-[2.5rem] border border-gray-700 shadow-xl'><h3 class='text-white font-black uppercase text-xs mb-4'>Palavras de Ataque</h3><p class='text-gray-400 text-xs mb-4'>O Google prioriza o que é relevante. Se você quer que o cliente te ache, seu site deve ter as palavras que ele busca em destaque: <b>\"teste grátis de IPTV\"</b>, <b>\"melhor entretenimento streaming\"</b>, etc.</p><div class='p-4 bg-black/30 rounded-2xl'><p class='text-[10px] font-black text-gray-500 uppercase mb-2'>Onde embutir?</p><ul class='list-disc list-inside text-gray-300 text-[11px] space-y-2'><li><b>Títulos (H1, H2):</b> Sua frase principal no topo.</li><li><b>Conteúdo (Blog/FAQ):</b> Escreva textos úteis que citem as palavras de forma natural.</li><li><b>Imagens (Alt Text):</b> Renomeie o arquivo para <i>'teste_gratis_iptv.jpg'</i> antes de subir.</li></ul></div></div><div class='bg-indigo-600/5 p-6 border border-indigo-500/20 rounded-3xl'><h3 class='text-white font-black uppercase text-xs mb-4'>Ferramenta Recomendada</h3><div class='flex items-center gap-4'><div class='w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white'><i class='fas fa-search-plus text-xl'></i></div><div><p class='text-xs font-bold text-white'>SEObility App</p><p class='text-[10px] text-gray-500'>Analise seu site e veja onde ele está falhando em SEO direto no seu celular.</p><a href='https://play.google.com/store/apps/details?id=net.seobility.seocheck' target='_blank' class='text-blue-400 text-[9px] font-black uppercase mt-2 inline-block'>Baixar na Play Store</a></div></div></div></div></div>"
+  }
+}

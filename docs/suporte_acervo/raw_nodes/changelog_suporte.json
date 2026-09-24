@@ -1,0 +1,49 @@
+{
+  "id": "changelog_suporte",
+  "title": "🚀 Novidades do Suporte",
+  "parent": "root",
+  "description": "Veja o que há de novo no seu portal e acesse os materiais instantaneamente.",
+  "type": "grid",
+  "items": [
+    {
+      "node": "aula_reporte_conteudo",
+      "label": "Reportar Erros",
+      "icon": "fa-exclamation-triangle"
+    },
+    {
+      "node": "aula_store_b2c",
+      "label": "Store B2C",
+      "icon": "fa-store"
+    },
+    {
+      "node": "lojaAppsRecomendados",
+      "label": "Novos Apps",
+      "icon": "fa-download"
+    },
+    {
+      "node": "chromecast_mirror",
+      "label": "Espelhamento VLC",
+      "icon": "fa-chromecast"
+    },
+    {
+      "node": "tutorial_vpn",
+      "label": "Mastering VPN",
+      "icon": "fa-shield-halved"
+    },
+    {
+      "node": "div_edit_templates_html",
+      "label": "Modelos HTML",
+      "icon": "fa-code"
+    },
+    {
+      "node": "duvida_ppv",
+      "label": "Sistema PPV",
+      "icon": "fa-trophy"
+    },
+    {
+      "node": "reseller_credit_return",
+      "label": "Estorno Créditos",
+      "icon": "fa-undo-alt"
+    }
+  ]
+}

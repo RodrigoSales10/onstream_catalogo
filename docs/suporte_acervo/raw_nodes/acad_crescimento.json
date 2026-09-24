@@ -1,0 +1,6 @@
+{
+  "title": "Crescimento & Marketing",
+  "parent": "academiaRevendedor",
+  "description": "Ferramentas para escalar sua rede e fidelizar clientes.",
+  "children": ["aula_mlm_niveis", "aula_mlm_saques", "aula_fidelidade_premios", "aula_historico_marketing", "aula_pedidos_conteudo", "aula_vitrine_inteligente"]
+}

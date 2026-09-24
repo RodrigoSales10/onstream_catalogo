@@ -1,0 +1,9 @@
+{
+  "title": "Ibope Real-Time (Métricas)",
+  "parent": "acad_arsenal_tecnologico",
+  "description": "Aprenda a analisar a audiência da sua base e criar ofertas baseadas em tendências de consumo.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-8 animate-fadeIn'><div class='bg-pink-600/10 border-l-4 border-pink-500 p-6 rounded-r-2xl'><h2 class='text-xl font-black text-white mb-2'>📊 Gestão Orientada a Dados</h2><p class='text-sm text-gray-400'>O <strong>Ibope Real-Time</strong> transforma você no diretor da sua própria TV. Ele analisa quais canais, filmes e séries seus clientes estão assistindo neste exato segundo.</p></div><section class='bg-[#161b22] border border-gray-800 p-6 rounded-3xl'><h3 class='text-white font-black text-sm uppercase tracking-widest mb-4 flex items-center gap-2'><i class='fas fa-eye text-pink-500'></i> Como Usar o Ibope a Seu Favor</h3><ul class='space-y-4 text-xs text-gray-400'><li><i class='fas fa-arrow-right text-[10px] text-pink-500 mr-2'></i> <strong>Ação de Vendas:</strong> Olhe a seção 'Tendências'. Se um filme específico estiver bombando (ex: 'Top Gun'), faça um disparo no WhatsApp da sua base ofertando um teste grátis com a frase: <em>'Todo mundo está assistindo Top Gun hoje, que tal um teste para ver também?'</em>.</li><li><i class='fas fa-arrow-right text-[10px] text-pink-500 mr-2'></i> <strong>Top Canais:</strong> Use os canais mais assistidos da sua rede como argumentos centrais nas suas imagens de propaganda no Instagram e Facebook.</li></ul></section></div>"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Fundamentos: Por que trava?",
+  "parent": "qualidadeRede",
+  "description": "Entenda Jitter, Latência e Perda de Pacotes - os verdadeiros vilões do streaming.",
+  "content": {
+    "type": "videoPlaylist",
+    "data_list": [
+      {
+        "title": "O que é Latência?",
+        "src": "/shared_assets/videos_tutoriais/rede/latencia_cidadao.mp4",
+        "description": "Entenda o tempo de resposta da sua conexão e como ele afeta o carregamento dos canais.",
+        "keywords": "latencia, ping, atraso, internet lenta"
+      },
+      {
+        "title": "Latência Detalhada",
+        "src": "/shared_assets/videos_tutoriais/rede/latencia_detalhada.mp4",
+        "description": "Uma explicação profunda sobre como a latência impacta serviços de tempo real.",
+        "keywords": "latencia, ping, tecnico, rede"
+      },
+      {
+        "title": "O que é Jitter?",
+        "src": "/shared_assets/videos_tutoriais/rede/jitter.mp4",
+        "description": "Descubra o que é a variação do atraso e por que ela causa pequenos 'pulos' no vídeo.",
+        "keywords": "jitter, oscilacao, travar, instabilidade"
+      },
+      {
+        "title": "Perda de Pacotes",
+        "src": "/shared_assets/videos_tutoriais/rede/perda_pacotes.mp4",
+        "description": "Saiba o que acontece quando os dados se perdem no caminho e o vídeo congela.",
+        "keywords": "perda de pacotes, packet loss, congelando, imagem parando"
+      },
+      {
+        "title": "Consumo de Banda por Vídeos",
+        "src": "/shared_assets/videos_tutoriais/rede/banda_videos.mp4",
+        "description": "Por que os vídeos consomem tanto da sua internet e como se planejar.",
+        "keywords": "consumo, banda, megas, internet"
+      }
+    ]
+  }
+}

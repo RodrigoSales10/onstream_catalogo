@@ -1,0 +1,8 @@
+{
+  "title": "Gerando seu Primeiro Teste",
+  "description": "A prova real: veja o robô criando um acesso em 5 segundos.",
+  "content": {
+    "data": "<h3>A Hora da Verdade!</h3><p>Agora que seu WhatsApp está conectado e seu servidor configurado, vamos ver a mágica acontecer. Gerar um teste manual é a melhor forma de validar se você fez tudo certo.</p><ol><li>No menu lateral, vá em <strong>Clientes</strong>.</li><li>Clique no botão azul <strong>+ Adicionar Cliente</strong>.</li><li>Preencha o Nome e o WhatsApp do seu próprio número (para você receber o teste).</li><li>Selecione o Servidor que você configurou.</li><li>Clique no botão verde: <strong>Salvar e Gerar Teste</strong>.</li></ol><p><strong>O que deve acontecer:</strong></p><ul><li>O sistema vai carregar por alguns segundos.</li><li>Uma mensagem de sucesso aparecerá.</li><li>Você receberá no seu WhatsApp os dados de acesso (Usuário, Senha e Link do Aplicativo) enviados pelo seu próprio robô.</li></ul><div class='bg-emerald-600/10 p-4 rounded-xl border border-emerald-500/20 my-4'><strong>Parabéns!</strong> Se você recebeu a mensagem, seu ecossistema está 100% operacional. Você já pode começar a vender.</div>",
+    "videoId": "VIDEO_PRIMEIRO_TESTE"
+  }
+}

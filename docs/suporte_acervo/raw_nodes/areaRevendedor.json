@@ -1,0 +1,21 @@
+{
+  "id": "areaRevendedor",
+  "title": "Material do Servidor",
+  "parent": "root",
+  "description": "Informações técnicas, grupos de suporte e aulas em vídeo sobre o painel de revenda.",
+  "children": [
+    "dns",
+    "regras",
+    "rotas",
+    "grupos",
+    "reseller_buy_asaas",
+    "reseller_auto_renewal",
+    "reseller_sell_asaas",
+    "reseller_custom_domain",
+    "reseller_panel_options",
+    "reseller_credit_return",
+    "reseller_novo_ipv6",
+    "aulasVideoBot",
+    "documentacao_api"
+  ]
+}

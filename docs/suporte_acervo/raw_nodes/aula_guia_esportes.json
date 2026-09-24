@@ -1,0 +1,9 @@
+{
+  "title": "Guia de Esportes (Agenda)",
+  "parent": "acad_arsenal_tecnologico",
+  "description": "Utilize a programação esportiva centralizada para dominar as vendas aos finais de semana e fidelizar clientes.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-8 animate-fadeIn'><div class='bg-emerald-600/10 border-l-4 border-emerald-500 p-6 rounded-r-2xl'><h2 class='text-xl font-black text-white mb-2'>⚽ O Motor do Faturamento</h2><p class='text-sm text-gray-400'>Mais de 60% das vendas e renovações de assinaturas acontecem por causa do futebol. O <strong>Guia de Esportes</strong> resolve o problema de ter que pesquisar 'onde vai passar o jogo' no Google.</p></div><section class='bg-[#161b22] border border-gray-800 p-6 rounded-3xl'><h3 class='text-white font-black text-sm uppercase tracking-widest mb-4 flex items-center gap-2'><i class='fas fa-bullhorn text-emerald-500'></i> Como vender usando o Guia</h3><ul class='space-y-4 text-xs text-gray-400'><li><i class='fas fa-check text-[10px] text-emerald-500 mr-2'></i> <strong>Ataque de Manhã:</strong> Abra o Guia de Esportes pela manhã, veja quais clássicos vão passar à noite (ex: Corinthians x Palmeiras no Premiere). Dispare mensagem no WhatsApp oferecendo um teste gratuito focado no jogo.</li><li><i class='fas fa-check text-[10px] text-emerald-500 mr-2'></i> <strong>Autoridade:</strong> Quando o cliente perguntar <em>'Tem o jogo de tal time hoje?'</em>, você responde na hora, dizendo em qual canal e horário. Você vira uma referência de qualidade para ele.</li><li><i class='fas fa-check text-[10px] text-emerald-500 mr-2'></i> <strong>Explorar Times:</strong> Agora com a nova função Explorar Times, o cliente e você podem conferir os próximos jogos de times específicos, além dos elencos, estatísticas e muito mais. Use isso para vender para os torcedores fanáticos!</li></ul></section></div>"
+  }
+}

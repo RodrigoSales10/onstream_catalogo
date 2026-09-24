@@ -1,0 +1,28 @@
+{
+  "title": "Guia Completo de Aplicativos",
+  "parent": "centralApps",
+  "description": "Lista completa de aplicativos recomendados e compatíveis com nosso sistema.",
+  "type": "grid",
+  "items": [
+    { "label": "App TopTV", "image": "/shared_assets/logo/logo-toptv.png", "node": "app_toptv" },
+    { "label": "Brasil IPTV", "image": "/shared_assets/logo/logo-brasil-iptv.jpg", "node": "app_brasil_iptv" },
+    { "label": "Flexplay", "image": "/shared_assets/logo/logo-flexplay.jpg", "node": "app_flexplay" },
+    { "label": "IBO Player", "image": "/shared_assets/logo/logo-ibo-player.png", "node": "app_iboplayer" },
+    { "label": "HD Player", "image": "/shared_assets/logo/logo-hd-player.png", "node": "hub_hd_player" },
+    { "label": "Smartone", "image": "/shared_assets/logo/logo-smartone.webp", "node": "app_smartone" },
+    { "label": "Clouddy", "image": "/shared_assets/logo/logo-clouddy.webp", "node": "app_clouddy" },
+    { "label": "IPTV Smarters Pro", "image": "/shared_assets/logo/logo-iptv-smarters.jpg", "node": "app_smarters" },
+    { "label": "XCIPTV", "image": "/shared_assets/logo/logo-xciptv.png", "node": "app_xciptv" },
+    { "label": "SS IPTV", "image": "/shared_assets/logo/logo-ssiptv.png", "node": "app_ssiptv" },
+    { "label": "Bay IPTV", "image": "/shared_assets/logo/logo-bay-iptv.webp", "node": "app_bayiptv" },
+    { "label": "Duplecast", "image": "/shared_assets/logo/logo-duplecast.png", "node": "app_duplecast" },
+    { "label": "Bob Player", "image": "/shared_assets/logo/logo-bob_player.png", "node": "app_bobplayer" },
+    { "label": "Hot Player", "image": "/shared_assets/logo/logo-hot-iptv.webp", "node": "app_hotplayer" },
+    { "label": "Virginia Player", "image": "/shared_assets/logo/logo-virginia_tv.png", "node": "app_virginiaplayer" },
+    { "label": "Arc Player", "image": "/shared_assets/logo/logo-arc-player.png", "node": "app_arcplayer" },
+    { "label": "Net IPTV", "image": "/shared_assets/logo/logo-isp.webp", "node": "app_netiptv" },
+    { "label": "Flix IPTV", "image": "/shared_assets/logo/logo-flix-iptv.jpg", "node": "app_flixiptv" },
+    { "label": "Set IPTV", "image": "/shared_assets/logo/logo-setiptv.png", "node": "app_setiptv" },
+    { "label": "Nanomid", "image": "/shared_assets/logo/logo-nanomid.webp", "node": "app_nanomid" }
+  ]
+}

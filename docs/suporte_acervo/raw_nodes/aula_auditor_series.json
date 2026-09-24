@@ -1,0 +1,9 @@
+{
+  "title": "Auditor de Séries",
+  "parent": "acad_arsenal_tecnologico",
+  "description": "Utilize o Auditor de Séries para conferir episódios e acalmar clientes que reclamam de ordens incorretas.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-8 animate-fadeIn'><div class='bg-purple-600/10 border-l-4 border-purple-500 p-6 rounded-r-2xl'><h2 class='text-xl font-black text-white mb-2'>🕵️‍♂️ Auditoria à Prova de Balas</h2><p class='text-sm text-gray-400'>É comum clientes acharem que um episódio está faltando ou fora de ordem, quando na verdade as produtoras originais dividem temporadas de formas confusas. O Auditor puxa a base de dados mundial oficial para tirar a prova.</p></div><section class='bg-[#161b22] border border-gray-800 p-6 rounded-3xl'><h3 class='text-white font-black text-sm uppercase tracking-widest mb-4 flex items-center gap-2'><i class='fas fa-search text-purple-500'></i> Passos para a Auditoria</h3><ul class='space-y-4 text-xs text-gray-400'><li><i class='fas fa-check text-[10px] text-purple-500 mr-2'></i> Se o cliente disser 'Episódio X não é o Episódio Y', busque o nome da série no Auditor e mande o print da ordem mundial oficial.</li><li><i class='fas fa-check text-[10px] text-purple-500 mr-2'></i> Ensine seu cliente a usar o Auditor no painel dele, assim você se livra de chamados de suporte desnecessários sobre ordenação.</li></ul></section></div>"
+  }
+}

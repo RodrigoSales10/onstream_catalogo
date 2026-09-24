@@ -1,0 +1,10 @@
+{
+  "id": "hd_player_suporte",
+  "title": "Resolver Problemas Técnicos",
+  "parent": "hub_hd_player",
+  "description": "Corrija problemas de som, imagem travando ou canais que não carregam.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-red-600/10 border-l-4 border-red-500 p-6 rounded-r-2xl mb-8'><p class='text-red-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-tools'></i> Suporte Técnico</p><p class='text-gray-400 text-xs mt-1'>Siga estes passos se estiver enfrentando dificuldades com o sinal.</p></div><section class='bg-[#1c2128] border border-gray-800 p-8 rounded-[2rem] shadow-xl'><h4 class='text-white font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2'><i class='fas fa-film text-blue-500'></i> Canais sem Som ou Imagem</h4><p class='text-[11px] text-gray-400 leading-relaxed mb-4'>Alguns dispositivos exigem a troca do formato de processamento do vídeo (Stream Format). Siga o caminho:</p><div class='bg-black/30 p-4 rounded-xl font-mono text-[10px] text-blue-400'>Configurações (Engrenagem) > Stream Format > Mude de HLS para MPEGTS</div><p class='text-[10px] text-gray-500 mt-4 italic'>*Após mudar, tente abrir o canal novamente. Se continuar, teste a outra opção disponível.</p></section><section class='bg-[#1c2128] border border-gray-800 p-8 rounded-[2rem] shadow-xl'><h4 class='text-white font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2'><i class='fas fa-sync text-emerald-500'></i> Atualização de Conteúdo</h4><p class='text-[11px] text-gray-400 leading-relaxed'>Se você sentir falta de novos filmes ou séries que acabaram de sair, use o botão <b>Refresh</b> ou <b>Atualizar</b> no menu principal do app para sincronizar a lista com o servidor.</p></section></div>"
+  }
+}

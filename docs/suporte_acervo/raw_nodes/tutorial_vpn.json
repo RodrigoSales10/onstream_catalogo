@@ -1,0 +1,30 @@
+{
+  "title": "Domine o Uso de VPN",
+  "parent": "suporteTecnico",
+  "description": "Aprenda o que é, como instalar no celular e configurar no roteador para vencer bloqueios.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {
+        "title": "O que é uma VPN?",
+        "description": "Entenda como a Rede Privada Virtual protege sua navegação e esconde seu tráfego da operadora.",
+        "src": "/shared_assets/videos_tutoriais/rede/o_que_e_vpn.mp4"
+      },
+      {
+        "title": "VPN no Celular (NordVPN)",
+        "description": "Passo a passo simples para instalar e ativar a proteção no seu smartphone.",
+        "src": "/shared_assets/videos_tutoriais/rede/vpn_nord_celular.mp4"
+      },
+      {
+        "title": "VPN Direto no Roteador",
+        "description": "A solução definitiva: proteja todos os aparelhos da casa (TVs, TV Box, Games) de uma só vez.",
+        "src": "/shared_assets/videos_tutoriais/rede/vpn_roteador.mp4"
+      },
+      {
+        "title": "Benefícios e Proteção de Dados",
+        "description": "Descubra como a criptografia de ponta a ponta garante sua privacidade online.",
+        "src": "/shared_assets/videos_tutoriais/rede/vpn_beneficios.mp4"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Flix IPTV",
+  "parent": "ativacaoSite",
+  "description": "Tutorial de ativação via site oficial para o aplicativo Flix IPTV.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-10'><div class='bg-red-600/10 border-l-4 border-red-500 p-6 rounded-r-2xl mb-8'><p class='text-red-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-fire'></i> Interface Moderna</p><p class='text-gray-400 text-xs mt-1'>O Flix IPTV é um dos apps mais bonitos para Smart TVs Samsung e LG.</p></div><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>1</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Configurações</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Abra o app, vá em <b>Settings</b> > <b>User Account</b> e anote o seu <b>MAC Address</b>.</p></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>2</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Envio da Lista</h4><p class='text-sm text-gray-300 mb-4'>Acesse o portal do Flix e coloque os dados do seu teste:</p><div class='bg-black/40 p-4 rounded-xl border border-dashed border-gray-700 text-center mb-4'><a href='https://flixiptv.eu/mylist' target='_blank' class='text-blue-400 font-mono'>flixiptv.eu/mylist</a></div></section></div>"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Início",
+  "description": "Selecione uma categoria abaixo para começar.",
+  "children": [
+    "changelog_suporte",
+    "centralApps",
+    "vitrineNovidades",
+    "hubAtivacoes",
+    "suporte_pedidos_cliente",
+    "dicasDuvidas",
+    "suporteTecnico",
+    "areaRevendedor",
+    "academiaRevendedor",
+    "guia_revendedor",
+    "almanaque_master",
+    "termos",
+    "privacidade",
+    "admin_restricted"
+  ]
+}

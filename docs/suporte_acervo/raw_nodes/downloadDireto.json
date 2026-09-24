@@ -1,0 +1,62 @@
+{
+  "title": "Download Direto (APKs)",
+  "parent": "centralApps",
+  "description": "Baixe nossos aplicativos oficiais diretamente ou use os códigos do Downloader.",
+  "content": {
+    "type": "appList",
+    "data": [
+      {
+        "name": "TOPTV Player Oficial",
+        "badge": "MAIS ESTÁVEL",
+        "description": "Nossa versão principal. Recomendada para todos os dispositivos Android.",
+        "icon": "/shared_assets/logo/logo-top.webp",
+        "url": "https://loja.toptv.app/toptv.apk",
+        "downloader": "123456"
+      },
+      {
+        "name": "HD Player",
+        "badge": "ELITE",
+        "description": "Interface moderna estilo Netflix. O melhor para TV Box e Firestick.",
+        "icon": "/shared_assets/logo/logo-hd-player.png",
+        "url": "https://loja.toptv.app/hdplayer.apk",
+        "downloader": "2621880"
+      },
+      {
+        "name": "Jetix App",
+        "description": "Alternativa leve e rápida. Ideal para aparelhos com pouco processamento.",
+        "icon": "/shared_assets/logo/logo-jetix.webp",
+        "url": "https://loja.toptv.app/jetix.apk",
+        "downloader": "987654"
+      },
+      {
+        "name": "Pass Plus TV",
+        "badge": "MULTI-ROTAS",
+        "description": "Novo player com suporte a troca de rotas integrada.",
+        "icon": "/shared_assets/logo/passplus-logo.avif",
+        "url": "https://loja.toptv.app/passplus.apk",
+        "downloader": "8102981"
+      },
+      {
+        "name": "NatPlayer",
+        "description": "Minimalismo puro. Para quem quer apenas sentar e assistir.",
+        "icon": "/shared_assets/logo/logo-natplayer.webp",
+        "url": "https://loja.toptv.app/natplayer.apk",
+        "downloader": "1673071"
+      },
+      {
+        "name": "Strimo",
+        "description": "Design futurista. Excelente navegação para crianças e idosos.",
+        "icon": "/shared_assets/logo/logo-strimo.webp",
+        "url": "https://loja.toptv.app/strimo.apk",
+        "downloader": "7332910"
+      },
+      {
+        "name": "ClouDDy",
+        "description": "O app universal. Funciona em Android, iOS e Smart TVs.",
+        "icon": "/shared_assets/logo/logo-clouddy.webp",
+        "url": "https://loja.toptv.app/clouddy.apk",
+        "downloader": "112233"
+      }
+    ]
+  }
+}

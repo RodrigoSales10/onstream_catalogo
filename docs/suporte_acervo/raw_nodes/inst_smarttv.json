@@ -1,0 +1,28 @@
+{
+  "id": "inst_smarttv",
+  "title": "Configuração de Smart TV",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "brand_selection",
+      "title": "Qual a marca da sua TV?",
+      "items": [
+        { "label": "Samsung", "image": "/shared_assets/logo/logo-samsung.png", "node": "tv_samsung" },
+        { "label": "LG", "image": "/shared_assets/logo/logo-lg.png", "node": "tv_lg" },
+        { "label": "Android TV / Google TV", "icon": "fa-android", "node": "tv_android" },
+        { "label": "TCL", "image": "/shared_assets/logo/logo-Semp-TCL.png", "node": "tv_tcl" },
+        { "label": "Roku TV (AOC/Philco/Semp)", "image": "/shared_assets/logo/logo-roku.jfif", "node": "instalacao_roku" },
+        { "label": "Philco", "image": "/shared_assets/logo/logo-philco.jfif", "node": "tv_philco" },
+        { "label": "Philips", "image": "/shared_assets/logo/logo-philips.png", "node": "tv_philips" },
+        { "label": "Sony", "icon": "fa-tv", "node": "tv_sony" },
+        { "label": "Panasonic", "image": "/shared_assets/logo/logo-panasonic.webp", "node": "tv_panasonic" },
+        { "label": "Toshiba", "icon": "fa-tv", "node": "tv_toshiba" },
+        { "label": "AOC", "image": "/shared_assets/logo/logo-aoc.png", "node": "tv_aoc" },
+        { "label": "Semp", "image": "/shared_assets/logo/logo-Semp-TCL.png", "node": "tv_semp" },
+        { "label": "Multilaser", "image": "/shared_assets/logo/logo-multilaser.webp", "node": "tv_multilaser" },
+        { "label": "Apple TV", "image": "/shared_assets/logo/logo-apple.webp", "node": "tv_appletv" },
+        { "label": "Outras", "icon": "fa-tv", "node": "tv_outras" }
+      ]
+    }
+  ]
+}

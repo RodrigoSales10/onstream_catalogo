@@ -1,0 +1,9 @@
+{
+  "title": "Onboarding Dinâmico: Escala de Rede",
+  "parent": "almanaque_master",
+  "description": "Passo a passo prático para recrutamento automático de netos via Bot do Telegram.",
+  "content": {
+    "type": "text",
+    "data": "<h2>Como escalar sua rede automaticamente</h2><p>O Bot do Telegram (<strong>@gestortop_bot</strong>) agora possui validação de hierarquia Master em tempo real.</p><ul><li>O revendedor envia o comando /cadastro para o bot.</li><li>O bot solicita o ID do Master responsável.</li><li>O sistema insere o WhatsApp dele na sua lista de sub-revendas.</li><li>Ele entra automaticamente no Plano Grátis e você recebe a comissão futura.</li></ul>"
+  }
+}

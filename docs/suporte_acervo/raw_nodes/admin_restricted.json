@@ -1,0 +1,12 @@
+{
+  "title": "Área do Administrador",
+  "parent": "root",
+  "description": "Procedimentos internos e gestão avançada do ecossistema.",
+  "type": "grid",
+  "items": [
+    { "label": "Agenda (IA)", "icon": "fa-robot", "node": "aula_agenda_master" },
+    { "label": "Catálogo & Vitrine", "icon": "fa-film", "node": "admin_catalogo_vitrine" },
+    { "label": "Gestão de Cargos", "icon": "fa-user-shield", "node": "admin_gestao_roles" },
+    { "label": "Ibope Real-Time", "icon": "fa-chart-line", "node": "admin_ibope_realtime" }
+  ]
+}

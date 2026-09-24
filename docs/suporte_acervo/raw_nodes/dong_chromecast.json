@@ -1,0 +1,16 @@
+{
+  "id": "dong_chromecast",
+  "title": "Configuração: Chromecast",
+  "parent": "inst_dongle",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "chromecast_type",
+      "title": "Qual o modelo do seu Chromecast?",
+      "items": [
+        { "label": "Google TV (Com Controle)", "image": "/shared_assets/logo/ico-chromecast.png", "node": "dong_mibox" },
+        { "label": "Modelo Antigo (Sem Controle)", "icon": "fa-chromecast", "node": "chromecast_mirror" }
+      ]
+    }
+  ]
+}

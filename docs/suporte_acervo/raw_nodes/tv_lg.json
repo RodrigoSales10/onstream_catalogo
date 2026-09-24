@@ -1,0 +1,18 @@
+{
+  "title": "LG Smart TV",
+  "parent": "inst_smarttv",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "model_selection",
+      "title": "Escolha o Método de Instalação",
+      "items": [
+        { "label": "WebOS Antigo (Colorido)", "image": "/shared_assets/images/lg_webos_old.jpg", "node": "lg_modelo1" },
+        { "label": "WebOS Novo (Moderno)", "image": "/shared_assets/images/lg_webos_new.jpg", "node": "lg_modelo2" },
+        { "label": "NetCast (Antiga)", "image": "/shared_assets/images/lg_netcast.jpg", "node": "lg_modelo3" },
+        { "label": "Configuração DNS", "icon": "fa-network-wired", "node": "dns" },
+        { "label": "Vídeos LG", "icon": "fa-video", "node": "lg_videos" }
+      ]
+    }
+  ]
+}

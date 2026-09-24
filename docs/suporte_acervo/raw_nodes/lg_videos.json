@@ -1,0 +1,25 @@
+{
+  "title": "Vídeos Tutoriais LG",
+  "parent": "tv_lg",
+  "description": "Dicas, truques e soluções de problemas comuns em Smart TVs LG.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {
+        "title": "Erro de Memória Insuficiente",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/SMART-TV-LG-APARECENDO-MEMORIA-INSUFICIENTE.mp4",
+        "description": "Veja como limpar o cache da sua TV LG para resolver travamentos e lentidão."
+      },
+      {
+        "title": "Recursos Escondidos LG",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/lg-recursos-escondidos.mp4",
+        "description": "Dicas avançadas para aproveitar ao máximo a sua TV LG ThinQ AI."
+      },
+      {
+        "title": "Alterar DNS (Modelos Antigos)",
+        "src": "/shared_assets/videos_tutoriais/aparelhos/alterar-dns-lg-antiga.mp4",
+        "description": "Passo a passo para TVs LG que não permitem instalação de novos aplicativos."
+      }
+    ]
+  }
+}

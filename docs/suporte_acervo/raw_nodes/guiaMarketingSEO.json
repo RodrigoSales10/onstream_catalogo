@@ -1,0 +1,13 @@
+{
+  "title": "Marketing & SEO: O Pulo do Gato",
+  "parent": "guia_revendedor",
+  "description": "Crie seu site profissional em minutos com nossos templates prontos e aprenda a dominar o Google.",
+  "children": [
+    "div_edit_templates_html",
+    "marketing_seo_sites",
+    "marketing_seo_tecnico",
+    "marketing_seo_ferramentas",
+    "marketing_seo_hospedagem",
+    "marketing_seo_legado"
+  ]
+}

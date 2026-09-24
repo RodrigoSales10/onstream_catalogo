@@ -1,0 +1,12 @@
+{
+  "title": "Qualidade da Conexão e Rede",
+  "parent": "suporteTecnico",
+  "description": "Entenda por que sua internet trava mesmo tendo 'muitos megas'. Aprenda sobre latência, interferência e como melhorar seu sinal.",
+  "children": [
+    "navegadores_dispositivos",
+    "aula_fundamentos_rede",
+    "aula_wifi_cabos",
+    "entenda_qualidades_canais",
+    "aula_internet_parou"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "duvidasMetodosExtras",
+  "title": "Dúvidas e Métodos Extras",
+  "parent": "centralApps",
+  "description": "Guias de login, configuração de DNS (Gatilho) e dicas para acessar seu servidor IPTV em qualquer dispositivo.",
+  "children": [
+    "entendendoDNS",
+    "rotas_clientes",
+    "aula_formatos_players"
+  ]
+}

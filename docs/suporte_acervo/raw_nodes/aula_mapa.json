@@ -1,0 +1,9 @@
+{
+  "title": "Mapa Geográfico (Otimização ADS)",
+  "parent": "acad_arsenal_tecnologico",
+  "description": "Entenda onde seus clientes moram e pare de queimar dinheiro em campanhas de tráfego para locais sem conversão.",
+  "content": {
+    "type": "text",
+    "data": "<div class='space-y-8 animate-fadeIn'><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl'><h2 class='text-xl font-black text-white mb-2'>🗺️ Inteligência de Expansão</h2><p class='text-sm text-gray-400'>A ferramenta <strong>Inteligência Geográfica</strong> mapeia o IP dos seus clientes e cria um mapa de calor, revelando qual estado ou região te dá mais lucro.</p></div><section class='grid grid-cols-1 md:grid-cols-2 gap-6'><div class='bg-[#161b22] border border-gray-800 p-6 rounded-3xl'><h3 class='text-blue-500 font-black text-xs uppercase tracking-widest mb-4'><i class='fas fa-funnel-dollar'></i> Tráfego Pago Eficiente</h3><p class='text-xs text-gray-400 leading-relaxed'>No Facebook Ads, anunciar para 'Todo o Brasil' gasta seu orçamento muito rápido. Olhe seu mapa: se 70% dos seus clientes são de MG e SP, configure seus anúncios <strong>apenas para esses estados</strong>. Seu custo por clique vai despencar e as vendas vão subir.</p></div><div class='bg-[#161b22] border border-gray-800 p-6 rounded-3xl'><h3 class='text-cyan-500 font-black text-xs uppercase tracking-widest mb-4'><i class='fas fa-chess-knight'></i> Parcerias Locais</h3><p class='text-xs text-gray-400 leading-relaxed'>Descobriu que você tem uma concentração anormal de clientes em uma cidade do Nordeste? Fica muito mais fácil buscar um influenciador regional ou página de memes local para fechar uma parceria direcionada.</p></div></section></div>"
+  }
+}

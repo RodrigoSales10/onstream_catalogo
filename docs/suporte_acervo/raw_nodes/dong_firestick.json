@@ -1,0 +1,18 @@
+{
+  "id": "dong_firestick",
+  "title": "Instalação: Fire Stick (Android)",
+  "parent": "inst_dongle",
+  "description": "Tutorial completo para modelos Fire Stick com sistema Android (até 2025).",
+  "content": {
+    "type": "appList",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl mb-8'><p class='text-blue-400 font-bold text-sm flex items-center gap-2'><i class='fab fa-amazon'></i> Fire TV Stick</p><p class='text-gray-400 text-xs mt-1'>Siga a playlist de vídeos abaixo para instalar o Downloader e liberar o Modo Desenvolvedor.</p></div><div class='mt-10 space-y-8'><div class='grid grid-cols-1 md:grid-cols-2 gap-6'><div class='bg-[#1c2128] border border-gray-800 rounded-3xl overflow-hidden shadow-xl'><div class='aspect-video bg-black'><video controls class='w-full h-full'><source src='/shared_assets/videos_tutoriais/apps/downloader_firestick.mp4' type='video/mp4'></video></div><div class='p-4 text-center'><p class='text-[10px] font-black text-white uppercase'>1. Como Instalar Downloader</p></div></div><div class='bg-[#1c2128] border border-gray-800 rounded-3xl overflow-hidden shadow-xl'><div class='aspect-video bg-black'><video controls class='w-full h-full'><source src='/shared_assets/videos_tutoriais/aparelhos/desenvolvedor_fire_stick.mp4' type='video/mp4'></video></div><div class='p-4 text-center'><p class='text-[10px] font-black text-white uppercase'>2. Liberar Modo Desenvolvedor</p></div></div></div></div><div class='bg-amber-600/10 border-l-4 border-amber-500 p-6 rounded-r-2xl mt-10 mb-6'><p class='text-amber-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-exclamation-triangle'></i> Dica Extra: Teste de Velocidade</p><p class='text-gray-400 text-[10px] mt-1 italic'>Se o seu sistema estiver travando, recomendamos fazer um teste de velocidade direto no aparelho.</p><button onclick=\"loadNode('navegadores_dispositivos')\" class='mt-4 bg-amber-500 hover:bg-amber-600 text-black font-black py-2 px-4 rounded-xl text-[9px] uppercase tracking-tighter transition-all'>Ver tutorial do Navegador</button></div><div class='bg-emerald-600/10 border-l-4 border-emerald-500 p-6 rounded-r-2xl mt-12 mb-6'><h4 class='text-emerald-400 font-black uppercase text-xs tracking-widest'>Catálogo de Aplicativos</h4><p class='text-gray-400 text-[10px] mt-1'>Digite o código do app desejado no campo URL do seu Downloader.</p></div></div>",
+    "data_list": [
+      { "name": "TP PRO", "description": "Interface Cinema Premium. O mais recomendado.", "icon": "/shared_assets/logo/logo-tppro.webp", "url": "https://loja.toptv.app/apk/tppro.apk", "downloader": "4558350", "badge": "Oficial" },
+      { "name": "HD Player", "description": "O clássico estável e gratuito.", "icon": "/shared_assets/logo/logo-hd-player.png", "url": "https://loja.toptv.app/apk/hd-player.apk", "downloader": "2621880" },
+      { "name": "XCIPTV v7", "description": "Versão robusta e personalizável.", "icon": "/shared_assets/logo/logo-xciptv.png", "url": "https://loja.toptv.app/apk/xciptv-7-0.apk", "downloader": "6885576" },
+      { "name": "TOPTV Lite", "description": "Versão leve para hardware básico.", "icon": "/shared_assets/logo/logo-toptv.png", "url": "https://loja.toptv.app/apk/toptv.apk", "downloader": "5833942" },
+      { "name": "NatPlayer", "description": "Minimalismo e simplicidade.", "icon": "/shared_assets/logo/logo-natplayer.webp", "url": "https://loja.toptv.app/apk/NatPlayer.apk", "downloader": "1673071" },
+      { "name": "Strimo", "description": "Interface amigável para família.", "icon": "/shared_assets/logo/logo-strimo.webp", "url": "https://loja.toptv.app/apk/strimo.apk", "downloader": "7332910" }
+    ]
+  }
+}

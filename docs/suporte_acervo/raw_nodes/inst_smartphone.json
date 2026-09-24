@@ -1,0 +1,16 @@
+{
+  "id": "inst_smartphone",
+  "title": "Smartphone ou Tablet",
+  "parent": "lojaAppsRecomendados",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "device_selection",
+      "title": "Qual o sistema do seu dispositivo?",
+      "items": [
+        { "label": "Android", "icon": "fa-android", "node": "smart_android" },
+        { "label": "iPhone / iPad", "icon": "fa-apple", "node": "smart_ios" }
+      ]
+    }
+  ]
+}

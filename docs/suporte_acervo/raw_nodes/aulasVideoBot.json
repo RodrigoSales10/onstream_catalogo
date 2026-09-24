@@ -1,0 +1,22 @@
+{
+  "title": "Aulas em Vídeo (Painel Bot)",
+  "parent": "areaRevendedor",
+  "description": "Treinamento completo em vídeo para dominar o painel de revenda.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {"title": "1. Fazer Login", "src": "/shared_assets/videos_tutoriais/painel_bot/login_telegram.mp4", "poster": "/shared_assets/posters/aula1.jpg", "description": "Como acessar o painel pela primeira vez."},
+      {"title": "2. Criar Teste", "src": "/shared_assets/videos_tutoriais/painel_bot/criar_teste.mp4", "poster": "/shared_assets/posters/aula2.jpg", "description": "Gerando testes rápidos para seus clientes."},
+      {"title": "3. Ativar um usuário", "src": "/shared_assets/videos_tutoriais/painel_bot/ativar_usuario.mp4", "poster": "/shared_assets/posters/aula3.jpg", "description": "Transformando teste em cliente oficial."},
+      {"title": "4. Trocar data de vencimento", "src": "/shared_assets/videos_tutoriais/painel_bot/Trocar_data_de_vencimento_do_cliente.mp4", "poster": "/shared_assets/posters/aula4.jpg", "description": "Ajustando o prazo de renovação."},
+      {"title": "5. Editar Clientes", "src": "/shared_assets/videos_tutoriais/painel_bot/editar-clientes.mp4", "poster": "/shared_assets/posters/aula5.jpg", "description": "Alterando dados de usuários existentes."},
+      {"title": "6. Editar Pacotes de Canais", "src": "/shared_assets/videos_tutoriais/painel_bot/editar_pacotes_de_conteudos_cliente.mp4", "poster": "/shared_assets/posters/aula6.jpg", "description": "Personalizando a grade do cliente."},
+      {"title": "7. Criar Revenda", "src": "/shared_assets/videos_tutoriais/painel_bot/criar-revenda.mp4", "poster": "/shared_assets/posters/aula7.jpg", "description": "Como montar sua própria rede de sub-revendedores."},
+      {"title": "8. Enviar Créditos", "src": "/shared_assets/videos_tutoriais/painel_bot/como_enviar_creditos.mp4", "poster": "/shared_assets/posters/aula8.jpg", "description": "Transferindo saldo para suas revendas."},
+      {"title": "9. Enviar mensagem", "src": "/shared_assets/videos_tutoriais/painel_bot/enviar-mensagem.mp4", "poster": "/shared_assets/posters/aula9.jpg", "description": "Comunicando-se com seus clientes pelo painel."},
+      {"title": "10. Editar Revendas", "src": "/shared_assets/videos_tutoriais/painel_bot/editar-revendas.mp4", "poster": "/shared_assets/posters/aula10.jpg", "description": "Gerenciando os dados dos seus revendedores."},
+      {"title": "11. Relatórios", "src": "/shared_assets/videos_tutoriais/painel_bot/relatotios_toptv.mp4", "poster": "/shared_assets/posters/aula11.jpg", "description": "Acompanhando seu desempenho geral."},
+      {"title": "12. Relatórios de clientes", "src": "/shared_assets/videos_tutoriais/painel_bot/relatório_de_clientes.mp4", "poster": "/shared_assets/posters/aula12.jpg", "description": "Auditoria detalhada de acessos dos clientes."}
+    ]
+  }
+}

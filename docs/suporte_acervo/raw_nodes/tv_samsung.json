@@ -1,0 +1,17 @@
+{
+  "title": "Samsung Smart TV",
+  "parent": "inst_smarttv",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "method_selection",
+      "title": "Escolha o Modelo ou Método",
+      "items": [
+        { "label": "Modelo Tizen (Novas)", "icon": "fa-store", "node": "samsung_loja" },
+        { "label": "Modelo Orsay (Antigas)", "icon": "fa-tv", "node": "samsung_develop" },
+        { "label": "Configurar DNS (Universal)", "icon": "fa-network-wired", "node": "samsung_dns" },
+        { "label": "Vídeos Samsung", "icon": "fa-video", "node": "samsung_videos" }
+      ]
+    }
+  ]
+}

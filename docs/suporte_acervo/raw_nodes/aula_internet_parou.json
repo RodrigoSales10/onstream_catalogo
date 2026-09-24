@@ -1,0 +1,8 @@
+{
+  "title": "Minha Internet Parou... E agora?",
+  "parent": "qualidadeRede",
+  "description": "Um guia rápido do que fazer quando você fica sem conexão.",
+  "content": {
+    "data": "<div class='space-y-10 animate-fadein'><div class='bg-red-600/10 border-l-4 border-red-500 p-6 rounded-r-2xl mb-8'><p class='text-red-400 font-bold text-sm flex items-center gap-2'><i class='fas fa-plug-circle-xmark'></i> Diagnóstico de Queda Total</p><p class='text-gray-400 text-xs mt-1'>Siga este guia visual quando nada carregar na sua TV ou celular.</p></div><div class='aspect-video rounded-3xl overflow-hidden shadow-2xl border border-gray-800'><video class='w-full h-full' controls><source src='/shared_assets/videos_tutoriais/rede/internet_parou.mp4' type='video/mp4'></video></div><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>1</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>Verifique o Roteador</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Veja se as luzes do seu modem estão normais. Luzes vermelhas ou piscando fora do comum indicam problema externo da operadora.</p></section><section class='relative pl-12'><div class='absolute left-0 top-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg'>2</div><h4 class='text-lg font-black text-white uppercase tracking-tighter mb-4'>O Reset de 5 Minutos</h4><p class='text-sm text-gray-300 leading-relaxed mb-4'>Tirar da tomada por 5 minutos ainda é o melhor remédio. Isso força a operadora a renovar sua conexão e limpa bugs internos do roteador.</p></section></div>"
+  }
+}

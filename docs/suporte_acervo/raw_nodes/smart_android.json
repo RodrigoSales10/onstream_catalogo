@@ -1,0 +1,18 @@
+{
+  "id": "smart_android",
+  "title": "Smartphone / Tablet Android",
+  "parent": "inst_smartphone",
+  "description": "Baixe e instale nossos aplicativos oficiais diretamente no seu dispositivo Android.",
+  "content": {
+    "type": "appList",
+    "data": "<div class='space-y-10 animate-fadeIn'><div class='bg-blue-600/10 border-l-4 border-blue-500 p-6 rounded-r-2xl mb-8'><p class='text-blue-400 font-bold text-sm flex items-center gap-2'><i class='fab fa-android'></i> Download Direto para Android</p><p class='text-gray-400 text-xs mt-1'>Escolha um dos aplicativos abaixo. Se estiver no celular, basta clicar em <b>Baixar Arquivo</b>. Se estiver no PC, aponte a câmera para o <b>QR Code</b>.</p></div><div class='bg-emerald-600/10 border-l-4 border-emerald-500 p-6 rounded-r-2xl mb-6'><h4 class='text-emerald-400 font-black uppercase text-xs tracking-widest'>Catálogo de Aplicativos</h4><p class='text-gray-400 text-[10px] mt-1'>Recomendamos o <b>TP PRO</b> para a melhor experiência de cinema.</p></div></div>",
+    "data_list": [
+      { "name": "TP PRO", "description": "Interface Cinema Premium. O mais recomendado.", "icon": "/shared_assets/logo/logo-tppro.webp", "url": "https://loja.toptv.app/apk/tppro.apk", "badge": "Oficial" },
+      { "name": "HD Player", "description": "O clássico estável e gratuito.", "icon": "/shared_assets/logo/logo-hd-player.png", "url": "https://loja.toptv.app/apk/hd-player.apk" },
+      { "name": "XCIPTV v7", "description": "Versão robusta e personalizável.", "icon": "/shared_assets/logo/logo-xciptv.png", "url": "https://loja.toptv.app/apk/xciptv-7-0.apk" },
+      { "name": "TOPTV Lite", "description": "Versão leve para hardware básico.", "icon": "/shared_assets/logo/logo-toptv.png", "url": "https://loja.toptv.app/apk/toptv.apk" },
+      { "name": "NatPlayer", "description": "Minimalismo e simplicidade.", "icon": "/shared_assets/logo/logo-natplayer.webp", "url": "https://loja.toptv.app/apk/NatPlayer.apk" },
+      { "name": "Strimo", "description": "Interface amigável para família.", "icon": "/shared_assets/logo/logo-strimo.webp", "url": "https://loja.toptv.app/apk/strimo.apk" }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Academia & Almanaque Gestor",
+  "parent": "root",
+  "description": "Treinamentos completos para dominar o Gestor TopTV, automatizar sua revenda e escalar sua rede.",
+  "children": [
+    "faq_revenda_problemas",
+    "guia_inicial",
+    "gestor_vs_painelbot",
+    "acad_setup",
+    "acad_wpp",
+    "acad_gestao",
+    "acad_financeiro",
+    "acad_crescimento",
+    "acad_site",
+    "acad_arsenal_tecnologico"
+  ]
+}

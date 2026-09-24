@@ -1,0 +1,19 @@
+{
+  "title": "TV Box / Stick",
+  "parent": "lojaAppsRecomendados",
+  "type": "visualSelector",
+  "steps": [
+    {
+      "id": "dongle_selection",
+      "title": "Qual seu dispositivo?",
+      "items": [
+        { "label": "Fire Stick (Android)", "image": "/shared_assets/logo/logo-fire-stick.png", "node": "dong_firestick" },
+        { "label": "Novo Fire Stick (Vega)", "image": "/shared_assets/logo/logo-fire-stick.png", "node": "dong_fire_vega" },
+        { "label": "Mi Stick / Box", "image": "/shared_assets/logo/logo-mi-stick.png", "node": "dong_mibox" },
+        { "label": "Chromecast", "image": "/shared_assets/logo/ico-chromecast.png", "node": "dong_chromecast" },
+        { "label": "Roku Express", "image": "/shared_assets/logo/logo-roku.jfif", "node": "instalacao_roku" },
+        { "label": "TV Box (Genérica)", "icon": "fa-box-open", "node": "tvbox_videos" }
+      ]
+    }
+  ]
+}

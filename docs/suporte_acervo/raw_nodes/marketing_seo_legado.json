@@ -1,0 +1,35 @@
+{
+  "id": "marketing_seo_legado",
+  "title": "Aulas de Marketing e SEO (Legado 2022)",
+  "parent": "guiaMarketingSEO",
+  "description": "Vídeos originais de 2022. Embora o material tenha alguns anos, a essência estratégica e o 'pulo do gato' continuam valiosos.",
+  "content": {
+    "type": "videoPlaylist",
+    "data": [
+      {
+        "title": "Criando seu Site no Wix",
+        "src": "/shared_assets/videos/dicas-sites/criando-site-wix.mp4",
+        "poster": "/shared_assets/logo/icone.avif",
+        "description": "Passo a passo original de 2022 sobre como estruturar sua vitrine no Wix."
+      },
+      {
+        "title": "Google Search Console: Primeiros Passos",
+        "src": "/shared_assets/videos/dicas-sites/dica-google-search-console.mp4",
+        "poster": "/shared_assets/logo/icone.avif",
+        "description": "Como indexar suas páginas e ser visto pelo robô do Google."
+      },
+      {
+        "title": "Google ADS: Estratégia de Anúncios",
+        "src": "/shared_assets/videos/dicas-sites/dica-google-ads.mp4",
+        "poster": "/shared_assets/logo/icone.avif",
+        "description": "Aula básica sobre como configurar sua primeira campanha paga."
+      },
+      {
+        "title": "Google ADS: Reflexos e Ajustes",
+        "src": "/shared_assets/videos/dicas-sites/dica-ads-reflexos.mp4",
+        "poster": "/shared_assets/logo/icone.avif",
+        "description": "Análise de resultados e reflexos das campanhas de 2022."
+      }
+    ]
+  }
+}
