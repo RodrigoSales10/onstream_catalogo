@@ -6,19 +6,20 @@ const supabase = createClient(
 );
 
 async function verify() {
-  console.log("=== 1. TESTE FILMES (Mais recentes adicionados no topo) ===");
+  console.log("=== 1. TESTE FILMES (Lançamentos do Ano Mais Recente no Topo) ===");
   const { data: filmes, error: errFilmes } = await supabase
     .from("catalogo_itens")
     .select("id, nome, ano, criado_em")
     .eq("tipo", "filmes")
+    .order("ano", { ascending: false, nullsFirst: false })
     .order("criado_em", { ascending: false })
     .order("id", { ascending: false })
     .limit(5);
 
   if (errFilmes) console.error("Erro filmes:", errFilmes);
   else {
-    console.log("Top 5 filmes mais recentes:");
-    filmes.forEach(f => console.log(`  [ID ${f.id}] ${f.nome} (${f.ano}) - ${f.criado_em}`));
+    console.log("Top 5 filmes (Ano Atual no Topo):");
+    filmes.forEach(f => console.log(`  [Ano: ${f.ano}] ${f.nome} (ID: ${f.id})`));
   }
 
   console.log("\n=== 2. TESTE CANAIS (is_adult = false no início, is_adult = true no final) ===");
@@ -50,19 +51,20 @@ async function verify() {
     canaisUltimos.forEach(c => console.log(`  [${c.is_adult ? 'ADULTO' : 'NORMAL'}] ${c.nome} (${c.grupo})`));
   }
 
-  console.log("\n=== 4. TESTE SÉRIES (Mais recentes adicionadas no topo) ===");
+  console.log("\n=== 4. TESTE SÉRIES (Lançamentos do Ano Mais Recente no Topo) ===");
   const { data: series, error: errSeries } = await supabase
     .from("catalogo_itens")
-    .select("id, nome, grupo, total_episodios, criado_em")
+    .select("id, nome, ano, grupo, total_episodios, criado_em")
     .eq("tipo", "series")
+    .order("ano", { ascending: false, nullsFirst: false })
     .order("criado_em", { ascending: false })
     .order("id", { ascending: false })
     .limit(5);
 
   if (errSeries) console.error("Erro séries:", errSeries);
   else {
-    console.log("Top 5 séries mais recentes:");
-    series.forEach(s => console.log(`  [ID ${s.id}] ${s.nome} (${s.grupo}) - eps: ${s.total_episodios} - ${s.criado_em}`));
+    console.log("Top 5 séries (Ano Atual no Topo):");
+    series.forEach(s => console.log(`  [Ano: ${s.ano}] ${s.nome} (${s.grupo}) - ID: ${s.id}`));
   }
 }
 

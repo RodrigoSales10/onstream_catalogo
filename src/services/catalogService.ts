@@ -135,22 +135,30 @@ async function fetchFromSupabase(
       query = query.order("nome", { ascending: true });
     }
   } else if (params.type === "filmes") {
-    // Filmes adicionados mais recentemente no topo (criado_em DESC, id DESC)
+    // Filmes: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
     if (!params.sort_by || params.sort_by === "criado_em") {
-      sortCol = "criado_em";
+      sortCol = "ano";
       ascending = false;
-      query = query.order("criado_em", { ascending: false }).order("id", { ascending: false });
+      query = query
+        .order("ano", { ascending: false, nullsFirst: false })
+        .order("criado_em", { ascending: false })
+        .order("id", { ascending: false });
     } else if (params.sort_by === "ano") {
-      query = query.order("ano", { ascending, nullsFirst: false }).order("id", { ascending: false });
+      query = query
+        .order("ano", { ascending, nullsFirst: false })
+        .order("id", { ascending: false });
     } else {
       query = query.order("nome", { ascending });
     }
   } else {
-    // Séries: mais recentes no topo por padrão
+    // Séries: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
     if (!params.sort_by || params.sort_by === "criado_em") {
-      sortCol = "criado_em";
+      sortCol = "ano";
       ascending = false;
-      query = query.order("criado_em", { ascending: false }).order("id", { ascending: false });
+      query = query
+        .order("ano", { ascending: false, nullsFirst: false })
+        .order("criado_em", { ascending: false })
+        .order("id", { ascending: false });
     } else {
       query = query.order(params.sort_by, { ascending });
     }
@@ -253,7 +261,7 @@ export async function fetchCatalog(
   if (params.sort_by) {
     urlParams.set("sort_by", params.sort_by);
   } else if (params.type === "filmes" || params.type === "series") {
-    urlParams.set("sort_by", "criado_em");
+    urlParams.set("sort_by", "ano");
   }
 
   if (params.sort_dir) {
