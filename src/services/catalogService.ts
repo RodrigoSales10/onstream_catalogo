@@ -250,8 +250,17 @@ export async function fetchCatalog(
   if (params.filter_ano && params.filter_ano.trim()) {
     urlParams.set("filter_ano", params.filter_ano.trim());
   }
-  if (params.sort_by) urlParams.set("sort_by", params.sort_by);
-  if (params.sort_dir) urlParams.set("sort_dir", params.sort_dir);
+  if (params.sort_by) {
+    urlParams.set("sort_by", params.sort_by);
+  } else if (params.type === "filmes" || params.type === "series") {
+    urlParams.set("sort_by", "criado_em");
+  }
+
+  if (params.sort_dir) {
+    urlParams.set("sort_dir", params.sort_dir);
+  } else if (params.type === "filmes" || params.type === "series") {
+    urlParams.set("sort_dir", "desc");
+  }
 
   const requestUrl = `${apiUrl}?${urlParams.toString()}`;
 

@@ -50,13 +50,19 @@ async function verify() {
     canaisUltimos.forEach(c => console.log(`  [${c.is_adult ? 'ADULTO' : 'NORMAL'}] ${c.nome} (${c.grupo})`));
   }
 
-  console.log("\n=== 3. TESTE FILTROS DA RPC get_catalog_filters ===");
-  const { data: filtros, error: errFiltros } = await supabase.rpc("get_catalog_filters", { p_tipo: "canais" });
-  if (errFiltros) console.error("Erro filtros:", errFiltros);
+  console.log("\n=== 4. TESTE SÉRIES (Mais recentes adicionadas no topo) ===");
+  const { data: series, error: errSeries } = await supabase
+    .from("catalogo_itens")
+    .select("id, nome, grupo, total_episodios, criado_em")
+    .eq("tipo", "series")
+    .order("criado_em", { ascending: false })
+    .order("id", { ascending: false })
+    .limit(5);
+
+  if (errSeries) console.error("Erro séries:", errSeries);
   else {
-    console.log("Total categorias de canais:", filtros.grupos.length);
-    console.log("Primeiras categorias:", filtros.grupos.slice(0, 5));
-    console.log("Últimas categorias (devem incluir XXX):", filtros.grupos.slice(-5));
+    console.log("Top 5 séries mais recentes:");
+    series.forEach(s => console.log(`  [ID ${s.id}] ${s.nome} (${s.grupo}) - eps: ${s.total_episodios} - ${s.criado_em}`));
   }
 }
 
