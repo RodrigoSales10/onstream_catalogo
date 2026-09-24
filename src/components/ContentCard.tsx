@@ -42,6 +42,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({ item, onClick }) => {
             className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
             onError={() => setHasImageError(true)}
             loading="lazy"
+            unoptimized
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-slate-900 via-slate-950 to-black">
