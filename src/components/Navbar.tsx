@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { ContentType } from "@/types/catalog";
-import { Tv, Film, Clapperboard, Sparkles, MessageCircle, Heart } from "lucide-react";
+import { Tv, Film, Clapperboard, MessageCircle, Heart } from "lucide-react";
 import { buildWhatsAppLink } from "@/services/catalogService";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -42,14 +43,24 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-white/10 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3 cursor-pointer select-none">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-[0_0_20px_rgba(0,229,255,0.4)]">
-              <Sparkles className="w-5 h-5 text-black animate-pulse" />
+          {/* Brand Logo Oficial OnStream */}
+          <div
+            onClick={() => onTypeChange("filmes")}
+            className="flex items-center gap-3 cursor-pointer select-none group"
+          >
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(0,229,255,0.35)] border border-cyan-400/30 bg-black/60 group-hover:scale-105 group-hover:border-cyan-400/60 transition-all duration-300 flex-shrink-0">
+              <Image
+                src="/logo-onstream.png"
+                alt="OnStream Logo"
+                fill
+                className="object-cover"
+                priority
+                unoptimized
+              />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white font-sans">
+                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-cyan-300 transition-colors">
                   ON<span className="text-cyan-400">STREAM</span>
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">

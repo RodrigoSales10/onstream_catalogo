@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useTransition, useMemo } from "react";
+import Image from "next/image";
 import { ContentType, CatalogItem } from "@/types/catalog";
 import { fetchCatalog } from "@/services/catalogService";
 import { Navbar } from "@/components/Navbar";
@@ -186,12 +187,12 @@ export default function Home() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col gap-6 sm:gap-8">
         {/* Hero Section */}
-        <section className="relative overflow-hidden rounded-3xl p-6 sm:p-10 glass-panel border border-white/10 shadow-2xl">
+        <section className="relative overflow-hidden rounded-3xl p-6 sm:p-10 glass-panel border border-white/10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Background Ambient Glow */}
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col gap-4 max-w-3xl">
+          <div className="relative z-10 flex flex-col gap-4 max-w-2xl">
             {activeType === "favoritos" ? (
               <>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold w-fit">
@@ -247,6 +248,20 @@ export default function Home() {
                 </div>
               </>
             )}
+          </div>
+
+          {/* Brand Visual Emblem (Desktop & Tablet) */}
+          <div className="relative hidden md:flex items-center justify-center flex-shrink-0 z-10">
+            <div className="relative w-36 h-36 lg:w-44 lg:h-44 rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(0,229,255,0.2)] border border-cyan-400/20 bg-slate-950/80 backdrop-blur-xl group hover:border-cyan-400/50 transition-all duration-500 hover:scale-105">
+              <Image
+                src={activeType === "series" ? "/logo-series.png" : "/logo-onstream.png"}
+                alt="OnStream Identidade Oficial"
+                fill
+                className="object-cover rounded-2xl"
+                priority
+                unoptimized
+              />
+            </div>
           </div>
         </section>
 
@@ -310,8 +325,17 @@ export default function Home() {
       {/* Footer */}
       <footer className="w-full border-t border-white/5 py-8 mt-12 bg-slate-950/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-zinc-400">ONSTREAM</span>
+          <div className="flex items-center gap-3">
+            <div className="relative w-7 h-7 rounded-xl overflow-hidden border border-white/10 shadow-sm flex-shrink-0 bg-black/40">
+              <Image
+                src="/logo-onstream.png"
+                alt="OnStream Logo"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+            <span className="font-bold text-zinc-300">ONSTREAM</span>
             <span>•</span>
             <span>Vitrine Oficial de Demonstração</span>
           </div>

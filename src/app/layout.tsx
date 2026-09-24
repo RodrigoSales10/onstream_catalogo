@@ -57,6 +57,14 @@ export const metadata: Metadata = {
     description:
       "Navegue pelos lançamentos e grade ao vivo da OnStream. Ativação imediata de teste grátis no WhatsApp!",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: [{ url: "/favicon.png" }],
+    shortcut: ["/favicon.png"],
+  },
 };
 
 export default function RootLayout({
