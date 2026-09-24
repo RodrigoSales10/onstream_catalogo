@@ -86,14 +86,122 @@ export function normalizeToCatalogItem(
   };
 }
 
+import { supabase } from "@/lib/supabaseClient";
+
 /**
- * Consulta a API de catálogo público sanitizada
+ * Consulta o catálogo diretamente no Supabase Postgres
+ */
+async function fetchFromSupabase(
+  params: CatalogQueryParams
+): Promise<CatalogApiResponse<CatalogItem>> {
+  const page = Math.max(1, params.page || 1);
+  const limit = Math.min(100, Math.max(1, params.limit || 36));
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("catalogo_itens")
+    .select("id, tipo, nome, ano, logo_url, grupo, total_episodios, criado_em", {
+      count: "exact",
+    })
+    .eq("tipo", params.type);
+
+  if (params.search && params.search.trim()) {
+    query = query.ilike("nome", `%${params.search.trim()}%`);
+  }
+
+  if (params.filter_grupo && params.filter_grupo.trim()) {
+    query = query.eq("grupo", params.filter_grupo.trim());
+  }
+
+  if (params.filter_ano && params.filter_ano.trim()) {
+    const anoNum = parseInt(params.filter_ano.trim(), 10);
+    if (!isNaN(anoNum)) {
+      query = query.eq("ano", anoNum);
+    }
+  }
+
+  // Ordenação
+  const sortCol =
+    params.sort_by === "nome"
+      ? "nome"
+      : params.sort_by === "ano"
+      ? "ano"
+      : "criado_em";
+  const ascending = params.sort_dir === "asc";
+
+  query = query.order(sortCol, { ascending }).range(from, to);
+
+  // Executa busca de dados e busca de filtros em paralelo
+  const [dataResult, filtersResult] = await Promise.all([
+    query,
+    supabase.rpc("get_catalog_filters", { p_tipo: params.type }),
+  ]);
+
+  if (dataResult.error) {
+    throw dataResult.error;
+  }
+
+  const totalRecords = dataResult.count || 0;
+  const totalPages = Math.ceil(totalRecords / limit);
+
+  const normalizedData: CatalogItem[] = (dataResult.data || []).map((row) => {
+    const cleanCategory =
+      (row.grupo || "Geral")
+        .replace(/^(FILMES|CANAIS|SÉRIES):\s*/i, "")
+        .trim() || "Geral";
+
+    return {
+      id: row.id,
+      title: row.nome,
+      posterUrl: sanitizePosterUrl(row.logo_url),
+      category: cleanCategory,
+      year: row.ano,
+      episodeCount: row.total_episodios || 0,
+      type: row.tipo as ContentType,
+      createdAt: row.criado_em,
+    };
+  });
+
+  const filterData = (filtersResult.data as any) || { grupos: [], anos: [] };
+  const cleanGrupos = (filterData.grupos || [])
+    .map((g: string) => g.replace(/^(FILMES|CANAIS|SÉRIES):\s*/i, "").trim())
+    .filter((g: string) => g && g !== "ERROR" && g !== "DEMO");
+
+  const uniqueGrupos = Array.from(new Set(cleanGrupos)) as string[];
+
+  return {
+    total_records: totalRecords,
+    total_pages: totalPages,
+    current_page: page,
+    limit,
+    data: normalizedData,
+    filters: {
+      grupos: uniqueGrupos,
+      anos: filterData.anos || [],
+    },
+    sort: {
+      by: sortCol,
+      dir: ascending ? "asc" : "desc",
+    },
+  };
+}
+
+/**
+ * Consulta a API de catálogo com fallback automático
  */
 export async function fetchCatalog(
   params: CatalogQueryParams
 ): Promise<CatalogApiResponse<CatalogItem>> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+  try {
+    // 1. Tenta buscar prioritariamente no Supabase Postgres
+    return await fetchFromSupabase(params);
+  } catch (supabaseError) {
+    console.warn("Falha ao consultar Supabase, tentando API de fallback:", supabaseError);
+  }
 
+  // 2. Fallback para o endpoint HTTP legado
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
   const urlParams = new URLSearchParams();
   urlParams.set("type", params.type);
   urlParams.set("page", String(params.page || 1));
@@ -102,30 +210,19 @@ export async function fetchCatalog(
   if (params.search && params.search.trim()) {
     urlParams.set("search", params.search.trim());
   }
-
   if (params.filter_grupo && params.filter_grupo.trim()) {
     urlParams.set("filter_grupo", params.filter_grupo.trim());
   }
-
   if (params.filter_ano && params.filter_ano.trim()) {
     urlParams.set("filter_ano", params.filter_ano.trim());
   }
-
-  if (params.sort_by) {
-    urlParams.set("sort_by", params.sort_by);
-  }
-
-  if (params.sort_dir) {
-    urlParams.set("sort_dir", params.sort_dir);
-  }
+  if (params.sort_by) urlParams.set("sort_by", params.sort_by);
+  if (params.sort_dir) urlParams.set("sort_dir", params.sort_dir);
 
   const requestUrl = `${apiUrl}?${urlParams.toString()}`;
 
   try {
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-    };
-
+    const headers: Record<string, string> = { Accept: "application/json" };
     if (process.env.CATALOGO_API_KEY) {
       headers["X-Catalog-Key"] = process.env.CATALOGO_API_KEY;
     }
@@ -141,17 +238,13 @@ export async function fetchCatalog(
     }
 
     const json: CatalogApiResponse<RawCatalogItem> = await res.json();
-
     const normalizedData: CatalogItem[] = (json.data || []).map((raw) =>
       normalizeToCatalogItem(raw, params.type)
     );
 
-    // Sanitiza e limpa filtros
     const cleanGrupos = (json.filters?.grupos || [])
       .map((g) => g.replace(/^(FILMES|CANAIS|SÉRIES):\s*/i, "").trim())
       .filter((g) => g && g !== "ERROR" && g !== "DEMO");
-
-    const uniqueGrupos = Array.from(new Set(cleanGrupos));
 
     return {
       total_records: json.total_records || 0,
@@ -160,13 +253,13 @@ export async function fetchCatalog(
       limit: json.limit || 36,
       data: normalizedData,
       filters: {
-        grupos: uniqueGrupos,
+        grupos: Array.from(new Set(cleanGrupos)),
         anos: json.filters?.anos || [],
       },
       sort: json.sort || { by: "criado_em", dir: "desc" },
     };
   } catch (error) {
-    console.error("Erro ao buscar catálogo:", error);
+    console.error("Erro ao buscar catálogo em todas as fontes:", error);
     return {
       total_records: 0,
       total_pages: 0,
