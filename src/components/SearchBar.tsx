@@ -41,6 +41,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       ? "Buscar filmes por título, gênero ou ano..."
       : activeType === "series"
       ? "Buscar séries por nome ou grupo..."
+      : activeType === "favoritos"
+      ? "Buscar em seus títulos favoritos por nome ou categoria..."
       : "Buscar canais por nome (ex: SporTV, HBO, Premiere)...";
 
   return (

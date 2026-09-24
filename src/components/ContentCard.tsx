@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { CatalogItem } from "@/types/catalog";
-import { Tv, Film, Clapperboard, Play, Layers } from "lucide-react";
+import { Tv, Film, Clapperboard, Play, Layers, Heart } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface ContentCardProps {
   item: CatalogItem;
@@ -12,6 +13,8 @@ interface ContentCardProps {
 
 export const ContentCard: React.FC<ContentCardProps> = ({ item, onClick }) => {
   const [hasImageError, setHasImageError] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isFav = isFavorite(item.id);
 
   const getMediaIcon = () => {
     switch (item.type) {
@@ -69,15 +72,30 @@ export const ContentCard: React.FC<ContentCardProps> = ({ item, onClick }) => {
               {item.type === "canais" ? "AO VIVO" : "HD"}
             </span>
           )}
+
+          {item.type === "series" && typeof item.episodeCount === "number" && item.episodeCount > 0 && (
+            <span className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-blue-500/30 text-blue-200 border border-blue-400/30 backdrop-blur-md">
+              <Layers className="w-3 h-3" />
+              <span>{item.episodeCount} eps</span>
+            </span>
+          )}
         </div>
 
-        {/* Episode Count Badge (Series) */}
-        {item.type === "series" && typeof item.episodeCount === "number" && item.episodeCount > 0 && (
-          <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-blue-500/30 text-blue-200 border border-blue-400/30 backdrop-blur-md">
-            <Layers className="w-3 h-3" />
-            <span>{item.episodeCount} eps</span>
-          </div>
-        )}
+        {/* Favorite Quick Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(item);
+          }}
+          aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+          className={`absolute top-2.5 right-2.5 z-20 p-2 rounded-full transition-all duration-200 backdrop-blur-md ${
+            isFav
+              ? "bg-rose-500/30 text-rose-400 border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.5)] scale-110"
+              : "bg-black/60 text-zinc-400 hover:text-rose-400 border border-white/10 hover:border-rose-400/40 opacity-80 group-hover:opacity-100 hover:scale-110"
+          }`}
+        >
+          <Heart className={`w-3.5 h-3.5 ${isFav ? "fill-rose-500 text-rose-500" : ""}`} />
+        </button>
 
         {/* Hover Quick Action Button */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">

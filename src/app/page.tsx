@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect, useTransition, useMemo } from "react";
 import { ContentType, CatalogItem } from "@/types/catalog";
 import { fetchCatalog } from "@/services/catalogService";
 import { Navbar } from "@/components/Navbar";
@@ -9,7 +9,8 @@ import { CategoryFilters } from "@/components/CategoryFilters";
 import { ContentGrid } from "@/components/ContentGrid";
 import { DetailModal } from "@/components/DetailModal";
 import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
-import { Sparkles, ShieldCheck, Zap, HeartHandshake } from "lucide-react";
+import { Sparkles, ShieldCheck, Zap, HeartHandshake, Heart, Film } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Home() {
   const [activeType, setActiveType] = useState<ContentType>("filmes");
@@ -28,12 +29,54 @@ export default function Home() {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<CatalogItem | null>(null);
 
+  const { favorites, isLoaded: isFavoritesLoaded, favoritesCount } = useFavorites();
   const [, startTransition] = useTransition();
+
+  // Filtragem dos favoritos em memória
+  const filteredFavorites = useMemo(() => {
+    if (activeType !== "favoritos") return [];
+    let result = [...favorites];
+
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      result = result.filter(
+        (f) =>
+          f.title.toLowerCase().includes(q) ||
+          f.category.toLowerCase().includes(q)
+      );
+    }
+
+    if (selectedCategory.trim()) {
+      result = result.filter((f) => f.category === selectedCategory);
+    }
+
+    return result;
+  }, [activeType, favorites, search, selectedCategory]);
+
+  // Categorias dos favoritos
+  const favoriteCategories = useMemo(() => {
+    if (activeType !== "favoritos") return [];
+    const cats = favorites.map((f) => f.category).filter(Boolean);
+    return Array.from(new Set(cats));
+  }, [activeType, favorites]);
 
   // Sincronização de dados da página 1 conforme filtros mudam
   useEffect(() => {
     let ignore = false;
 
+    // Se estiver na aba Favoritos, usa dados locais
+    if (activeType === "favoritos") {
+      setIsLoading(false);
+      setItems(filteredFavorites);
+      setCategories(favoriteCategories);
+      setYears([]);
+      setTotalRecords(filteredFavorites.length);
+      setTotalPages(1);
+      setCurrentPage(1);
+      return;
+    }
+
+    // Consulta de catálogo remoto (filmes, series, canais)
     fetchCatalog({
       type: activeType,
       page: 1,
@@ -65,12 +108,12 @@ export default function Home() {
     return () => {
       ignore = true;
     };
-  }, [activeType, search, selectedCategory, selectedYear]);
+  }, [activeType, search, selectedCategory, selectedYear, filteredFavorites, favoriteCategories]);
 
   // Ao trocar de aba, reseta filtros específicos e aciona loading
   const handleTypeChange = (newType: ContentType) => {
     if (newType !== activeType) {
-      setIsLoading(true);
+      setIsLoading(newType !== "favoritos");
       setActiveType(newType);
       setSelectedCategory("");
       setSelectedYear("");
@@ -79,22 +122,24 @@ export default function Home() {
   };
 
   const handleCategorySelect = (category: string) => {
-    setIsLoading(true);
+    if (activeType !== "favoritos") setIsLoading(true);
     setSelectedCategory(category);
   };
 
   const handleYearSelect = (year: string) => {
-    setIsLoading(true);
+    if (activeType !== "favoritos") setIsLoading(true);
     setSelectedYear(year);
   };
 
   const handleSearchChange = (term: string) => {
-    setIsLoading(true);
+    if (activeType !== "favoritos") setIsLoading(true);
     setSearch(term);
   };
 
   // Carregar mais (próxima página)
   const handleLoadMore = () => {
+    if (activeType === "favoritos") return;
+
     if (currentPage < totalPages && !isLoadingMore) {
       setIsLoadingMore(true);
       fetchCatalog({
@@ -121,13 +166,13 @@ export default function Home() {
 
   // Limpar busca e filtros
   const handleResetFilters = () => {
-    setIsLoading(true);
+    setIsLoading(activeType !== "favoritos");
     setSearch("");
     setSelectedCategory("");
     setSelectedYear("");
   };
 
-  const hasMore = currentPage < totalPages;
+  const hasMore = activeType !== "favoritos" && currentPage < totalPages;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#060913] text-[#f8fafc]">
@@ -135,7 +180,7 @@ export default function Home() {
       <Navbar
         activeType={activeType}
         onTypeChange={handleTypeChange}
-        totalRecords={totalRecords}
+        totalRecords={activeType === "favoritos" ? favoritesCount : totalRecords}
       />
 
       {/* Main Container */}
@@ -147,37 +192,61 @@ export default function Home() {
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col gap-4 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold w-fit">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Grade Completa de Programação & Lançamentos</span>
-            </div>
+            {activeType === "favoritos" ? (
+              <>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold w-fit">
+                  <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                  <span>Sua Coleção Pessoal Salva</span>
+                </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-              O Melhor do Entretenimento em{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                Alta Definição
-              </span>
-            </h1>
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                  Meus Títulos{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-500">
+                    Favoritos
+                  </span>
+                </h1>
 
-            <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
-              Navegue por filmes recém-lançados, suas séries favoritas e canais ao vivo com futebol, esportes e variedades. Escolha o que deseja assistir e libere seu teste de 6 horas grátis no WhatsApp.
-            </p>
+                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
+                  {favoritesCount > 0
+                    ? `Você tem ${favoritesCount} título(s) salvos na sua lista. Toque em qualquer card para ver a sinopse completa e pedir liberação imediata no WhatsApp.`
+                    : "Você ainda não favoritou nenhum canal, filme ou série. Toque no ícone de coração nos cards para criar sua lista personalizada de reprodução."}
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold w-fit">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Grade Completa de Programação & Lançamentos</span>
+                </div>
 
-            {/* Feature Highlights */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm text-zinc-300">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-cyan-400" />
-                <span>Estabilidade 99.9%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                <span>Sem Travamentos</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <HeartHandshake className="w-4 h-4 text-cyan-400" />
-                <span>Suporte Dedicado</span>
-              </div>
-            </div>
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                  O Melhor do Entretenimento em{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                    Alta Definição
+                  </span>
+                </h1>
+
+                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
+                  Navegue por filmes recém-lançados, suas séries favoritas e canais ao vivo com futebol, esportes e variedades. Escolha o que deseja assistir e libere seu teste de 6 horas grátis no WhatsApp.
+                </p>
+
+                {/* Feature Highlights */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm text-zinc-300">
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-cyan-400" />
+                    <span>Estabilidade 99.9%</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                    <span>Sem Travamentos</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <HeartHandshake className="w-4 h-4 text-cyan-400" />
+                    <span>Suporte Dedicado</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
@@ -189,29 +258,52 @@ export default function Home() {
             activeType={activeType}
           />
 
-          <CategoryFilters
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onSelectCategory={handleCategorySelect}
-            years={years}
-            selectedYear={selectedYear}
-            onSelectYear={handleYearSelect}
-            activeType={activeType}
-          />
+          {categories.length > 0 && (
+            <CategoryFilters
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onSelectCategory={handleCategorySelect}
+              years={years}
+              selectedYear={selectedYear}
+              onSelectYear={handleYearSelect}
+              activeType={activeType}
+            />
+          )}
         </section>
 
         {/* Content Listing Grid */}
         <section className="w-full">
-          <ContentGrid
-            items={items}
-            isLoading={isLoading}
-            isLoadingMore={isLoadingMore}
-            totalRecords={totalRecords}
-            hasMore={hasMore}
-            onLoadMore={handleLoadMore}
-            onItemClick={(item) => setSelectedItem(item)}
-            onResetFilters={handleResetFilters}
-          />
+          {activeType === "favoritos" && favorites.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 px-4 text-center rounded-3xl bg-slate-900/40 border border-white/5 max-w-lg mx-auto">
+              <div className="p-4 rounded-full bg-rose-500/10 border border-rose-500/20 mb-4 text-rose-400">
+                <Heart className="w-10 h-10 fill-rose-500/30" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-1">
+                Sua lista de favoritos está vazia
+              </h3>
+              <p className="text-sm text-zinc-400 max-w-xs mb-6">
+                Toque no ícone de coração nos cards de canais, filmes ou séries para salvá-los aqui e acessar rapidamente.
+              </p>
+              <button
+                onClick={() => handleTypeChange("filmes")}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500 text-black font-bold text-xs sm:text-sm hover:bg-cyan-400 transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)]"
+              >
+                <Film className="w-4 h-4" />
+                <span>Explorar Filmes & Lançamentos</span>
+              </button>
+            </div>
+          ) : (
+            <ContentGrid
+              items={items}
+              isLoading={isLoading}
+              isLoadingMore={isLoadingMore}
+              totalRecords={totalRecords}
+              hasMore={hasMore}
+              onLoadMore={handleLoadMore}
+              onItemClick={(item) => setSelectedItem(item)}
+              onResetFilters={handleResetFilters}
+            />
+          )}
         </section>
       </main>
 

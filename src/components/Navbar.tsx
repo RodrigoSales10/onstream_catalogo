@@ -2,8 +2,9 @@
 
 import React from "react";
 import { ContentType } from "@/types/catalog";
-import { Tv, Film, Clapperboard, Sparkles, MessageCircle } from "lucide-react";
+import { Tv, Film, Clapperboard, Sparkles, MessageCircle, Heart } from "lucide-react";
 import { buildWhatsAppLink } from "@/services/catalogService";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface NavbarProps {
   activeType: ContentType;
@@ -17,11 +18,24 @@ export const Navbar: React.FC<NavbarProps> = ({
   totalRecords,
 }) => {
   const whatsappUrl = buildWhatsAppLink();
+  const { favoritesCount } = useFavorites();
 
-  const navItems: { type: ContentType; label: string; icon: React.ReactNode }[] = [
-    { type: "canais", label: "Canais ao Vivo", icon: <Tv className="w-4 h-4" /> },
+  const navItems: { type: ContentType; label: string; icon: React.ReactNode; badge?: number }[] = [
+    { type: "canais", label: "Canais", icon: <Tv className="w-4 h-4" /> },
     { type: "filmes", label: "Filmes", icon: <Film className="w-4 h-4" /> },
     { type: "series", label: "Séries", icon: <Clapperboard className="w-4 h-4" /> },
+    {
+      type: "favoritos",
+      label: "Favoritos",
+      icon: (
+        <Heart
+          className={`w-4 h-4 transition-colors ${
+            favoritesCount > 0 ? "fill-rose-500 text-rose-500" : ""
+          }`}
+        />
+      ),
+      badge: favoritesCount > 0 ? favoritesCount : undefined,
+    },
   ];
 
   return (
@@ -56,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.type}
                   onClick={() => onTypeChange(item.type)}
-                  className={`flex items-center gap-2 px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 select-none ${
+                  className={`relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 select-none ${
                     isActive
                       ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(0,229,255,0.4)] font-bold"
                       : "text-zinc-400 hover:text-white hover:bg-white/5"
@@ -64,6 +78,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   {item.icon}
                   <span className="hidden xs:inline">{item.label}</span>
+                  {typeof item.badge === "number" && item.badge > 0 && (
+                    <span
+                      className={`px-1.5 py-0.2 text-[10px] font-extrabold rounded-full ${
+                        isActive
+                          ? "bg-black text-cyan-300"
+                          : "bg-rose-500 text-white shadow-[0_0_8px_rgba(244,63,94,0.6)]"
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}

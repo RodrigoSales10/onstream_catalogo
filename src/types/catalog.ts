@@ -3,8 +3,21 @@
  * Conforme especificado em docs/spec/03-api-contract.md
  */
 
-export type ContentType = 'canais' | 'filmes' | 'series';
+export type ContentType = 'canais' | 'filmes' | 'series' | 'favoritos';
 export type SortDirection = 'asc' | 'desc';
+
+export interface TmdbMetadata {
+  found: boolean;
+  title?: string;
+  originalTitle?: string;
+  overview?: string;
+  rating?: number;
+  voteCount?: number;
+  releaseDate?: string;
+  genres?: string[];
+  posterPath?: string | null;
+  backdropPath?: string | null;
+}
 
 export interface CanalItem {
   id: number;
