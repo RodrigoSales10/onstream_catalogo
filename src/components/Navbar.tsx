@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ContentType } from "@/types/catalog";
@@ -21,6 +21,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const whatsappUrl = buildWhatsAppLink();
   const { favoritesCount } = useFavorites();
+  const [isBumping, setIsBumping] = useState(false);
+  const prevCountRef = useRef(favoritesCount);
+
+  useEffect(() => {
+    if (prevCountRef.current !== favoritesCount) {
+      prevCountRef.current = favoritesCount;
+      const startTimer = setTimeout(() => setIsBumping(true), 0);
+      const resetTimer = setTimeout(() => setIsBumping(false), 500);
+      return () => {
+        clearTimeout(startTimer);
+        clearTimeout(resetTimer);
+      };
+    }
+  }, [favoritesCount]);
 
   const navItems: { type: ContentType; label: string; icon: React.ReactNode; badge?: number }[] = [
     { type: "canais", label: "Canais", icon: <Tv className="w-4 h-4" /> },
@@ -31,9 +45,9 @@ export const Navbar: React.FC<NavbarProps> = ({
       label: "Favoritos",
       icon: (
         <Heart
-          className={`w-4 h-4 transition-colors ${
+          className={`w-4 h-4 transition-all duration-300 ${
             favoritesCount > 0 ? "fill-rose-500 text-rose-500" : ""
-          }`}
+          } ${isBumping ? "scale-135 text-rose-400 rotate-6" : ""}`}
         />
       ),
       badge: favoritesCount > 0 ? favoritesCount : undefined,
@@ -92,7 +106,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <span className="hidden xs:inline">{item.label}</span>
                   {typeof item.badge === "number" && item.badge > 0 && (
                     <span
-                      className={`px-1.5 py-0.2 text-[10px] font-extrabold rounded-full ${
+                      className={`px-1.5 py-0.2 text-[10px] font-extrabold rounded-full transition-transform duration-300 ${
+                        isBumping && item.type === "favoritos" ? "scale-125 shadow-[0_0_15px_rgba(244,63,94,0.9)]" : ""
+                      } ${
                         isActive
                           ? "bg-black text-cyan-300"
                           : "bg-rose-500 text-white shadow-[0_0_8px_rgba(244,63,94,0.6)]"

@@ -77,6 +77,7 @@ export interface CatalogApiResponse<T = RawCatalogItem> {
   filters: {
     grupos: string[];
     anos: (string | number)[];
+    generos?: string[];
   };
   sort: {
     by: string;
@@ -91,6 +92,8 @@ export interface CatalogQueryParams {
   search?: string;
   filter_grupo?: string;
   filter_ano?: string;
+  filter_genero?: string;
+  filter_rating_min?: number;
   sort_by?: string;
   sort_dir?: SortDirection;
 }

@@ -16,14 +16,14 @@ BEGIN
     END IF;
 END $$;
 
--- 3. Agenda o disparo a cada 30 minutos
--- Se não houver itens pendentes, a Edge Function responde em < 100ms e encerra
+-- 3. Agenda o disparo uma vez por dia de madrugada às 02:30 BRT (05:30 UTC)
+-- Roda logo após a sincronização diária do ERP (que ocorre às 01:00 BRT)
 SELECT cron.schedule(
     'enrich-tmdb-auto',
-    '*/30 * * * *',
+    '30 5 * * *',
     $$
     SELECT net.http_get(
-        url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/enrich-tmdb?limit=50&tipo=todos',
+        url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/enrich-tmdb?limit=250&tipo=todos',
         headers := '{"Accept": "application/json", "User-Agent": "Supabase-Cron/1.0"}'::jsonb
     );
     $$

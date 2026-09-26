@@ -47,4 +47,5 @@ backup.json
 api_tmdb.json
 scripts/test_*.mjs
 supabase/.temp
+mcp*.json
 

@@ -11,6 +11,24 @@ import {
 
 const DEFAULT_API_URL = "https://onstream.rstibahia.com.br/api_catalogo_publico.php";
 
+export const OFFICIAL_GENRES = [
+  "Ação",
+  "Aventura",
+  "Animação",
+  "Comédia",
+  "Crime",
+  "Documentário",
+  "Drama",
+  "Família",
+  "Fantasia",
+  "Ficção científica",
+  "Mistério",
+  "Romance",
+  "Suspense",
+  "Terror",
+  "Faroeste",
+];
+
 /**
  * Normaliza URLs de imagem para garantir HTTPS e caminhos absolutos
  */
@@ -136,6 +154,14 @@ async function fetchFromSupabase(
       }
     }
 
+    if (params.filter_genero && params.filter_genero.trim()) {
+      q = q.eq("genero_principal", params.filter_genero.trim());
+    }
+
+    if (typeof params.filter_rating_min === "number" && params.filter_rating_min > 0) {
+      q = q.gte("tmdb_rating", params.filter_rating_min);
+    }
+
     // Lógica de Ordenação
     if (params.type === "canais") {
       // Canais normais primeiro (is_adult = false), conteúdo adulto (is_adult = true) estritamente no final
@@ -147,8 +173,15 @@ async function fetchFromSupabase(
         q = q.order("nome", { ascending: true });
       }
     } else if (params.type === "filmes") {
-      // Filmes: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
-      if (!params.sort_by || params.sort_by === "criado_em") {
+      // Filmes: suporte a Maior Nota, Lançamentos, Ano ou Nome
+      if (params.sort_by === "tmdb_rating") {
+        sortCol = "tmdb_rating";
+        ascending = false;
+        q = q
+          .order("tmdb_rating", { ascending: false, nullsFirst: false })
+          .order("ano", { ascending: false, nullsFirst: false })
+          .order("criado_em", { ascending: false });
+      } else if (!params.sort_by || params.sort_by === "criado_em") {
         sortCol = "ano";
         ascending = false;
         q = q
@@ -163,8 +196,15 @@ async function fetchFromSupabase(
         q = q.order("nome", { ascending });
       }
     } else {
-      // Séries: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
-      if (!params.sort_by || params.sort_by === "criado_em") {
+      // Séries: suporte a Maior Nota, Lançamentos, Ano ou Nome
+      if (params.sort_by === "tmdb_rating") {
+        sortCol = "tmdb_rating";
+        ascending = false;
+        q = q
+          .order("tmdb_rating", { ascending: false, nullsFirst: false })
+          .order("ano", { ascending: false, nullsFirst: false })
+          .order("criado_em", { ascending: false });
+      } else if (!params.sort_by || params.sort_by === "criado_em") {
         sortCol = "ano";
         ascending = false;
         q = q
@@ -277,6 +317,7 @@ async function fetchFromSupabase(
     filters: {
       grupos: orderedGrupos,
       anos: filterData.anos || [],
+      generos: OFFICIAL_GENRES,
     },
     sort: {
       by: sortCol,

@@ -240,126 +240,142 @@ async function searchTmdb(item) {
 }
 
 async function main() {
+  const TARGET_TOTAL = LIMIT_PARAM === "all" ? Infinity : parseInt(LIMIT_PARAM, 10);
+  const BATCH_SIZE = 500;
+
   console.log("==============================================================");
   console.log("🎬 ONSTREAM - ENRIQUECIMENTO DE METADADOS E CAPAS (TMDB)");
   console.log("==============================================================");
   console.log(`- Tipo alvo: ${TIPO_ALVO.toUpperCase()}`);
-  console.log(`- Limite: ${LIMIT_PARAM}`);
-  console.log(`- Delay entre requisições: ${DELAY_MS}ms (~${Math.round(1000 / DELAY_MS)} req/s)`);
-  console.log(`- Dry run (simulação sem gravar no banco): ${IS_DRY_RUN ? "SIM" : "NÃO"}`);
+  console.log(`- Meta total: ${LIMIT_PARAM === "all" ? "TODOS OS PENDENTES" : TARGET_TOTAL}`);
+  console.log(`- Tamanho do lote Supabase: ${BATCH_SIZE} itens por requisição`);
+  console.log(`- Delay entre requisições TMDB: ${DELAY_MS}ms (~${Math.round(1000 / DELAY_MS)} req/s)`);
+  console.log(`- Dry run: ${IS_DRY_RUN ? "SIM" : "NÃO"}`);
   console.log("==============================================================");
 
   await loadGenreMaps();
 
-  // 1. Busca os itens no Supabase que ainda não foram sincronizados
-  let query = supabase
-    .from("catalogo_itens")
-    .select("id, nome, ano, tipo, logo_url, grupo");
+  let totalProcessadoGeral = 0;
+  let sucessosGeral = 0;
+  let naoEncontradosGeral = 0;
+  let errosGeral = 0;
+  let loteIndex = 1;
 
-  if (TIPO_ALVO === "todos" || TIPO_ALVO === "all") {
-    query = query.in("tipo", ["series", "filmes"]);
-  } else {
-    query = query.eq("tipo", TIPO_ALVO);
-  }
+  while (totalProcessadoGeral < TARGET_TOTAL) {
+    const restante = TARGET_TOTAL - totalProcessadoGeral;
+    const fetchLimit = Math.min(BATCH_SIZE, restante);
 
-  if (!FORCE_RESCAN) {
-    query = query.is("tmdb_sincronizado_em", null);
-  }
+    let query = supabase
+      .from("catalogo_itens")
+      .select("id, nome, ano, tipo, logo_url, grupo");
 
-  // Prioriza lançamentos mais recentes
-  query = query.order("ano", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
+    if (TIPO_ALVO === "todos" || TIPO_ALVO === "all") {
+      query = query.in("tipo", ["series", "filmes"]);
+    } else {
+      query = query.eq("tipo", TIPO_ALVO);
+    }
 
-  if (LIMIT_PARAM !== "all") {
-    query = query.limit(parseInt(LIMIT_PARAM, 10));
-  }
+    if (!FORCE_RESCAN) {
+      query = query.is("tmdb_sincronizado_em", null);
+    }
 
-  const { data: itens, error } = await query;
+    // Prioriza lançamentos mais recentes
+    query = query
+      .order("ano", { ascending: false, nullsFirst: false })
+      .order("id", { ascending: false })
+      .limit(fetchLimit);
 
-  if (error) {
-    if (error.message && error.message.includes("tmdb_sincronizado_em")) {
-      console.error("\n❌ ERRO DE ESQUEMA NO SUPABASE:");
-      console.error("As colunas do TMDB ainda não foram criadas na tabela 'catalogo_itens'.");
-      console.error("Por favor, execute o arquivo 'supabase/migrations/20260925_tmdb_fields.sql' no SQL Editor do Supabase!");
+    const { data: itens, error } = await query;
+
+    if (error) {
+      if (error.message && error.message.includes("tmdb_sincronizado_em")) {
+        console.error("\n❌ ERRO DE ESQUEMA NO SUPABASE:");
+        console.error("As colunas do TMDB ainda não foram criadas na tabela 'catalogo_itens'.");
+        console.error("Por favor, execute o arquivo 'supabase/migrations/20260925_tmdb_fields.sql' no SQL Editor do Supabase!");
+        process.exit(1);
+      }
+      console.error("Erro ao carregar itens do Supabase:", error);
       process.exit(1);
     }
-    console.error("Erro ao carregar itens do Supabase:", error);
-    process.exit(1);
-  }
 
-  if (!itens || itens.length === 0) {
-    console.log("\n✅ Nenhum item pendente de sincronização para os filtros selecionados!");
-    process.exit(0);
-  }
+    if (!itens || itens.length === 0) {
+      console.log("\n🎉 Nenhum item pendente restante! Catálogo 100% sincronizado com o TMDB.");
+      break;
+    }
 
-  console.log(`\nItens encontrados para processar: ${itens.length}`);
-  console.log("Iniciando consultas no TMDB...\n");
+    console.log(
+      `\n📦 INICIANDO LOTE ${loteIndex} [${itens.length} itens] (Progresso Geral: ${totalProcessadoGeral}/${
+        TARGET_TOTAL === Infinity ? "TOTAL" : TARGET_TOTAL
+      })`
+    );
 
-  let sucessos = 0;
-  let naoEncontrados = 0;
-  let erros = 0;
+    for (let i = 0; i < itens.length; i++) {
+      const item = itens[i];
+      const progressoItem = totalProcessadoGeral + i + 1;
+      const prefix = `[#${progressoItem}] ID ${item.id} - "${item.nome}" (${item.ano || "N/A"})`;
 
-  for (let i = 0; i < itens.length; i++) {
-    const item = itens[i];
-    const prefix = `[${i + 1}/${itens.length}] ID ${item.id} - "${item.nome}" (${item.ano || "N/A"})`;
+      try {
+        const tmdbData = await searchTmdb(item);
 
-    try {
-      const tmdbData = await searchTmdb(item);
+        if (!tmdbData) {
+          naoEncontradosGeral++;
+          console.log(`${prefix} -> ⚠️ Não encontrado no TMDB`);
 
-      if (!tmdbData) {
-        naoEncontrados++;
-        console.log(`${prefix} -> ⚠️ Não encontrado no TMDB`);
+          if (!IS_DRY_RUN) {
+            await supabase
+              .from("catalogo_itens")
+              .update({ tmdb_sincronizado_em: new Date().toISOString() })
+              .eq("id", item.id);
+          }
+          continue;
+        }
+
+        sucessosGeral++;
+        console.log(
+          `${prefix} -> ✅ TMDB: "${tmdbData.tmdb_title}" | Gênero: ${tmdbData.genero_principal || "N/A"} | Capa: ${
+            tmdbData.capa_tmdb ? "OK" : "Sem Capa"
+          } | Sinopse: ${tmdbData.sinopse ? tmdbData.sinopse.slice(0, 45) + "..." : "Sem Sinopse"}`
+        );
 
         if (!IS_DRY_RUN) {
-          // Marca sincronizado para não ficar tentando eternamente
-          await supabase
+          const updatePayload = {
+            sinopse: tmdbData.sinopse,
+            genero_principal: tmdbData.genero_principal,
+            generos: tmdbData.generos,
+            capa_tmdb: tmdbData.capa_tmdb,
+            backdrop_tmdb: tmdbData.backdrop_tmdb,
+            tmdb_id: tmdbData.tmdb_id,
+            tmdb_rating: tmdbData.tmdb_rating,
+            tmdb_sincronizado_em: new Date().toISOString(),
+          };
+
+          const { error: updateErr } = await supabase
             .from("catalogo_itens")
-            .update({ tmdb_sincronizado_em: new Date().toISOString() })
+            .update(updatePayload)
             .eq("id", item.id);
+
+          if (updateErr) {
+            console.error(`   Erro ao atualizar no Supabase: ${updateErr.message}`);
+            errosGeral++;
+          }
         }
-        continue;
+      } catch (err) {
+        errosGeral++;
+        console.error(`${prefix} -> ❌ Erro: ${err.message}`);
       }
-
-      sucessos++;
-      console.log(
-        `${prefix} -> ✅ TMDB: "${tmdbData.tmdb_title}" | Gênero: ${tmdbData.genero_principal || "N/A"} | Capa: ${
-          tmdbData.capa_tmdb ? "OK" : "Sem Capa"
-        } | Sinopse: ${tmdbData.sinopse ? tmdbData.sinopse.slice(0, 45) + "..." : "Sem Sinopse"}`
-      );
-
-      if (!IS_DRY_RUN) {
-        const updatePayload = {
-          sinopse: tmdbData.sinopse,
-          genero_principal: tmdbData.genero_principal,
-          generos: tmdbData.generos,
-          capa_tmdb: tmdbData.capa_tmdb,
-          backdrop_tmdb: tmdbData.backdrop_tmdb,
-          tmdb_id: tmdbData.tmdb_id,
-          tmdb_rating: tmdbData.tmdb_rating,
-          tmdb_sincronizado_em: new Date().toISOString(),
-        };
-
-        const { error: updateErr } = await supabase
-          .from("catalogo_itens")
-          .update(updatePayload)
-          .eq("id", item.id);
-
-        if (updateErr) {
-          console.error(`   Erro ao atualizar no Supabase: ${updateErr.message}`);
-          erros++;
-        }
-      }
-    } catch (err) {
-      erros++;
-      console.error(`${prefix} -> ❌ Erro: ${err.message}`);
     }
+
+    totalProcessadoGeral += itens.length;
+    loteIndex++;
   }
 
   console.log("\n==============================================================");
-  console.log("🎉 RESUMO DO PROCESSAMENTO:");
-  console.log(`- Total processado: ${itens.length}`);
-  console.log(`- Encontrados com sucesso: ${sucessos}`);
-  console.log(`- Não encontrados: ${naoEncontrados}`);
-  console.log(`- Falhas/Erros: ${erros}`);
+  console.log("🎉 RESUMO DO PROCESSAMENTO GERAL:");
+  console.log(`- Total de lotes processados: ${loteIndex - 1}`);
+  console.log(`- Total de itens processados: ${totalProcessadoGeral}`);
+  console.log(`- Encontrados com sucesso: ${sucessosGeral}`);
+  console.log(`- Não encontrados: ${naoEncontradosGeral}`);
+  console.log(`- Falhas/Erros: ${errosGeral}`);
   console.log("==============================================================");
   process.exit(0);
 }

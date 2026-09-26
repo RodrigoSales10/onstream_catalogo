@@ -58,43 +58,67 @@ export type Database = {
         Row: {
           ano: number | null
           atualizado_em: string
+          backdrop_tmdb: string | null
+          capa_tmdb: string | null
           criado_em: string
           fonte_id: number | null
+          genero_principal: string | null
+          generos: string[] | null
           grupo: string
           id: number
           is_adult: boolean
           logo_url: string | null
           nome: string
+          sinopse: string | null
           sync_id: string | null
           tipo: string
+          tmdb_id: number | null
+          tmdb_rating: number | null
+          tmdb_sincronizado_em: string | null
           total_episodios: number | null
         }
         Insert: {
           ano?: number | null
           atualizado_em?: string
+          backdrop_tmdb?: string | null
+          capa_tmdb?: string | null
           criado_em?: string
           fonte_id?: number | null
+          genero_principal?: string | null
+          generos?: string[] | null
           grupo?: string
           id?: number
           is_adult?: boolean
           logo_url?: string | null
           nome: string
+          sinopse?: string | null
           sync_id?: string | null
           tipo: string
+          tmdb_id?: number | null
+          tmdb_rating?: number | null
+          tmdb_sincronizado_em?: string | null
           total_episodios?: number | null
         }
         Update: {
           ano?: number | null
           atualizado_em?: string
+          backdrop_tmdb?: string | null
+          capa_tmdb?: string | null
           criado_em?: string
           fonte_id?: number | null
+          genero_principal?: string | null
+          generos?: string[] | null
           grupo?: string
           id?: number
           is_adult?: boolean
           logo_url?: string | null
           nome?: string
+          sinopse?: string | null
           sync_id?: string | null
           tipo?: string
+          tmdb_id?: number | null
+          tmdb_rating?: number | null
+          tmdb_sincronizado_em?: string | null
           total_episodios?: number | null
         }
         Relationships: [

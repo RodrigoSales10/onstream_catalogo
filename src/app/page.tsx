@@ -7,6 +7,7 @@ import { fetchCatalog } from "@/services/catalogService";
 import { Navbar } from "@/components/Navbar";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryFilters } from "@/components/CategoryFilters";
+import { DiscoveryPanel } from "@/components/DiscoveryPanel";
 import { ContentGrid } from "@/components/ContentGrid";
 import { DetailModal } from "@/components/DetailModal";
 import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
@@ -18,9 +19,13 @@ export default function Home() {
   const [search, setSearch] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
+  const [selectedRatingMin, setSelectedRatingMin] = useState<number>(0);
+  const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("criado_em");
 
   const [items, setItems] = useState<CatalogItem[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
   const [years, setYears] = useState<(string | number)[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -33,6 +38,20 @@ export default function Home() {
   const { favorites, favoritesCount } = useFavorites();
   const [, startTransition] = useTransition();
 
+  // Gêneros disponíveis nos favoritos salvos
+  const favoriteGenres = useMemo(() => {
+    if (activeType !== "favoritos") return [];
+    const set = new Set<string>();
+    favorites.forEach((f) => {
+      if (f.genres && Array.isArray(f.genres)) {
+        f.genres.forEach((g) => set.add(g));
+      } else if (f.mainGenre) {
+        set.add(f.mainGenre);
+      }
+    });
+    return Array.from(set);
+  }, [activeType, favorites]);
+
   // Filtragem dos favoritos em memória
   const filteredFavorites = useMemo(() => {
     if (activeType !== "favoritos") return [];
@@ -43,7 +62,8 @@ export default function Home() {
       result = result.filter(
         (f) =>
           f.title.toLowerCase().includes(q) ||
-          f.category.toLowerCase().includes(q)
+          f.category.toLowerCase().includes(q) ||
+          (f.synopsis && f.synopsis.toLowerCase().includes(q))
       );
     }
 
@@ -51,8 +71,33 @@ export default function Home() {
       result = result.filter((f) => f.category === selectedCategory);
     }
 
+    if (selectedGenre.trim()) {
+      result = result.filter((f) => {
+        if (f.mainGenre && f.mainGenre.toLowerCase() === selectedGenre.toLowerCase()) return true;
+        if (f.genres && f.genres.some((g) => g.toLowerCase() === selectedGenre.toLowerCase())) return true;
+        return false;
+      });
+    }
+
+    if (selectedRatingMin > 0) {
+      result = result.filter((f) => (f.tmdbRating || 0) >= selectedRatingMin);
+    }
+
+    if (selectedYear.trim()) {
+      result = result.filter((f) => String(f.year) === selectedYear.trim());
+    }
+
+    // Ordenação dos favoritos
+    if (sortBy === "tmdb_rating") {
+      result.sort((a, b) => (b.tmdbRating || 0) - (a.tmdbRating || 0));
+    } else if (sortBy === "ano") {
+      result.sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
+    } else if (sortBy === "nome") {
+      result.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
     return result;
-  }, [activeType, favorites, search, selectedCategory]);
+  }, [activeType, favorites, search, selectedCategory, selectedGenre, selectedRatingMin, selectedYear, sortBy]);
 
   // Categorias dos favoritos
   const favoriteCategories = useMemo(() => {
@@ -72,6 +117,7 @@ export default function Home() {
           setIsLoading(false);
           setItems(filteredFavorites);
           setCategories(favoriteCategories);
+          setGenres(favoriteGenres);
           setYears([]);
           setTotalRecords(filteredFavorites.length);
           setTotalPages(1);
@@ -92,12 +138,16 @@ export default function Home() {
       search: search || undefined,
       filter_grupo: selectedCategory || undefined,
       filter_ano: selectedYear || undefined,
+      filter_genero: selectedGenre || undefined,
+      filter_rating_min: selectedRatingMin > 0 ? selectedRatingMin : undefined,
+      sort_by: sortBy || undefined,
     })
       .then((response) => {
         if (!ignore) {
           startTransition(() => {
             setItems(response.data);
             setCategories(response.filters.grupos || []);
+            setGenres(response.filters.generos || []);
             setYears(response.filters.anos || []);
             setTotalRecords(response.total_records);
             setTotalPages(response.total_pages);
@@ -116,7 +166,18 @@ export default function Home() {
     return () => {
       ignore = true;
     };
-  }, [activeType, search, selectedCategory, selectedYear, filteredFavorites, favoriteCategories]);
+  }, [
+    activeType,
+    search,
+    selectedCategory,
+    selectedYear,
+    selectedGenre,
+    selectedRatingMin,
+    sortBy,
+    filteredFavorites,
+    favoriteCategories,
+    favoriteGenres,
+  ]);
 
   // Ao trocar de aba, reseta filtros específicos e aciona loading
   const handleTypeChange = (newType: ContentType) => {
@@ -125,6 +186,9 @@ export default function Home() {
       setActiveType(newType);
       setSelectedCategory("");
       setSelectedYear("");
+      setSelectedGenre("");
+      setSelectedRatingMin(0);
+      setSortBy("criado_em");
       setSearch("");
     }
   };
@@ -137,6 +201,21 @@ export default function Home() {
   const handleYearSelect = (year: string) => {
     if (activeType !== "favoritos") setIsLoading(true);
     setSelectedYear(year);
+  };
+
+  const handleGenreSelect = (genre: string) => {
+    if (activeType !== "favoritos") setIsLoading(true);
+    setSelectedGenre(genre);
+  };
+
+  const handleRatingSelect = (rating: number) => {
+    if (activeType !== "favoritos") setIsLoading(true);
+    setSelectedRatingMin(rating);
+  };
+
+  const handleSortBySelect = (sort: string) => {
+    if (activeType !== "favoritos") setIsLoading(true);
+    setSortBy(sort);
   };
 
   const handleSearchChange = (term: string) => {
@@ -157,6 +236,9 @@ export default function Home() {
         search: search || undefined,
         filter_grupo: selectedCategory || undefined,
         filter_ano: selectedYear || undefined,
+        filter_genero: selectedGenre || undefined,
+        filter_rating_min: selectedRatingMin > 0 ? selectedRatingMin : undefined,
+        sort_by: sortBy || undefined,
       })
         .then((response) => {
           startTransition(() => {
@@ -178,6 +260,9 @@ export default function Home() {
     setSearch("");
     setSelectedCategory("");
     setSelectedYear("");
+    setSelectedGenre("");
+    setSelectedRatingMin(0);
+    setSortBy("criado_em");
   };
 
   const hasMore = activeType !== "favoritos" && currentPage < totalPages;
@@ -289,6 +374,24 @@ export default function Home() {
               selectedYear={selectedYear}
               onSelectYear={handleYearSelect}
               activeType={activeType}
+            />
+          )}
+
+          {/* Discovery & Thermometer Panel (Filmes, Séries & Favoritos) */}
+          {(activeType === "filmes" || activeType === "series" || (activeType === "favoritos" && favorites.length > 0)) && (
+            <DiscoveryPanel
+              activeType={activeType}
+              selectedRatingMin={selectedRatingMin}
+              onSelectRatingMin={handleRatingSelect}
+              genres={genres}
+              selectedGenre={selectedGenre}
+              onSelectGenre={handleGenreSelect}
+              years={years}
+              selectedYear={selectedYear}
+              onSelectYear={handleYearSelect}
+              sortBy={sortBy}
+              onSelectSortBy={handleSortBySelect}
+              onResetFilters={handleResetFilters}
             />
           )}
         </section>
