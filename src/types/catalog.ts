@@ -55,11 +55,17 @@ export interface CatalogItem {
   id: string | number;
   title: string;
   posterUrl: string | null;
+  backdropUrl?: string | null;
   category: string;
   year?: string | number | null;
   episodeCount?: number;
   type: ContentType;
   createdAt: string;
+  synopsis?: string | null;
+  mainGenre?: string | null;
+  genres?: string[] | null;
+  tmdbRating?: number | null;
+  tmdbId?: number | null;
 }
 
 export interface CatalogApiResponse<T = RawCatalogItem> {

@@ -30,7 +30,7 @@ export default function Home() {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<CatalogItem | null>(null);
 
-  const { favorites, isLoaded: isFavoritesLoaded, favoritesCount } = useFavorites();
+  const { favorites, favoritesCount } = useFavorites();
   const [, startTransition] = useTransition();
 
   // Filtragem dos favoritos em memória
@@ -67,14 +67,21 @@ export default function Home() {
 
     // Se estiver na aba Favoritos, usa dados locais
     if (activeType === "favoritos") {
-      setIsLoading(false);
-      setItems(filteredFavorites);
-      setCategories(favoriteCategories);
-      setYears([]);
-      setTotalRecords(filteredFavorites.length);
-      setTotalPages(1);
-      setCurrentPage(1);
-      return;
+      const timer = setTimeout(() => {
+        if (!ignore) {
+          setIsLoading(false);
+          setItems(filteredFavorites);
+          setCategories(favoriteCategories);
+          setYears([]);
+          setTotalRecords(filteredFavorites.length);
+          setTotalPages(1);
+          setCurrentPage(1);
+        }
+      }, 0);
+      return () => {
+        ignore = true;
+        clearTimeout(timer);
+      };
     }
 
     // Consulta de catálogo remoto (filmes, series, canais)

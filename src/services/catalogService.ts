@@ -91,6 +91,14 @@ import { supabase } from "@/lib/supabaseClient";
 /**
  * Consulta o catálogo diretamente no Supabase Postgres
  */
+interface FilterRpcResult {
+  grupos?: string[];
+  anos?: (string | number)[];
+}
+
+/**
+ * Consulta o catálogo diretamente no Supabase Postgres
+ */
 async function fetchFromSupabase(
   params: CatalogQueryParams
 ): Promise<CatalogApiResponse<CatalogItem>> {
@@ -99,78 +107,94 @@ async function fetchFromSupabase(
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let query = supabase
-    .from("catalogo_itens")
-    .select("id, tipo, nome, ano, logo_url, grupo, total_episodios, criado_em", {
-      count: "exact",
-    })
-    .eq("tipo", params.type);
-
-  if (params.search && params.search.trim()) {
-    query = query.ilike("nome", `%${params.search.trim()}%`);
-  }
-
-  if (params.filter_grupo && params.filter_grupo.trim()) {
-    query = query.eq("grupo", params.filter_grupo.trim());
-  }
-
-  if (params.filter_ano && params.filter_ano.trim()) {
-    const anoNum = parseInt(params.filter_ano.trim(), 10);
-    if (!isNaN(anoNum)) {
-      query = query.eq("ano", anoNum);
-    }
-  }
-
-  // Lógica de Ordenação
   let sortCol = params.sort_by || "criado_em";
   let ascending = params.sort_dir === "asc";
 
-  if (params.type === "canais") {
-    // Canais normais primeiro (is_adult = false), conteúdo adulto (is_adult = true) estritamente no final
-    query = query.order("is_adult", { ascending: true });
+  const ENRICHED_COLUMNS =
+    "id, tipo, nome, ano, logo_url, grupo, total_episodios, criado_em, sinopse, genero_principal, generos, capa_tmdb, backdrop_tmdb, tmdb_rating, tmdb_id";
+  const BASIC_COLUMNS =
+    "id, tipo, nome, ano, logo_url, grupo, total_episodios, criado_em";
 
-    if (params.sort_by === "nome") {
-      query = query.order("nome", { ascending });
-    } else {
-      query = query.order("nome", { ascending: true });
-    }
-  } else if (params.type === "filmes") {
-    // Filmes: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
-    if (!params.sort_by || params.sort_by === "criado_em") {
-      sortCol = "ano";
-      ascending = false;
-      query = query
-        .order("ano", { ascending: false, nullsFirst: false })
-        .order("criado_em", { ascending: false })
-        .order("id", { ascending: false });
-    } else if (params.sort_by === "ano") {
-      query = query
-        .order("ano", { ascending, nullsFirst: false })
-        .order("id", { ascending: false });
-    } else {
-      query = query.order("nome", { ascending });
-    }
-  } else {
-    // Séries: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
-    if (!params.sort_by || params.sort_by === "criado_em") {
-      sortCol = "ano";
-      ascending = false;
-      query = query
-        .order("ano", { ascending: false, nullsFirst: false })
-        .order("criado_em", { ascending: false })
-        .order("id", { ascending: false });
-    } else {
-      query = query.order(params.sort_by, { ascending });
-    }
-  }
+  const buildQuery = (columns: string) => {
+    let q = supabase
+      .from("catalogo_itens")
+      .select(columns, { count: "exact" })
+      .eq("tipo", params.type);
 
-  query = query.range(from, to);
+    if (params.search && params.search.trim()) {
+      q = q.ilike("nome", `%${params.search.trim()}%`);
+    }
 
-  // Executa busca de dados e busca de filtros em paralelo
-  const [dataResult, filtersResult] = await Promise.all([
-    query,
+    if (params.filter_grupo && params.filter_grupo.trim()) {
+      q = q.eq("grupo", params.filter_grupo.trim());
+    }
+
+    if (params.filter_ano && params.filter_ano.trim()) {
+      const anoNum = parseInt(params.filter_ano.trim(), 10);
+      if (!isNaN(anoNum)) {
+        q = q.eq("ano", anoNum);
+      }
+    }
+
+    // Lógica de Ordenação
+    if (params.type === "canais") {
+      // Canais normais primeiro (is_adult = false), conteúdo adulto (is_adult = true) estritamente no final
+      q = q.order("is_adult", { ascending: true });
+
+      if (params.sort_by === "nome") {
+        q = q.order("nome", { ascending });
+      } else {
+        q = q.order("nome", { ascending: true });
+      }
+    } else if (params.type === "filmes") {
+      // Filmes: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
+      if (!params.sort_by || params.sort_by === "criado_em") {
+        sortCol = "ano";
+        ascending = false;
+        q = q
+          .order("ano", { ascending: false, nullsFirst: false })
+          .order("criado_em", { ascending: false })
+          .order("id", { ascending: false });
+      } else if (params.sort_by === "ano") {
+        q = q
+          .order("ano", { ascending, nullsFirst: false })
+          .order("id", { ascending: false });
+      } else {
+        q = q.order("nome", { ascending });
+      }
+    } else {
+      // Séries: prioriza lançamentos do ano atual / mais recente no topo, desempatando por inserção recente
+      if (!params.sort_by || params.sort_by === "criado_em") {
+        sortCol = "ano";
+        ascending = false;
+        q = q
+          .order("ano", { ascending: false, nullsFirst: false })
+          .order("criado_em", { ascending: false })
+          .order("id", { ascending: false });
+      } else {
+        q = q.order(params.sort_by, { ascending });
+      }
+    }
+
+    return q.range(from, to);
+  };
+
+  // Tenta primeiro buscar com as colunas enriquecidas do TMDB
+  const [initialDataResult, filtersResult] = await Promise.all([
+    buildQuery(ENRICHED_COLUMNS),
     supabase.rpc("get_catalog_filters", { p_tipo: params.type }),
   ]);
+  let dataResult = initialDataResult;
+
+  // Se falhar por as colunas novas ainda não existirem na tabela, faz fallback para as colunas básicas
+  if (
+    dataResult.error &&
+    (dataResult.error.message?.includes("sinopse") ||
+      dataResult.error.code === "PGRST204" ||
+      dataResult.error.code === "42703")
+  ) {
+    dataResult = await buildQuery(BASIC_COLUMNS);
+  }
 
   if (dataResult.error) {
     throw dataResult.error;
@@ -179,25 +203,57 @@ async function fetchFromSupabase(
   const totalRecords = dataResult.count || 0;
   const totalPages = Math.ceil(totalRecords / limit);
 
-  const normalizedData: CatalogItem[] = (dataResult.data || []).map((row) => {
+  // Mapeamento com hierarquia de capas e metadados TMDB
+  const rawRows = (dataResult.data as unknown as Record<string, unknown>[]) || [];
+  const normalizedData: CatalogItem[] = rawRows.map((row) => {
+    const rawGrupo = typeof row.grupo === "string" ? row.grupo : "";
     const cleanCategory =
-      (row.grupo || "Geral")
+      rawGrupo
         .replace(/^(FILMES|CANAIS|SÉRIES):\s*/i, "")
         .trim() || "Geral";
 
+    const tipo = (typeof row.tipo === "string" ? row.tipo : "filmes") as ContentType;
+    let poster = sanitizePosterUrl(typeof row.logo_url === "string" ? row.logo_url : null);
+    const capaTmdb = sanitizePosterUrl(typeof row.capa_tmdb === "string" ? row.capa_tmdb : null);
+
+    if (tipo === "series") {
+      // Hierarquia para Séries:
+      // 1. Capa oficial do TMDB em alta resolução (se encontrada)
+      // 2. logo_url original (se não for o placeholder genérico 150466.jpg)
+      // 3. Fallback genérico visual da UI OnStream
+      if (capaTmdb) {
+        poster = capaTmdb;
+      } else if (poster && poster.includes("150466.jpg")) {
+        poster = null;
+      }
+    } else if (tipo === "filmes") {
+      // Hierarquia para Filmes:
+      // 1. logo_url original existente
+      // 2. Capa do TMDB caso logo_url seja nulo/inválido
+      if (!poster && capaTmdb) {
+        poster = capaTmdb;
+      }
+    }
+
     return {
-      id: row.id,
-      title: row.nome,
-      posterUrl: sanitizePosterUrl(row.logo_url),
+      id: (row.id as string | number) || 0,
+      title: typeof row.nome === "string" ? row.nome : "Sem título",
+      posterUrl: poster,
+      backdropUrl: sanitizePosterUrl(typeof row.backdrop_tmdb === "string" ? row.backdrop_tmdb : null),
       category: cleanCategory,
-      year: row.ano,
-      episodeCount: row.total_episodios || 0,
-      type: row.tipo as ContentType,
-      createdAt: row.criado_em,
+      year: (row.ano as number | string | null) || null,
+      episodeCount: typeof row.total_episodios === "number" ? row.total_episodios : 0,
+      type: tipo,
+      createdAt: typeof row.criado_em === "string" ? row.criado_em : new Date().toISOString(),
+      synopsis: typeof row.sinopse === "string" ? row.sinopse : null,
+      mainGenre: typeof row.genero_principal === "string" ? row.genero_principal : null,
+      genres: Array.isArray(row.generos) ? (row.generos as string[]) : null,
+      tmdbRating: typeof row.tmdb_rating === "number" ? row.tmdb_rating : null,
+      tmdbId: typeof row.tmdb_id === "number" ? row.tmdb_id : null,
     };
   });
 
-  const filterData = (filtersResult.data as any) || { grupos: [], anos: [] };
+  const filterData = (filtersResult.data as FilterRpcResult) || { grupos: [], anos: [] };
   const cleanGrupos = (filterData.grupos || [])
     .map((g: string) => g.replace(/^(FILMES|CANAIS|SÉRIES):\s*/i, "").trim())
     .filter((g: string) => g && g !== "ERROR" && g !== "DEMO");

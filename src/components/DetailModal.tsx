@@ -33,45 +33,76 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
 
   const isFav = item ? isFavorite(item.id) : false;
 
+  const hasPreloadedMetadata = Boolean(item?.synopsis);
+
+  // Se o item já tiver metadados persistidos no Supabase, usa diretamente sem consultar TMDB
+  const effectiveTmdb: TmdbMetadata | null = hasPreloadedMetadata && item
+    ? {
+        found: true,
+        title: item.title,
+        overview: item.synopsis || undefined,
+        genres: item.genres || (item.mainGenre ? [item.mainGenre] : []),
+        rating: item.tmdbRating || undefined,
+        posterPath: item.posterUrl,
+        backdropPath: item.backdropUrl,
+      }
+    : tmdb;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
 
-    if (item) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
+    if (!item) return;
 
-      // Busca sinopse e metadados no TMDB para filmes e séries
-      if (item.type === "filmes" || item.type === "series") {
-        setIsLoadingTmdb(true);
-        setTmdb(null);
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
 
+    // Se já tem sinopse gravada no banco ou é canal ao vivo, não precisa chamar a API TMDB
+    if (item.synopsis || (item.type !== "filmes" && item.type !== "series")) {
+      return () => {
+        document.body.style.overflow = "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const fetchTmdb = async () => {
+      setIsLoadingTmdb(true);
+      try {
         const params = new URLSearchParams();
         params.set("query", item.title);
         params.set("type", item.type);
         if (item.year) params.set("year", String(item.year));
 
-        fetch(`/api/tmdb?${params.toString()}`)
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data: TmdbMetadata | null) => {
-            if (data && data.found) {
-              setTmdb(data);
-            }
-          })
-          .catch((err) => {
-            console.warn("Erro ao buscar sinopse no TMDB:", err);
-          })
-          .finally(() => {
-            setIsLoadingTmdb(false);
-          });
-      } else {
-        setTmdb(null);
-        setIsLoadingTmdb(false);
+        const res = await fetch(`/api/tmdb?${params.toString()}`, {
+          signal: controller.signal,
+        });
+        if (res.ok && isMounted) {
+          const data: TmdbMetadata | null = await res.json();
+          if (data && data.found) {
+            setTmdb(data);
+          }
+        }
+      } catch (err: unknown) {
+        if (isMounted && (err as Error)?.name !== "AbortError") {
+          console.warn("Erro ao buscar sinopse no TMDB:", err);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingTmdb(false);
+        }
       }
-    }
+    };
+
+    const timer = setTimeout(fetchTmdb, 0);
 
     return () => {
+      isMounted = false;
+      controller.abort();
+      clearTimeout(timer);
       document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -95,7 +126,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
   const badgeInfo = getMediaBadge();
 
   // Imagem prioritária (se o TMDB tiver poster em alta e o item não tiver logo bom)
-  const displayPoster = item.posterUrl || tmdb?.posterPath;
+  const displayPoster = item.posterUrl || effectiveTmdb?.posterPath;
 
   return (
     <div
@@ -109,10 +140,10 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
       {/* Modal Window */}
       <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto glass-panel-glow rounded-3xl bg-slate-950 border border-white/10 shadow-2xl z-10 flex flex-col overflow-hidden">
         {/* Backdrop Banner (Cinema Style) */}
-        {tmdb?.backdropPath && (
+        {effectiveTmdb?.backdropPath && (
           <div className="relative w-full h-44 sm:h-56 overflow-hidden flex-shrink-0">
             <Image
-              src={tmdb.backdropPath}
+              src={effectiveTmdb.backdropPath}
               alt={item.title}
               fill
               className="object-cover opacity-35"
@@ -133,7 +164,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
         </button>
 
         {/* Modal Content Body */}
-        <div className={`p-6 sm:p-8 flex flex-col sm:flex-row gap-6 ${tmdb?.backdropPath ? "-mt-16 sm:-mt-20 relative z-10" : ""}`}>
+        <div className={`p-6 sm:p-8 flex flex-col sm:flex-row gap-6 ${effectiveTmdb?.backdropPath ? "-mt-16 sm:-mt-20 relative z-10" : ""}`}>
           {/* Poster Column */}
           <div className="w-full sm:w-5/12 flex-shrink-0 flex flex-col items-center">
             <div className="relative w-full max-w-[240px] aspect-[2/3] rounded-2xl overflow-hidden bg-slate-900 border border-white/10 shadow-2xl">
@@ -179,10 +210,10 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
                 </div>
 
                 {/* Rating Badge TMDB */}
-                {tmdb?.rating && tmdb.rating > 0 && (
+                {effectiveTmdb?.rating && effectiveTmdb.rating > 0 && (
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold">
                     <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span>{tmdb.rating} / 10</span>
+                    <span>{effectiveTmdb.rating} / 10</span>
                   </div>
                 )}
               </div>
@@ -193,9 +224,9 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
               </h2>
 
               {/* TMDB Genres */}
-              {tmdb?.genres && tmdb.genres.length > 0 && (
+              {effectiveTmdb?.genres && effectiveTmdb.genres.length > 0 && (
                 <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  {tmdb.genres.map((genre) => (
+                  {effectiveTmdb.genres.map((genre) => (
                     <span
                       key={genre}
                       className="px-2.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[11px] font-medium text-zinc-300"
@@ -214,12 +245,12 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
                   <span className="font-semibold text-white">{item.category}</span>
                 </div>
 
-                {(item.year || tmdb?.releaseDate) && (
+                {(item.year || effectiveTmdb?.releaseDate) && (
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-cyan-400" />
                     <span className="text-zinc-400">Lançamento:</span>
                     <span className="font-semibold text-white">
-                      {item.year || tmdb?.releaseDate?.slice(0, 4)}
+                      {item.year || effectiveTmdb?.releaseDate?.slice(0, 4)}
                     </span>
                   </div>
                 )}
@@ -252,7 +283,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ item, onClose }) => {
                   </div>
                 ) : (
                   <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-h-36 overflow-y-auto pr-2 scrollbar-thin">
-                    {tmdb?.overview ||
+                    {effectiveTmdb?.overview ||
                       "Assista a este e milhares de outros títulos em qualidade 4K e Full HD no servidor OnStream. Libere seu teste grátis de 6 horas agora mesmo!"}
                   </p>
                 )}

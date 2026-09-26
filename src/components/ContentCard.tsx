@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { CatalogItem } from "@/types/catalog";
-import { Tv, Film, Clapperboard, Play, Layers, Heart } from "lucide-react";
+import { Tv, Film, Clapperboard, Play, Layers, Heart, Star } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
 
 interface ContentCardProps {
@@ -62,7 +62,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({ item, onClick }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
 
         {/* Top Badges */}
-        <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10">
+        <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10 flex-wrap">
           {item.year ? (
             <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-black/75 text-zinc-200 border border-white/10 backdrop-blur-md">
               {item.year}
@@ -70,6 +70,13 @@ export const ContentCard: React.FC<ContentCardProps> = ({ item, onClick }) => {
           ) : (
             <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 backdrop-blur-md">
               {item.type === "canais" ? "AO VIVO" : "HD"}
+            </span>
+          )}
+
+          {typeof item.tmdbRating === "number" && item.tmdbRating > 0 && (
+            <span className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/30 backdrop-blur-md">
+              <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+              <span>{item.tmdbRating}</span>
             </span>
           )}
 

@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
   const { cleanTitle, extractedYear } = sanitizeSearchTitle(rawQuery);
   const year = paramYear || extractedYear;
 
-  const apiKey =
+  const rawKey =
     process.env.TMDB_API_KEY ||
     process.env.NEXT_PUBLIC_TMDB_API_KEY ||
     DEFAULT_TMDB_KEY;
@@ -52,34 +52,50 @@ export async function GET(request: NextRequest) {
   const isSerie = type === "series";
   const primaryEndpoint = isSerie ? "search/tv" : "search/movie";
 
-  try {
-    // 1. Primeira tentativa: com ano (se houver)
-    let url = `https://api.themoviedb.org/3/${primaryEndpoint}?api_key=${apiKey}&query=${encodeURIComponent(
-      cleanTitle
-    )}&language=pt-BR&include_adult=false`;
+  const buildTmdbUrl = (endpoint: string, queryParams: Record<string, string>) => {
+    const url = new URL(`https://api.themoviedb.org/3/${endpoint}`);
+    url.searchParams.set("language", "pt-BR");
+    url.searchParams.set("include_adult", "false");
 
-    if (year) {
-      url += isSerie ? `&first_air_date_year=${year}` : `&year=${year}`;
+    if (!rawKey.startsWith("ey")) {
+      url.searchParams.set("api_key", rawKey);
     }
 
-    let tmdbRes = await fetch(url, { next: { revalidate: 86400 } });
+    for (const [k, v] of Object.entries(queryParams)) {
+      if (v) url.searchParams.set(k, v);
+    }
+
+    const headers: Record<string, string> = { Accept: "application/json" };
+    if (rawKey.startsWith("ey")) {
+      headers["Authorization"] = `Bearer ${rawKey}`;
+    }
+
+    return { urlString: url.toString(), headers };
+  };
+
+  try {
+    // 1. Primeira tentativa: com ano (se houver)
+    const initialParams: Record<string, string> = { query: cleanTitle };
+    if (year) {
+      if (isSerie) initialParams.first_air_date_year = year;
+      else initialParams.year = year;
+    }
+
+    const { urlString, headers } = buildTmdbUrl(primaryEndpoint, initialParams);
+    let tmdbRes = await fetch(urlString, { headers, next: { revalidate: 86400 } });
     let data = await tmdbRes.json();
 
     // 2. Segunda tentativa: se falhou com o ano, busca sem restrição de ano
     if ((!data.results || data.results.length === 0) && year) {
-      const fallbackUrl = `https://api.themoviedb.org/3/${primaryEndpoint}?api_key=${apiKey}&query=${encodeURIComponent(
-        cleanTitle
-      )}&language=pt-BR&include_adult=false`;
-      tmdbRes = await fetch(fallbackUrl, { next: { revalidate: 86400 } });
+      const fallback = buildTmdbUrl(primaryEndpoint, { query: cleanTitle });
+      tmdbRes = await fetch(fallback.urlString, { headers: fallback.headers, next: { revalidate: 86400 } });
       data = await tmdbRes.json();
     }
 
     // 3. Terceira tentativa: busca multi caso o tipo tenha sido invertido no M3U
     if (!data.results || data.results.length === 0) {
-      const multiUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${encodeURIComponent(
-        cleanTitle
-      )}&language=pt-BR&include_adult=false`;
-      tmdbRes = await fetch(multiUrl, { next: { revalidate: 86400 } });
+      const multi = buildTmdbUrl("search/multi", { query: cleanTitle });
+      tmdbRes = await fetch(multi.urlString, { headers: multi.headers, next: { revalidate: 86400 } });
       data = await tmdbRes.json();
     }
 
@@ -101,15 +117,21 @@ export async function GET(request: NextRequest) {
     if (item.id) {
       try {
         const mediaType = item.media_type || (isSerie ? "tv" : "movie");
-        const detailsUrl = `https://api.themoviedb.org/3/${mediaType}/${item.id}?api_key=${apiKey}&language=pt-BR`;
-        const detailsRes = await fetch(detailsUrl, { next: { revalidate: 86400 } });
+        const detailsReq = buildTmdbUrl(`${mediaType}/${item.id}`, {});
+        const detailsRes = await fetch(detailsReq.urlString, {
+          headers: detailsReq.headers,
+          next: { revalidate: 86400 },
+        });
+
         if (detailsRes.ok) {
           const detailsData = await detailsRes.json();
           if (detailsData.overview && !overview) {
             overview = detailsData.overview;
           }
           if (Array.isArray(detailsData.genres)) {
-            genres = detailsData.genres.map((g: any) => g.name);
+            genres = detailsData.genres
+              .map((g: { id: number; name: string }) => g.name)
+              .filter(Boolean);
           }
         }
       } catch (detailsErr) {
@@ -142,12 +164,13 @@ export async function GET(request: NextRequest) {
         },
       }
     );
-  } catch (error: any) {
-    console.error("Erro na rota TMDB:", error);
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error("Erro na rota TMDB:", err);
     return NextResponse.json(
       {
         found: false,
-        error: error.message || "Erro ao consultar TMDB",
+        error: err?.message || "Erro ao consultar TMDB",
         overview: "Não foi possível carregar a sinopse no momento.",
       },
       { status: 500 }

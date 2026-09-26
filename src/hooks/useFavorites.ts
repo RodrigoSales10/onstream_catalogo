@@ -31,7 +31,7 @@ export function useFavorites() {
   }, []);
 
   useEffect(() => {
-    loadFavorites();
+    const timer = setTimeout(loadFavorites, 0);
 
     const handleStorageChange = () => {
       loadFavorites();
@@ -41,6 +41,7 @@ export function useFavorites() {
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener(EVENT_NAME, handleStorageChange);
       window.removeEventListener("storage", handleStorageChange);
     };
