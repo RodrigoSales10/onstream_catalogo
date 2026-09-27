@@ -7,16 +7,16 @@ import { MatchCard } from "./MatchCard";
 import { Trophy, Calendar, Search, RotateCcw, Loader2 } from "lucide-react";
 
 export const MatchSection: React.FC = () => {
-  const [dayOffset, setDayOffset] = useState<number>(0); // 0 = hoje, -1 = ontem, 1 = amanha
   const [selectedLiga, setSelectedLiga] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [jogos, setJogos] = useState<FutebolJogo[]>([]);
   const [ligas, setLigas] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const activeDateStr = getBrasiliaDateStr(dayOffset);
+  // Sempre focado nos jogos de hoje no fuso oficial de Brasília
+  const activeDateStr = getBrasiliaDateStr(0);
 
-  // Formata a data para exibição (ex: "Sábado, 26 de Setembro")
+  // Formata a data para exibição (ex: "Domingo, 27 de Setembro")
   const formattedDate = (() => {
     const [y, m, d] = activeDateStr.split("-").map(Number);
     const dateObj = new Date(y, m - 1, d);
@@ -55,7 +55,7 @@ export const MatchSection: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full animate-in fade-in duration-300">
-      {/* Header com Abas de Data (Ontem, Hoje, Amanhã) */}
+      {/* Header com Informações da Rodada de Hoje */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-slate-950/70 border border-white/10 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
@@ -63,7 +63,7 @@ export const MatchSection: React.FC = () => {
           </div>
           <div>
             <h2 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
-              <span>Agenda de Jogos na TV</span>
+              <span>Jogos de Hoje na TV</span>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 {jogos.length} {jogos.length === 1 ? "partida" : "partidas"}
               </span>
@@ -72,31 +72,11 @@ export const MatchSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Date Selector Pills */}
-        <div className="flex items-center p-1 rounded-xl bg-slate-900 border border-white/10 w-full sm:w-auto">
-          {[
-            { offset: -1, label: "Ontem" },
-            { offset: 0, label: "Hoje" },
-            { offset: 1, label: "Amanhã" },
-          ].map((tab) => {
-            const isActive = dayOffset === tab.offset;
-            return (
-              <button
-                key={tab.offset}
-                onClick={() => {
-                  setDayOffset(tab.offset);
-                  setSelectedLiga("");
-                }}
-                className={`flex-1 sm:flex-none px-3 sm:px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                  isActive
-                    ? "bg-emerald-500 text-black shadow-[0_0_12px_rgba(16,185,129,0.4)]"
-                    : "text-zinc-400 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+        {/* Indicador de Transmissões ao Vivo de Hoje */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-emerald-500/30 text-emerald-300 text-xs font-bold shadow-inner">
+          <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Agenda de Hoje</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
         </div>
       </div>
 
