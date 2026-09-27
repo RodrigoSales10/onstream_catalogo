@@ -131,6 +131,271 @@ export type Database = {
           },
         ]
       }
+      futebol_times: {
+        Row: {
+          atualizado_em: string
+          criado_em: string
+          escudo_storage_path: string | null
+          escudo_url_origem: string | null
+          fonte_id: string | null
+          id: number
+          nome: string
+          nome_normalizado: string
+          slug: string | null
+          status_imagem: string
+          url_origem: string | null
+        }
+        Insert: {
+          atualizado_em?: string
+          criado_em?: string
+          escudo_storage_path?: string | null
+          escudo_url_origem?: string | null
+          fonte_id?: string | null
+          id?: number
+          nome: string
+          nome_normalizado: string
+          slug?: string | null
+          status_imagem?: string
+          url_origem?: string | null
+        }
+        Update: {
+          atualizado_em?: string
+          criado_em?: string
+          escudo_storage_path?: string | null
+          escudo_url_origem?: string | null
+          fonte_id?: string | null
+          id?: number
+          nome?: string
+          nome_normalizado?: string
+          slug?: string | null
+          status_imagem?: string
+          url_origem?: string | null
+        }
+        Relationships: []
+      }
+      futebol_ligas: {
+        Row: {
+          atualizado_em: string
+          criado_em: string
+          fonte_id: string | null
+          id: number
+          logo_storage_path: string | null
+          logo_url_origem: string | null
+          nome: string
+          nome_normalizado: string
+          slug: string | null
+          status_imagem: string
+          url_origem: string | null
+        }
+        Insert: {
+          atualizado_em?: string
+          criado_em?: string
+          fonte_id?: string | null
+          id?: number
+          logo_storage_path?: string | null
+          logo_url_origem?: string | null
+          nome: string
+          nome_normalizado: string
+          slug?: string | null
+          status_imagem?: string
+          url_origem?: string | null
+        }
+        Update: {
+          atualizado_em?: string
+          criado_em?: string
+          fonte_id?: string | null
+          id?: number
+          logo_storage_path?: string | null
+          logo_url_origem?: string | null
+          nome?: string
+          nome_normalizado?: string
+          slug?: string | null
+          status_imagem?: string
+          url_origem?: string | null
+        }
+        Relationships: []
+      }
+      futebol_canais: {
+        Row: {
+          atualizado_em: string
+          criado_em: string
+          id: number
+          logo_storage_path: string | null
+          logo_url_origem: string | null
+          nome: string
+          nome_normalizado: string
+          status_imagem: string
+        }
+        Insert: {
+          atualizado_em?: string
+          criado_em?: string
+          id?: number
+          logo_storage_path?: string | null
+          logo_url_origem?: string | null
+          nome: string
+          nome_normalizado: string
+          status_imagem?: string
+        }
+        Update: {
+          atualizado_em?: string
+          criado_em?: string
+          id?: number
+          logo_storage_path?: string | null
+          logo_url_origem?: string | null
+          nome?: string
+          nome_normalizado?: string
+          status_imagem?: string
+        }
+        Relationships: []
+      }
+      futebol_jogos: {
+        Row: {
+          atualizado_em: string
+          coletado_em: string
+          data_hora: string
+          data_jogo: string
+          descricao: string | null
+          fonte_id: string
+          hora_jogo: string
+          id: number
+          liga_id: number | null
+          placar_casa: number | null
+          placar_fora: number | null
+          status: string
+          time_casa_id: number
+          time_fora_id: number
+          url_origem: string
+        }
+        Insert: {
+          atualizado_em?: string
+          coletado_em?: string
+          data_hora: string
+          data_jogo: string
+          descricao?: string | null
+          fonte_id: string
+          hora_jogo: string
+          id?: number
+          liga_id?: number | null
+          placar_casa?: number | null
+          placar_fora?: number | null
+          status?: string
+          time_casa_id: number
+          time_fora_id: number
+          url_origem: string
+        }
+        Update: {
+          atualizado_em?: string
+          coletado_em?: string
+          data_hora?: string
+          data_jogo?: string
+          descricao?: string | null
+          fonte_id?: string
+          hora_jogo?: string
+          id?: number
+          liga_id?: number | null
+          placar_casa?: number | null
+          placar_fora?: number | null
+          status?: string
+          time_casa_id?: number
+          time_fora_id?: number
+          url_origem?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "futebol_jogos_liga_id_fkey"
+            columns: ["liga_id"]
+            isOneToOne: false
+            referencedRelation: "futebol_ligas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "futebol_jogos_time_casa_id_fkey"
+            columns: ["time_casa_id"]
+            isOneToOne: false
+            referencedRelation: "futebol_times"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "futebol_jogos_time_fora_id_fkey"
+            columns: ["time_fora_id"]
+            isOneToOne: false
+            referencedRelation: "futebol_times"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      futebol_jogo_canais: {
+        Row: {
+          canal_id: number
+          criado_em: string
+          jogo_id: number
+        }
+        Insert: {
+          canal_id: number
+          criado_em?: string
+          jogo_id: number
+        }
+        Update: {
+          canal_id?: number
+          criado_em?: string
+          jogo_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "futebol_jogo_canais_canal_id_fkey"
+            columns: ["canal_id"]
+            isOneToOne: false
+            referencedRelation: "futebol_canais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "futebol_jogo_canais_jogo_id_fkey"
+            columns: ["jogo_id"]
+            isOneToOne: false
+            referencedRelation: "futebol_jogos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      futebol_sync_logs: {
+        Row: {
+          detalhes: Json | null
+          duracao_ms: number | null
+          finalizado_em: string | null
+          id: number
+          iniciado_em: string
+          mensagem_erro: string | null
+          rotina: string
+          status: string
+          total_imagens: number | null
+          total_jogos: number | null
+        }
+        Insert: {
+          detalhes?: Json | null
+          duracao_ms?: number | null
+          finalizado_em?: string | null
+          id?: number
+          iniciado_em?: string
+          mensagem_erro?: string | null
+          rotina: string
+          status: string
+          total_imagens?: number | null
+          total_jogos?: number | null
+        }
+        Update: {
+          detalhes?: Json | null
+          duracao_ms?: number | null
+          finalizado_em?: string | null
+          id?: number
+          iniciado_em?: string
+          mensagem_erro?: string | null
+          rotina?: string
+          status?: string
+          total_imagens?: number | null
+          total_jogos?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

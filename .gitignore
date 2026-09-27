@@ -46,6 +46,7 @@ next-env.d.ts
 backup.json
 api_tmdb.json
 scripts/test_*.mjs
+scripts/apply_*.mjs
 supabase/.temp
 mcp*.json
 
