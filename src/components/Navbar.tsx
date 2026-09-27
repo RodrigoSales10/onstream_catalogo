@@ -104,7 +104,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   {item.icon}
-                  <span className="hidden xs:inline">{item.label}</span>
+                  <span className="text-[11px] sm:text-xs md:text-sm font-semibold">{item.label}</span>
+                  {item.type === "jogos" && (
+                    <span className="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full animate-pulse">
+                      Novo
+                    </span>
+                  )}
                   {typeof item.badge === "number" && item.badge > 0 && (
                     <span
                       className={`px-1.5 py-0.2 text-[10px] font-extrabold rounded-full transition-transform duration-300 ${

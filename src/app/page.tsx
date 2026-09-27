@@ -39,6 +39,17 @@ export default function Home() {
   const { favorites, favoritesCount } = useFavorites();
   const [, startTransition] = useTransition();
 
+  // Detecta parâmetro de URL (?tab=jogos ou ?tipo=jogos) no carregamento inicial
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab") || params.get("tipo");
+      if (tabParam && ["canais", "filmes", "series", "jogos", "favoritos"].includes(tabParam)) {
+        setActiveType(tabParam as ContentType);
+      }
+    }
+  }, []);
+
   // Gêneros disponíveis nos favoritos salvos
   const favoriteGenres = useMemo(() => {
     if (activeType !== "favoritos") return [];
@@ -348,9 +359,23 @@ export default function Home() {
               </>
             ) : (
               <>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold w-fit">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Grade Completa de Programação & Lançamentos</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold w-fit">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Grade Completa de Programação & Lançamentos</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleTypeChange("jogos")}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.15)] group"
+                  >
+                    <Trophy className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <span>⚽ Ver Jogos de Hoje na TV</span>
+                    <span className="text-[10px] bg-emerald-500 text-black px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider ml-1">
+                      Ao Vivo
+                    </span>
+                  </button>
                 </div>
 
                 <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
