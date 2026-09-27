@@ -202,16 +202,11 @@ serve(async (req) => {
               status = "agendado";
             }
 
-            const placar1Match = /<span id="placar-time1"[^>]*>\s*(\d+)\s*<\/span>/i.exec(detailHtml);
-            const placar2Match = /<span id="placar-time2"[^>]*>\s*(\d+)\s*<\/span>/i.exec(detailHtml);
-
             details = {
               teamLinks,
               ligaSlug,
               ligaFonteId,
               status,
-              placarCasa: placar1Match && status !== "agendado" ? parseInt(placar1Match[1], 10) : null,
-              placarFora: placar2Match && status !== "agendado" ? parseInt(placar2Match[1], 10) : null,
             };
           }
         } catch {
@@ -288,8 +283,8 @@ serve(async (req) => {
               data_jogo: card.dataJogo,
               hora_jogo: card.horaJogo,
               status: details?.status || "agendado",
-              placar_casa: details?.placarCasa ?? null,
-              placar_fora: details?.placarFora ?? null,
+              placar_casa: null,
+              placar_fora: null,
               descricao: card.descricao,
               atualizado_em: new Date().toISOString(),
             },

@@ -290,7 +290,7 @@ async function fetchMatchDetails(relUrl) {
       if (ligaNomeTxt) result.liga.nome = ligaNomeTxt;
     }
 
-    // 4. Placares e Status precisos
+    // 4. Status da Partida
     const statusBadgeMatch = /id="status-badge"[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/i.exec(html);
     const statusBadgeContent = statusBadgeMatch ? statusBadgeMatch[0] : "";
 
@@ -300,13 +300,6 @@ async function fetchMatchDetails(relUrl) {
       result.status = "ao_vivo";
     } else {
       result.status = "agendado";
-    }
-
-    const placar1Match = /<span id="placar-time1"[^>]*>\s*(\d+)\s*<\/span>/i.exec(html);
-    const placar2Match = /<span id="placar-time2"[^>]*>\s*(\d+)\s*<\/span>/i.exec(html);
-    if (placar1Match && placar2Match && result.status !== "agendado") {
-      result.placarCasa = parseInt(placar1Match[1], 10);
-      result.placarFora = parseInt(placar2Match[1], 10);
     }
 
     return result;
@@ -592,10 +585,8 @@ async function main() {
         continue;
       }
 
-      // 4. Upsert do Jogo
+      // 4. Upsert do Jogo (focado em grade, horários e canais de transmissão)
       const statusFinal = details?.status || "agendado";
-      const placarCasa = details?.placarCasa ?? null;
-      const placarFora = details?.placarFora ?? null;
 
       const { data: jogoRecord, error: jogoError } = await supabase
         .from("futebol_jogos")
@@ -610,8 +601,8 @@ async function main() {
             data_jogo: card.dataJogo,
             hora_jogo: card.horaJogo,
             status: statusFinal,
-            placar_casa: placarCasa,
-            placar_fora: placarFora,
+            placar_casa: null,
+            placar_fora: null,
             descricao: card.descricao,
             atualizado_em: new Date().toISOString(),
           },

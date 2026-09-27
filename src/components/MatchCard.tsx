@@ -75,19 +75,11 @@ export const MatchCard: React.FC<MatchCardProps> = ({ jogo }) => {
           </span>
         </div>
 
-        {/* Placar ou VS */}
+        {/* Marcador Central: VS */}
         <div className="col-span-1 flex flex-col items-center justify-center">
-          {typeof jogo.placarCasa === "number" && typeof jogo.placarFora === "number" ? (
-            <div className="flex items-center gap-1.5 text-xl sm:text-2xl font-black text-white bg-black/60 px-2.5 py-1 rounded-xl border border-white/10">
-              <span className="text-emerald-400">{jogo.placarCasa}</span>
-              <span className="text-zinc-500 text-sm">-</span>
-              <span className="text-emerald-400">{jogo.placarFora}</span>
-            </div>
-          ) : (
-            <span className="text-xs font-extrabold uppercase tracking-widest text-zinc-500 bg-white/5 px-2 py-1 rounded-lg">
-              VS
-            </span>
-          )}
+          <span className="text-xs font-black tracking-widest text-zinc-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-xl shadow-inner select-none">
+            VS
+          </span>
         </div>
 
         {/* Time Fora */}
