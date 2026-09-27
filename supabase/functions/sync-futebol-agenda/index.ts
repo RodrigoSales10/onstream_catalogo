@@ -90,11 +90,11 @@ serve(async (req) => {
       while ((match = articleRegex.exec(html)) !== null) {
         const cardHtml = match[1];
 
-        const linkMatch = /<a\s+href="(\/aovivo\/[^"]+?-([a-z0-9]+)\.html)"/i.exec(cardHtml);
+        const linkMatch = /<a\s+href="(\/aovivo\/([^"]+)\.html)"/i.exec(cardHtml);
         if (!linkMatch) continue;
 
         const relUrl = linkMatch[1];
-        const fonteId = linkMatch[2];
+        const fonteId = linkMatch[2]; // ex: "criciuma-x-avai-2745a8d70e"
         const urlOrigem = `${BASE_URL}${relUrl}`;
 
         const titleMatch = /<h3[^>]*>[\s\S]*?<a[^>]*>([\s\S]*?)<\/a>/i.exec(cardHtml);
@@ -191,19 +191,27 @@ serve(async (req) => {
             const ligaFonteId = lastLigaHyphen !== -1 ? fullLigaSlug.slice(lastLigaHyphen + 1) : fullLigaSlug;
 
             let status = "agendado";
-            if (/FIM DE JOGO/i.test(detailHtml)) status = "finalizado";
-            else if (/AO VIVO|INTERVALO|EM ANDAMENTO/i.test(detailHtml)) status = "ao_vivo";
+            const statusBadgeMatch = /id="status-badge"[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/i.exec(detailHtml);
+            const statusBadgeContent = statusBadgeMatch ? statusBadgeMatch[0] : "";
+
+            if (/FIM DE JOGO|ENCERRADO/i.test(statusBadgeContent)) {
+              status = "finalizado";
+            } else if (/bullet|animate-pulse|\b\d+'\b|INTERVALO|EM ANDAMENTO/i.test(statusBadgeContent)) {
+              status = "ao_vivo";
+            } else {
+              status = "agendado";
+            }
 
             const placar1Match = /<span id="placar-time1"[^>]*>\s*(\d+)\s*<\/span>/i.exec(detailHtml);
             const placar2Match = /<span id="placar-time2"[^>]*>\s*(\d+)\s*<\/span>/i.exec(detailHtml);
 
             details = {
               teamLinks,
-              ligaSlug: ligaRegex ? ligaRegex[2] : null,
-              ligaFonteId: ligaRegex ? ligaRegex[3] : null,
+              ligaSlug,
+              ligaFonteId,
               status,
-              placarCasa: placar1Match ? parseInt(placar1Match[1], 10) : null,
-              placarFora: placar2Match ? parseInt(placar2Match[1], 10) : null,
+              placarCasa: placar1Match && status !== "agendado" ? parseInt(placar1Match[1], 10) : null,
+              placarFora: placar2Match && status !== "agendado" ? parseInt(placar2Match[1], 10) : null,
             };
           }
         } catch {

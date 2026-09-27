@@ -58,7 +58,11 @@ serve(async (_req) => {
         }
 
         const imgRes = await fetch(urlOrigem, {
-          headers: { "User-Agent": USER_AGENT },
+          headers: {
+            "User-Agent": USER_AGENT,
+            "Referer": "https://www.futebolnatv.com.br/",
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+          },
         });
 
         if (!imgRes.ok) {

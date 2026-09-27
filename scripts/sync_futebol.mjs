@@ -141,12 +141,12 @@ function parseMatchCards(html, dataJogoStr) {
   while ((match = articleRegex.exec(html)) !== null) {
     const cardHtml = match[1];
 
-    // 1. Link e Fonte ID
-    const linkMatch = /<a\s+href="(\/aovivo\/[^"]+?-([a-z0-9]+)\.html)"/i.exec(cardHtml);
+    // 1. Link e Fonte ID (usa o slug completo do jogo para garantir 100% de unicidade)
+    const linkMatch = /<a\s+href="(\/aovivo\/([^"]+)\.html)"/i.exec(cardHtml);
     if (!linkMatch) continue;
 
     const relUrl = linkMatch[1];
-    const fonteId = linkMatch[2];
+    const fonteId = linkMatch[2]; // Ex: "criciuma-x-avai-2745a8d70e", "crb-x-cuiaba-2745a8d70e"
     const urlOrigem = `${BASE_URL}${relUrl}`;
 
     // 2. Título da partida
@@ -290,18 +290,23 @@ async function fetchMatchDetails(relUrl) {
       if (ligaNomeTxt) result.liga.nome = ligaNomeTxt;
     }
 
-    // 4. Placares e Status
-    const placar1Match = /<span id="placar-time1"[^>]*>\s*(\d+)\s*<\/span>/i.exec(html);
-    const placar2Match = /<span id="placar-time2"[^>]*>\s*(\d+)\s*<\/span>/i.exec(html);
-    if (placar1Match && placar2Match) {
-      result.placarCasa = parseInt(placar1Match[1], 10);
-      result.placarFora = parseInt(placar2Match[1], 10);
+    // 4. Placares e Status precisos
+    const statusBadgeMatch = /id="status-badge"[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/i.exec(html);
+    const statusBadgeContent = statusBadgeMatch ? statusBadgeMatch[0] : "";
+
+    if (/FIM DE JOGO|ENCERRADO/i.test(statusBadgeContent)) {
+      result.status = "finalizado";
+    } else if (/bullet|animate-pulse|\b\d+'\b|INTERVALO|EM ANDAMENTO/i.test(statusBadgeContent)) {
+      result.status = "ao_vivo";
+    } else {
+      result.status = "agendado";
     }
 
-    if (/FIM DE JOGO/i.test(html)) {
-      result.status = "finalizado";
-    } else if (/AO VIVO|INTERVALO|EM ANDAMENTO/i.test(html)) {
-      result.status = "ao_vivo";
+    const placar1Match = /<span id="placar-time1"[^>]*>\s*(\d+)\s*<\/span>/i.exec(html);
+    const placar2Match = /<span id="placar-time2"[^>]*>\s*(\d+)\s*<\/span>/i.exec(html);
+    if (placar1Match && placar2Match && result.status !== "agendado") {
+      result.placarCasa = parseInt(placar1Match[1], 10);
+      result.placarFora = parseInt(placar2Match[1], 10);
     }
 
     return result;
@@ -319,10 +324,17 @@ async function uploadAssetToStorage(folder, remoteUrl) {
 
   try {
     const res = await fetch(remoteUrl, {
-      headers: { "User-Agent": USER_AGENT },
+      headers: {
+        "User-Agent": USER_AGENT,
+        "Referer": "https://www.futebolnatv.com.br/",
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+      },
     });
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`  ⚠️ HTTP ${res.status} ao baixar imagem (${remoteUrl})`);
+      return null;
+    }
 
     const buffer = Buffer.from(await res.arrayBuffer());
     if (buffer.length === 0 || buffer.length > 2097152) return null; // Máx 2MB

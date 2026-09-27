@@ -31,21 +31,24 @@ export const MatchCard: React.FC<MatchCardProps> = ({ jogo }) => {
           {jogo.ligaNome}
         </span>
 
-        {isLive ? (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-black rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.4)]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-            <span>AO VIVO</span>
-          </span>
-        ) : isFinished ? (
-          <span className="px-2 py-0.5 text-[11px] font-bold rounded-md bg-zinc-800 text-zinc-400 border border-white/5">
-            FINALIZADO
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold rounded-md bg-white/5 text-zinc-300 border border-white/10">
-            <Clock className="w-3 h-3 text-emerald-400" />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Horário oficial da partida sempre visível */}
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] sm:text-xs font-bold rounded-lg bg-white/5 text-zinc-200 border border-white/10 shadow-sm">
+            <Clock className="w-3.5 h-3.5 text-emerald-400" />
             <span>{jogo.horaJogo}</span>
           </span>
-        )}
+
+          {isLive ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] sm:text-[11px] font-black rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.4)]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+              <span>AO VIVO</span>
+            </span>
+          ) : isFinished ? (
+            <span className="px-2 py-0.5 text-[10px] sm:text-[11px] font-bold rounded-md bg-zinc-800 text-zinc-400 border border-white/5">
+              FINALIZADO
+            </span>
+          ) : null}
+        </div>
       </div>
 
       {/* Confronto: Time Casa x Time Fora */}
@@ -61,6 +64,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ jogo }) => {
                 className="object-contain p-1"
                 onError={() => setHomeImgError(true)}
                 unoptimized
+                referrerPolicy="no-referrer"
               />
             ) : (
               <Shield className="w-7 h-7 text-zinc-500" />
@@ -97,6 +101,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ jogo }) => {
                 className="object-contain p-1"
                 onError={() => setAwayImgError(true)}
                 unoptimized
+                referrerPolicy="no-referrer"
               />
             ) : (
               <Shield className="w-7 h-7 text-zinc-500" />
