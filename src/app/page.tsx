@@ -8,10 +8,11 @@ import { Navbar } from "@/components/Navbar";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryFilters } from "@/components/CategoryFilters";
 import { DiscoveryPanel } from "@/components/DiscoveryPanel";
+import { MatchSection } from "@/components/MatchSection";
 import { ContentGrid } from "@/components/ContentGrid";
 import { DetailModal } from "@/components/DetailModal";
 import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
-import { Sparkles, ShieldCheck, Zap, HeartHandshake, Heart, Film } from "lucide-react";
+import { Sparkles, ShieldCheck, Zap, HeartHandshake, Heart, Film, Trophy } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Home() {
@@ -110,6 +111,12 @@ export default function Home() {
   useEffect(() => {
     let ignore = false;
 
+    // Se estiver na aba Jogos, a renderização é controlada pelo MatchSection
+    if (activeType === "jogos") {
+      setIsLoading(false);
+      return;
+    }
+
     // Se estiver na aba Favoritos, usa dados locais
     if (activeType === "favoritos") {
       const timer = setTimeout(() => {
@@ -182,7 +189,7 @@ export default function Home() {
   // Ao trocar de aba, reseta filtros específicos e aciona loading
   const handleTypeChange = (newType: ContentType) => {
     if (newType !== activeType) {
-      setIsLoading(newType !== "favoritos");
+      setIsLoading(newType !== "favoritos" && newType !== "jogos");
       setActiveType(newType);
       setSelectedCategory("");
       setSelectedYear("");
@@ -305,6 +312,40 @@ export default function Home() {
                     : "Você ainda não favoritou nenhum canal, filme ou série. Toque no ícone de coração nos cards para criar sua lista personalizada de reprodução."}
                 </p>
               </>
+            ) : activeType === "jogos" ? (
+              <>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold w-fit">
+                  <Trophy className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Agenda Esportiva & Transmissões Ao Vivo</span>
+                </div>
+
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                  Guia de Jogos na{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                    TV e Streaming
+                  </span>
+                </h1>
+
+                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
+                  Acompanhe os horários, placares e canais de transmissão das principais partidas do Brasil e do mundo de ontem, hoje e amanhã. Peça a liberação do seu canal no WhatsApp em poucos segundos.
+                </p>
+
+                {/* Feature Highlights */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm text-zinc-300">
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-emerald-400" />
+                    <span>Transmissão Sem Delay</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <span>Qualidade 4K / Full HD</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <HeartHandshake className="w-4 h-4 text-emerald-400" />
+                    <span>Suporte Imediato</span>
+                  </div>
+                </div>
+              </>
             ) : (
               <>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold w-fit">
@@ -357,48 +398,52 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Search & Filter Bar */}
-        <section className="flex flex-col gap-4 w-full">
-          <SearchBar
-            value={search}
-            onChange={handleSearchChange}
-            activeType={activeType}
-          />
-
-          {categories.length > 0 && (
-            <CategoryFilters
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onSelectCategory={handleCategorySelect}
-              years={years}
-              selectedYear={selectedYear}
-              onSelectYear={handleYearSelect}
+        {/* Search & Filter Bar (Filmes, Séries, Canais, Favoritos) */}
+        {activeType !== "jogos" && (
+          <section className="flex flex-col gap-4 w-full">
+            <SearchBar
+              value={search}
+              onChange={handleSearchChange}
               activeType={activeType}
             />
-          )}
 
-          {/* Discovery & Thermometer Panel (Filmes, Séries & Favoritos) */}
-          {(activeType === "filmes" || activeType === "series" || (activeType === "favoritos" && favorites.length > 0)) && (
-            <DiscoveryPanel
-              activeType={activeType}
-              selectedRatingMin={selectedRatingMin}
-              onSelectRatingMin={handleRatingSelect}
-              genres={genres}
-              selectedGenre={selectedGenre}
-              onSelectGenre={handleGenreSelect}
-              years={years}
-              selectedYear={selectedYear}
-              onSelectYear={handleYearSelect}
-              sortBy={sortBy}
-              onSelectSortBy={handleSortBySelect}
-              onResetFilters={handleResetFilters}
-            />
-          )}
-        </section>
+            {categories.length > 0 && (
+              <CategoryFilters
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onSelectCategory={handleCategorySelect}
+                years={years}
+                selectedYear={selectedYear}
+                onSelectYear={handleYearSelect}
+                activeType={activeType}
+              />
+            )}
+
+            {/* Discovery & Thermometer Panel (Filmes, Séries & Favoritos) */}
+            {(activeType === "filmes" || activeType === "series" || (activeType === "favoritos" && favorites.length > 0)) && (
+              <DiscoveryPanel
+                activeType={activeType}
+                selectedRatingMin={selectedRatingMin}
+                onSelectRatingMin={handleRatingSelect}
+                genres={genres}
+                selectedGenre={selectedGenre}
+                onSelectGenre={handleGenreSelect}
+                years={years}
+                selectedYear={selectedYear}
+                onSelectYear={handleYearSelect}
+                sortBy={sortBy}
+                onSelectSortBy={handleSortBySelect}
+                onResetFilters={handleResetFilters}
+              />
+            )}
+          </section>
+        )}
 
         {/* Content Listing Grid */}
         <section className="w-full">
-          {activeType === "favoritos" && favorites.length === 0 ? (
+          {activeType === "jogos" ? (
+            <MatchSection />
+          ) : activeType === "favoritos" && favorites.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-4 text-center rounded-3xl bg-slate-900/40 border border-white/5 max-w-lg mx-auto">
               <div className="p-4 rounded-full bg-rose-500/10 border border-rose-500/20 mb-4 text-rose-400">
                 <Heart className="w-10 h-10 fill-rose-500/30" />

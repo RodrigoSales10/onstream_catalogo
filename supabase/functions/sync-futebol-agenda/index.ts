@@ -26,17 +26,20 @@ function normalizarNome(nome: string): string {
 
 function calcularDataBrasilia(diaParam: string): string {
   const agora = new Date();
-  const offset = -3 * 60;
-  const utc = agora.getTime() + agora.getTimezoneOffset() * 60000;
-  const brasilia = new Date(utc + offset * 60000);
+  let offsetDays = 0;
+  if (diaParam === "ontem") offsetDays = -1;
+  else if (diaParam === "amanha") offsetDays = 1;
 
-  if (diaParam === "ontem") brasilia.setDate(brasilia.getDate() - 1);
-  else if (diaParam === "amanha") brasilia.setDate(brasilia.getDate() + 1);
+  if (offsetDays !== 0) {
+    agora.setDate(agora.getDate() + offsetDays);
+  }
 
-  const y = brasilia.getFullYear();
-  const m = String(brasilia.getMonth() + 1).padStart(2, "0");
-  const d = String(brasilia.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(agora);
 }
 
 function buildTimestampBrasilia(dateStr: string, timeStr: string): string {
@@ -158,22 +161,34 @@ serve(async (req) => {
           });
           if (detailRes.ok) {
             const detailHtml = await detailRes.text();
-            const teamRegex = /<a\s+href="(\/time\/([a-z0-9\-]+)-([a-z0-9]+))"[^>]*>([\s\S]*?)<\/a>/gi;
+            const teamRegex = /<a\s+href="(\/time\/([^"]+))"[^>]*>([\s\S]*?)<\/a>/gi;
             const teamLinks = [];
             let tMatch;
             while ((tMatch = teamRegex.exec(detailHtml)) !== null) {
               const href = tMatch[1];
-              const slug = tMatch[2];
-              const fonteId = tMatch[3];
-              const inner = tMatch[4];
-              const imgMatch = /<img[^>]+src="([^">]+upload\/teams\/[^">]+)"/i.exec(inner);
+              const fullSlug = tMatch[2];
+              const inner = tMatch[3];
+              const lastHyphen = fullSlug.lastIndexOf("-");
+              const slug = lastHyphen !== -1 ? fullSlug.slice(0, lastHyphen) : fullSlug;
+              const fonteId = lastHyphen !== -1 ? fullSlug.slice(lastHyphen + 1) : fullSlug;
+              const imgMatch = /<img[^>]+src="([^">]+(?:upload\/teams|upload|teams)[^">]+)"/i.exec(inner);
               const escudoUrl = imgMatch ? imgMatch[1] : "";
               const nameMatch = /<p[^>]*>([\s\S]*?)<\/p>/i.exec(inner);
               const nome = nameMatch ? nameMatch[1].replace(/<[^>]+>/g, "").trim() : slug;
               teamLinks.push({ href, slug, fonteId, escudoUrl, nome });
             }
 
-            const ligaRegex = /<a\s+href="(\/liga\/([a-z0-9\-]+)-([a-z0-9]+))"[^>]*>([\s\S]*?)<\/a>/i.exec(detailHtml);
+            const allTeamImgs = Array.from(detailHtml.matchAll(/<img[^>]+src="([^">]+upload\/teams\/[^">]+)"/gi)).map((m) => m[1]);
+            if (teamLinks.length >= 2) {
+              if (!teamLinks[0].escudoUrl && allTeamImgs[0]) teamLinks[0].escudoUrl = allTeamImgs[0];
+              if (!teamLinks[1].escudoUrl && allTeamImgs[1]) teamLinks[1].escudoUrl = allTeamImgs[1];
+            }
+
+            const ligaRegex = /<a\s+href="(\/liga\/([^"]+))"[^>]*>([\s\S]*?)<\/a>/i.exec(detailHtml);
+            const fullLigaSlug = ligaRegex ? ligaRegex[2] : "";
+            const lastLigaHyphen = fullLigaSlug.lastIndexOf("-");
+            const ligaSlug = lastLigaHyphen !== -1 ? fullLigaSlug.slice(0, lastLigaHyphen) : fullLigaSlug;
+            const ligaFonteId = lastLigaHyphen !== -1 ? fullLigaSlug.slice(lastLigaHyphen + 1) : fullLigaSlug;
 
             let status = "agendado";
             if (/FIM DE JOGO/i.test(detailHtml)) status = "finalizado";

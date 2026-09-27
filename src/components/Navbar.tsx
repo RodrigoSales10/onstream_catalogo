@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ContentType } from "@/types/catalog";
-import { Tv, Film, Clapperboard, MessageCircle, Heart, HelpCircle } from "lucide-react";
+import { Tv, Film, Clapperboard, MessageCircle, Heart, HelpCircle, Trophy } from "lucide-react";
 import { buildWhatsAppLink } from "@/services/catalogService";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -40,6 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { type: "canais", label: "Canais", icon: <Tv className="w-4 h-4" /> },
     { type: "filmes", label: "Filmes", icon: <Film className="w-4 h-4" /> },
     { type: "series", label: "Séries", icon: <Clapperboard className="w-4 h-4" /> },
+    { type: "jogos", label: "Jogos", icon: <Trophy className="w-4 h-4 text-emerald-400" /> },
     {
       type: "favoritos",
       label: "Favoritos",

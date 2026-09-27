@@ -3,8 +3,32 @@
  * Conforme especificado em docs/spec/03-api-contract.md
  */
 
-export type ContentType = 'canais' | 'filmes' | 'series' | 'favoritos';
+export type ContentType = 'canais' | 'filmes' | 'series' | 'jogos' | 'favoritos';
 export type SortDirection = 'asc' | 'desc';
+
+export interface FutebolTime {
+  id: number;
+  nome: string;
+  slug?: string | null;
+  escudoUrl?: string | null;
+}
+
+export interface FutebolJogo {
+  id: number;
+  fonteId: string;
+  urlOrigem: string;
+  timeCasa: FutebolTime;
+  timeFora: FutebolTime;
+  ligaNome: string;
+  dataHora: string;
+  dataJogo: string;
+  horaJogo: string;
+  status: 'agendado' | 'ao_vivo' | 'finalizado' | 'cancelado';
+  placarCasa?: number | null;
+  placarFora?: number | null;
+  descricao?: string | null;
+  canais: string[];
+}
 
 export interface TmdbMetadata {
   found: boolean;

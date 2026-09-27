@@ -103,21 +103,20 @@ async function fetchHtml(url) {
  */
 function calcularDataBrasilia(diaParam) {
   const agora = new Date();
-  // Fuso de Brasília UTC-3
-  const offset = -3 * 60;
-  const utc = agora.getTime() + agora.getTimezoneOffset() * 60000;
-  const brasilia = new Date(utc + offset * 60000);
+  let offsetDays = 0;
+  if (diaParam === "ontem") offsetDays = -1;
+  else if (diaParam === "amanha") offsetDays = 1;
 
-  if (diaParam === "ontem") {
-    brasilia.setDate(brasilia.getDate() - 1);
-  } else if (diaParam === "amanha") {
-    brasilia.setDate(brasilia.getDate() + 1);
+  if (offsetDays !== 0) {
+    agora.setDate(agora.getDate() + offsetDays);
   }
 
-  const y = brasilia.getFullYear();
-  const m = String(brasilia.getMonth() + 1).padStart(2, "0");
-  const d = String(brasilia.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(agora);
 }
 
 /**
@@ -249,17 +248,19 @@ async function fetchMatchDetails(relUrl) {
     }
 
     // 2. Extração de times com links e escudos
-    // Exemplo: <a href="/time/corinthians-f-fva2zgfcjm" ...><img src="https://static.futebolnatv.com.br/upload/teams/Cz0kvj9BYw7Dew0eT63KLqYELYI1ou0QE4ZfnD1g.png" ...>
     const teamLinks = [];
-    const teamRegex = /<a\s+href="(\/time\/([a-z0-9\-]+)-([a-z0-9]+))"[^>]*>([\s\S]*?)<\/a>/gi;
+    const teamRegex = /<a\s+href="(\/time\/([^"]+))"[^>]*>([\s\S]*?)<\/a>/gi;
     let tMatch;
     while ((tMatch = teamRegex.exec(html)) !== null) {
       const href = tMatch[1];
-      const slug = tMatch[2];
-      const fonteId = tMatch[3];
-      const inner = tMatch[4];
+      const fullSlug = tMatch[2];
+      const inner = tMatch[3];
 
-      const imgMatch = /<img[^>]+src="([^">]+upload\/teams\/[^">]+)"/i.exec(inner);
+      const lastHyphen = fullSlug.lastIndexOf("-");
+      const slug = lastHyphen !== -1 ? fullSlug.slice(0, lastHyphen) : fullSlug;
+      const fonteId = lastHyphen !== -1 ? fullSlug.slice(lastHyphen + 1) : fullSlug;
+
+      const imgMatch = /<img[^>]+src="([^">]+(?:upload\/teams|upload|teams)[^">]+)"/i.exec(inner);
       const escudoUrl = imgMatch ? imgMatch[1] : "";
 
       const nameMatch = /<p[^>]*>([\s\S]*?)<\/p>/i.exec(inner);
@@ -268,17 +269,24 @@ async function fetchMatchDetails(relUrl) {
       teamLinks.push({ href, slug, fonteId, escudoUrl, nome });
     }
 
+    // Fallback para escudos presentes no HTML
+    const allTeamImgs = Array.from(html.matchAll(/<img[^>]+src="([^">]+upload\/teams\/[^">]+)"/gi)).map((m) => m[1]);
     if (teamLinks.length >= 2) {
+      if (!teamLinks[0].escudoUrl && allTeamImgs[0]) teamLinks[0].escudoUrl = allTeamImgs[0];
+      if (!teamLinks[1].escudoUrl && allTeamImgs[1]) teamLinks[1].escudoUrl = allTeamImgs[1];
+
       result.timeCasa = { ...result.timeCasa, ...teamLinks[0] };
       result.timeFora = { ...result.timeFora, ...teamLinks[1] };
     }
 
     // 3. Extração da Liga
-    const ligaRegex = /<a\s+href="(\/liga\/([a-z0-9\-]+)-([a-z0-9]+))"[^>]*>([\s\S]*?)<\/a>/i.exec(html);
+    const ligaRegex = /<a\s+href="(\/liga\/([^"]+))"[^>]*>([\s\S]*?)<\/a>/i.exec(html);
     if (ligaRegex) {
-      result.liga.slug = ligaRegex[2];
-      result.liga.fonteId = ligaRegex[3];
-      const ligaNomeTxt = ligaRegex[4].replace(/<[^>]+>/g, "").trim();
+      const fullLigaSlug = ligaRegex[2];
+      const lastHyphen = fullLigaSlug.lastIndexOf("-");
+      result.liga.slug = lastHyphen !== -1 ? fullLigaSlug.slice(0, lastHyphen) : fullLigaSlug;
+      result.liga.fonteId = lastHyphen !== -1 ? fullLigaSlug.slice(lastHyphen + 1) : fullLigaSlug;
+      const ligaNomeTxt = ligaRegex[3].replace(/<[^>]+>/g, "").trim();
       if (ligaNomeTxt) result.liga.nome = ligaNomeTxt;
     }
 
