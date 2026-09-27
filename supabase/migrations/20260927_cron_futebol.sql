@@ -1,40 +1,37 @@
 -- ==============================================================================
 -- MIGRATION: 20260927_cron_futebol.sql
--- Descrição: Agendamento automático via pg_cron e pg_net para o Futebol na TV
+-- Descrição: Agendamento automático diário às 01:00 da manhã (Horário de Brasília)
 -- Projeto: onstream_catalogo (siooqwcxgmilrtnolyoc)
 -- ==============================================================================
 
--- 1. Agendamento da Agenda de Hoje (A cada 1 hora no minuto 15)
--- Observação sobre Fuso Horário:
--- O pg_cron do Supabase opera internamente em UTC (GMT+0).
--- O fuso oficial de Brasília é UTC-3 (America/Sao_Paulo).
--- A Edge Function 'sync-futebol-agenda' utiliza 'America/Sao_Paulo' para calcular o dia,
--- portanto qualquer disparo durante as 24 horas do dia cairá com exatidão na data de hoje de Brasília.
--- Além disso, às 03:05 UTC (00:05 Horário de Brasília), ocorre a primeira raspagem logo após a virada da meia-noite.
-
+-- 1. Remoção de agendamentos anteriores
 SELECT cron.unschedule('futebol-agenda-hourly') WHERE EXISTS (
     SELECT 1 FROM cron.job WHERE jobname = 'futebol-agenda-hourly'
 );
-
-SELECT cron.schedule(
-    'futebol-agenda-hourly',
-    '15 * * * *',
-    $$
-    SELECT net.http_get(
-        url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/sync-futebol-agenda?dia=hoje',
-        headers := '{"Accept": "application/json", "User-Agent": "Supabase-Cron/1.0"}'::jsonb
-    );
-    $$
-);
-
--- Disparo específico às 00:05 de Brasília (03:05 UTC) para virada de dia
 SELECT cron.unschedule('futebol-agenda-meia-noite-brt') WHERE EXISTS (
     SELECT 1 FROM cron.job WHERE jobname = 'futebol-agenda-meia-noite-brt'
 );
+SELECT cron.unschedule('futebol-agenda-1am-brt') WHERE EXISTS (
+    SELECT 1 FROM cron.job WHERE jobname = 'futebol-agenda-1am-brt'
+);
+SELECT cron.unschedule('futebol-imagens-5min') WHERE EXISTS (
+    SELECT 1 FROM cron.job WHERE jobname = 'futebol-imagens-5min'
+);
+SELECT cron.unschedule('futebol-imagens-1am-brt') WHERE EXISTS (
+    SELECT 1 FROM cron.job WHERE jobname = 'futebol-imagens-1am-brt'
+);
 
+-- ==============================================================================
+-- 2. Agendamento Diário da Agenda de Jogos às 01:00 BRT (04:00 UTC)
+--
+-- FUSO HORÁRIO:
+-- O pg_cron do Supabase opera nativamente em UTC (GMT+0).
+-- 01:00 da manhã no Horário Oficial de Brasília (UTC-3) corresponde a 04:00 em UTC.
+-- Expressão Cron: '0 4 * * *' (Todo dia às 04:00 UTC = 01:00 BRT).
+-- ==============================================================================
 SELECT cron.schedule(
-    'futebol-agenda-meia-noite-brt',
-    '5 3 * * *',
+    'futebol-agenda-1am-brt',
+    '0 4 * * *',
     $$
     SELECT net.http_get(
         url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/sync-futebol-agenda?dia=hoje',
@@ -43,15 +40,16 @@ SELECT cron.schedule(
     $$
 );
 
--- 2. Agendamento do Processador de Imagens (A cada 5 minutos)
--- Processa lotes de até 20 escudos pendentes com upload para o bucket futebol-assets
-SELECT cron.unschedule('futebol-imagens-5min') WHERE EXISTS (
-    SELECT 1 FROM cron.job WHERE jobname = 'futebol-imagens-5min'
-);
-
+-- ==============================================================================
+-- 3. Agendamento do Download de Escudos para o Storage às 01:05 BRT (04:05 UTC)
+--
+-- Executa 5 minutos após a raspagem da agenda para transferir todos os novos escudos
+-- pendentes para o bucket público 'futebol-assets'.
+-- Expressão Cron: '5 4 * * *' (Todo dia às 04:05 UTC = 01:05 BRT).
+-- ==============================================================================
 SELECT cron.schedule(
-    'futebol-imagens-5min',
-    '*/5 * * * *',
+    'futebol-imagens-1am-brt',
+    '5 4 * * *',
     $$
     SELECT net.http_get(
         url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/sync-futebol-imagens',
