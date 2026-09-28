@@ -295,29 +295,29 @@ export default function Home() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col gap-6 sm:gap-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-12 flex flex-col gap-5 sm:gap-8 overflow-x-hidden">
         {/* Hero Section */}
-        <section className="relative overflow-hidden rounded-3xl p-6 sm:p-10 glass-panel border border-white/10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+        <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-10 glass-panel border border-white/10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
           {/* Background Ambient Glow */}
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col gap-4 max-w-2xl">
+          <div className="relative z-10 flex flex-col gap-3 sm:gap-4 max-w-2xl">
             {activeType === "favoritos" ? (
               <>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold w-fit">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] sm:text-xs font-bold w-fit">
                   <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
                   <span>Sua Coleção Pessoal Salva</span>
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                <h1 className="text-xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
                   Meus Títulos{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-500">
                     Favoritos
                   </span>
                 </h1>
 
-                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
+                <p className="text-xs sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
                   {favoritesCount > 0
                     ? `Você tem ${favoritesCount} título(s) salvos na sua lista. Toque em qualquer card para ver a sinopse completa e pedir liberação imediata no WhatsApp.`
                     : "Você ainda não favoritou nenhum canal, filme ou série. Toque no ícone de coração nos cards para criar sua lista personalizada de reprodução."}
@@ -325,34 +325,34 @@ export default function Home() {
               </>
             ) : activeType === "jogos" ? (
               <>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold w-fit">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] sm:text-xs font-bold w-fit">
                   <Trophy className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Agenda Esportiva & Transmissões Ao Vivo</span>
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                <h1 className="text-xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
                   Guia de Jogos na{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
                     TV e Streaming
                   </span>
                 </h1>
 
-                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
-                  Acompanhe os horários, placares e canais de transmissão das principais partidas do Brasil e do mundo de ontem, hoje e amanhã. Peça a liberação do seu canal no WhatsApp em poucos segundos.
+                <p className="text-xs sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
+                  Acompanhe os horários e canais de transmissão das principais partidas do Brasil e do mundo de hoje. Peça a liberação do seu canal no WhatsApp em poucos segundos.
                 </p>
 
-                {/* Feature Highlights */}
-                <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm text-zinc-300">
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-emerald-400" />
+                {/* Feature Highlights (Carrossel Horizontal no Mobile) */}
+                <div className="flex items-center gap-2 sm:gap-6 pt-1 sm:pt-2 text-[11px] sm:text-sm text-zinc-300 overflow-x-auto scrollbar-none py-1 flex-nowrap w-full">
+                  <div className="flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap bg-white/5 sm:bg-transparent px-2.5 py-1 sm:p-0 rounded-lg">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
                     <span>Transmissão Sem Delay</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <div className="flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap bg-white/5 sm:bg-transparent px-2.5 py-1 sm:p-0 rounded-lg">
+                    <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
                     <span>Qualidade 4K / Full HD</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <HeartHandshake className="w-4 h-4 text-emerald-400" />
+                  <div className="flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap bg-white/5 sm:bg-transparent px-2.5 py-1 sm:p-0 rounded-lg">
+                    <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
                     <span>Suporte Imediato</span>
                   </div>
                 </div>
@@ -360,47 +360,47 @@ export default function Home() {
             ) : (
               <>
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold w-fit">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-[11px] sm:text-xs font-bold w-fit">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Grade Completa de Programação & Lançamentos</span>
+                    <span>Grade de Programação & Lançamentos</span>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => handleTypeChange("jogos")}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.15)] group"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[11px] sm:text-xs font-bold transition-all cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.15)] group"
                   >
                     <Trophy className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                    <span>⚽ Ver Jogos de Hoje na TV</span>
-                    <span className="text-[10px] bg-emerald-500 text-black px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider ml-1">
+                    <span>⚽ Jogos de Hoje</span>
+                    <span className="text-[9px] bg-emerald-500 text-black px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider ml-0.5">
                       Ao Vivo
                     </span>
                   </button>
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                <h1 className="text-xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
                   O Melhor do Entretenimento em{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
                     Alta Definição
                   </span>
                 </h1>
 
-                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
+                <p className="text-xs sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
                   Navegue por filmes recém-lançados, suas séries favoritas e canais ao vivo com futebol, esportes e variedades. Escolha o que deseja assistir e libere seu teste de 6 horas grátis no WhatsApp.
                 </p>
 
-                {/* Feature Highlights */}
-                <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm text-zinc-300">
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-cyan-400" />
+                {/* Feature Highlights (Carrossel Horizontal no Mobile) */}
+                <div className="flex items-center gap-2 sm:gap-6 pt-1 sm:pt-2 text-[11px] sm:text-sm text-zinc-300 overflow-x-auto scrollbar-none py-1 flex-nowrap w-full">
+                  <div className="flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap bg-white/5 sm:bg-transparent px-2.5 py-1 sm:p-0 rounded-lg">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
                     <span>Estabilidade 99.9%</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                  <div className="flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap bg-white/5 sm:bg-transparent px-2.5 py-1 sm:p-0 rounded-lg">
+                    <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
                     <span>Sem Travamentos</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <HeartHandshake className="w-4 h-4 text-cyan-400" />
+                  <div className="flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap bg-white/5 sm:bg-transparent px-2.5 py-1 sm:p-0 rounded-lg">
+                    <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
                     <span>Suporte Dedicado</span>
                   </div>
                 </div>
@@ -503,7 +503,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/5 py-8 mt-12 bg-slate-950/80">
+      <footer className="w-full border-t border-white/5 py-8 mt-12 mb-16 md:mb-0 bg-slate-950/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
           <div className="flex items-center gap-3">
             <div className="relative w-7 h-7 rounded-xl overflow-hidden border border-white/10 shadow-sm flex-shrink-0 bg-black/40">

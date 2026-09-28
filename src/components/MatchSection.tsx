@@ -94,15 +94,15 @@ export const MatchSection: React.FC = () => {
           />
         </div>
 
-        {/* Ligas Pills */}
+        {/* Ligas Pills (Carrossel Horizontal Mobile-Friendly) */}
         {ligas.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1 w-full max-w-full flex-nowrap">
             <button
               onClick={() => setSelectedLiga("")}
-              className={`px-3 py-1 text-xs font-bold rounded-lg transition-all border ${
+              className={`flex-shrink-0 whitespace-nowrap px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all border ${
                 selectedLiga === ""
-                  ? "bg-emerald-500 text-black border-emerald-400 font-extrabold"
-                  : "bg-slate-900 text-zinc-400 hover:text-white border-white/5"
+                  ? "bg-emerald-500 text-black border-emerald-400 font-extrabold shadow-[0_0_12px_rgba(16,185,129,0.35)]"
+                  : "bg-slate-900/90 text-zinc-400 hover:text-white border-white/5"
               }`}
             >
               Todas as Ligas
@@ -113,10 +113,10 @@ export const MatchSection: React.FC = () => {
                 <button
                   key={liga}
                   onClick={() => setSelectedLiga(isSelected ? "" : liga)}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all border ${
+                  className={`flex-shrink-0 whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-xl transition-all border ${
                     isSelected
                       ? "bg-emerald-500/25 text-emerald-300 border-emerald-400 font-bold shadow-[0_0_10px_rgba(16,185,129,0.3)]"
-                      : "bg-slate-900 text-zinc-400 hover:text-zinc-200 border-white/5 hover:border-white/20"
+                      : "bg-slate-900/90 text-zinc-400 hover:text-zinc-200 border-white/5 hover:border-white/20"
                   }`}
                 >
                   {liga}
