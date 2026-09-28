@@ -26,7 +26,7 @@ function sanitizarLogo(url) {
 
 async function upsertLote(itens) {
   if (!itens || itens.length === 0) return true;
-  const url = `${SUPABASE_URL}/rest/v1/catalogo_itens?on_conflict=fonte_id,tipo,nome,grupo`;
+  const url = `${SUPABASE_URL}/rest/v1/catalogo_itens?on_conflict=fonte_id,tipo,nome,grupo,ano`;
 
   const res = await fetch(url, {
     method: "POST",
@@ -84,7 +84,8 @@ async function sincronizarTipo(tipo) {
       const nomeFinal = (tipo === "series" ? (item.nome_serie || item.nome) : item.nome) || "Sem Nome";
       const logoFinal = sanitizarLogo(item.logo_url);
       const grupoFinal = (item.grupo || "Geral").trim();
-      const dedupKey = `1::${tipo}::${nomeFinal.trim()}::${grupoFinal}`;
+      const anoKey = ano !== null ? String(ano) : "null";
+      const dedupKey = `1::${tipo}::${nomeFinal.trim()}::${grupoFinal}::${anoKey}`;
 
       if (!seen.has(dedupKey)) {
         seen.add(dedupKey);
