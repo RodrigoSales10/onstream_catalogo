@@ -35,7 +35,12 @@ SELECT cron.schedule(
     $$
     SELECT net.http_get(
         url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/sync-futebol-agenda?dia=hoje',
-        headers := '{"Accept": "application/json", "User-Agent": "Supabase-Cron/1.0"}'::jsonb
+        headers := jsonb_build_object(
+            'Accept', 'application/json',
+            'User-Agent', 'Supabase-Cron/1.0',
+            'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpb29xd2N4Z21pbHJ0bm9seW9jIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDIxMTc5OSwiZXhwIjoyMTA1Nzg3Nzk5fQ.CHK_OtTquEzePL4-dybsctFdrmry4SqedEA-YlkngvA',
+            'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpb29xd2N4Z21pbHJ0bm9seW9jIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDIxMTc5OSwiZXhwIjoyMTA1Nzg3Nzk5fQ.CHK_OtTquEzePL4-dybsctFdrmry4SqedEA-YlkngvA'
+        )
     );
     $$
 );
@@ -53,7 +58,12 @@ SELECT cron.schedule(
     $$
     SELECT net.http_get(
         url := 'https://siooqwcxgmilrtnolyoc.supabase.co/functions/v1/sync-futebol-imagens',
-        headers := '{"Accept": "application/json", "User-Agent": "Supabase-Cron/1.0"}'::jsonb
+        headers := jsonb_build_object(
+            'Accept', 'application/json',
+            'User-Agent', 'Supabase-Cron/1.0',
+            'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpb29xd2N4Z21pbHJ0bm9seW9jIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDIxMTc5OSwiZXhwIjoyMTA1Nzg3Nzk5fQ.CHK_OtTquEzePL4-dybsctFdrmry4SqedEA-YlkngvA',
+            'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpb29xd2N4Z21pbHJ0bm9seW9jIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDIxMTc5OSwiZXhwIjoyMTA1Nzg3Nzk5fQ.CHK_OtTquEzePL4-dybsctFdrmry4SqedEA-YlkngvA'
+        )
     );
     $$
 );

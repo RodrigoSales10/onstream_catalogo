@@ -1,0 +1,7 @@
+project_id = "siooqwcxgmilrtnolyoc"
+
+[functions.sync-futebol-agenda]
+verify_jwt = false
+
+[functions.sync-futebol-imagens]
+verify_jwt = false
