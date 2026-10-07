@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "**" },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/lista-filmes:page(\\d+)",
+        destination: "/lista-filmes/:page",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
