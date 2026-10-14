@@ -11,6 +11,9 @@ export function getAssetUrl(storagePath: string | null | undefined, fallbackUrl?
     return `${SUPABASE_URL}/storage/v1/object/public/futebol-assets/${storagePath}`;
   }
   if (fallbackUrl && fallbackUrl.startsWith("http")) {
+    if (fallbackUrl.includes("futebolnatv.com.br")) {
+      return `/api/futebol/image-proxy?url=${encodeURIComponent(fallbackUrl)}`;
+    }
     return fallbackUrl;
   }
   return null;

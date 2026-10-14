@@ -64,7 +64,7 @@ const hasFlag = (name) => args.includes(`--${name}`);
 
 const DIA_PARAM = getArg("dia", "hoje"); // 'hoje', 'ontem', 'amanha', 'todos'
 const LIMIT_PARAM = parseInt(getArg("limit", "0"), 10);
-const SHOULD_DOWNLOAD_IMAGES = hasFlag("download-images");
+const SHOULD_DOWNLOAD_IMAGES = !hasFlag("skip-images");
 
 // Normalização de nomes para deduplicação semântica
 function normalizarNome(nome) {
