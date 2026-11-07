@@ -135,57 +135,118 @@ function buildTimestampBrasilia(dateStr, timeStr) {
  */
 function parseMatchCards(html, dataJogoStr) {
   const matches = [];
-  const articleRegex = /<article\b[^>]*>([\s\S]*?)<\/article>/gi;
+
+  // Padrão 1: Novo layout Futebol na TV (articles com class="match")
+  const matchRegex = /<article\s+class="match"([^>]*)>([\s\S]*?)<\/article>/gi;
   let match;
 
-  while ((match = articleRegex.exec(html)) !== null) {
-    const cardHtml = match[1];
+  while ((match = matchRegex.exec(html)) !== null) {
+    const attrsStr = match[1];
+    const body = match[2];
 
-    // 1. Link e Fonte ID (usa o slug completo do jogo para garantir 100% de unicidade)
-    const linkMatch = /<a\s+href="(\/aovivo\/([^"]+)\.html)"/i.exec(cardHtml);
-    if (!linkMatch) continue;
-
-    const relUrl = linkMatch[1];
-    const fonteId = linkMatch[2]; // Ex: "criciuma-x-avai-2745a8d70e", "crb-x-cuiaba-2745a8d70e"
-    const urlOrigem = `${BASE_URL}${relUrl}`;
-
-    // 2. Título da partida
-    const titleMatch = /<h3[^>]*>[\s\S]*?<a[^>]*>([\s\S]*?)<\/a>/i.exec(cardHtml);
-    let rawTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, "").trim() : "";
-    rawTitle = rawTitle.replace(/^Onde assistir\s+/i, "").replace(/\s+ao vivo\??$/i, "").trim();
-
-    // 3. Times Casa x Fora
-    let timeCasaNome = "";
-    let timeForaNome = "";
-    if (rawTitle.includes(" x ")) {
-      const parts = rawTitle.split(" x ");
-      timeCasaNome = parts[0].trim();
-      timeForaNome = parts.slice(1).join(" x ").trim();
-    } else if (rawTitle.includes(" X ")) {
-      const parts = rawTitle.split(" X ");
-      timeCasaNome = parts[0].trim();
-      timeForaNome = parts.slice(1).join(" X ").trim();
+    // Extrai atributos data-*
+    const attrs = {};
+    const attrRegex = /data-([a-z0-9_-]+)="([^"]*)"/gi;
+    let aMatch;
+    while ((aMatch = attrRegex.exec(attrsStr)) !== null) {
+      attrs[aMatch[1]] = aMatch[2];
     }
 
-    // 4. Liga
-    const ligaMatch = /<div class="mt-2[^>]*>[\s\S]*?<span class="font-medium[^>]*>([\s\S]*?)<\/span>/i.exec(cardHtml);
-    const ligaNome = ligaMatch ? ligaMatch[1].replace(/<[^>]+>/g, "").trim() : "Futebol Geral";
+    // Link, URL e Fonte ID
+    const linkMatch =
+      /<a\s+href="([^"]+)"[^>]*aria-label="([^"]*)"/i.exec(body) ||
+      /<a\s+href="(\/aovivo\/([^"]+)\.html)"/i.exec(body);
+    const relUrl = linkMatch ? linkMatch[1] : "";
+    const ariaLabel = linkMatch && linkMatch[2] ? linkMatch[2].trim() : "";
 
-    // 5. Horário
-    const horaMatch = /<span class="tabular-nums">⏱\s*(\d{1,2}:\d{2})h?<\/span>/i.exec(cardHtml);
-    const horaJogo = horaMatch ? horaMatch[1].trim() : "00:00";
+    let fonteId = "";
+    if (relUrl) {
+      const slugMatch = /\/aovivo\/([^/]+)\.html/i.exec(relUrl);
+      if (slugMatch) fonteId = slugMatch[1];
+    }
+    if (!fonteId && attrs.slot) {
+      fonteId = attrs.slot;
+    }
+    if (!fonteId && attrs.h) {
+      fonteId = `jogo-${attrs.h}`;
+    }
 
-    // 6. Descrição contextual
-    const descMatch = /<p class="mt-3 text-sm[^>]*>([\s\S]*?)<\/p>/i.exec(cardHtml);
-    const descricao = descMatch ? descMatch[1].replace(/<[^>]+>/g, "").trim() : null;
+    const urlOrigem = relUrl ? `${BASE_URL}${relUrl}` : BASE_URL;
 
-    // 7. Canais de transmissão
+    // Liga e Fase/Rodada
+    const leagueMatch = /<div class="m-head">[\s\S]*?<p><b>([\s\S]*?)<\/b>([\s\S]*?)<\/p>/i.exec(body);
+    const ligaNome = leagueMatch ? leagueMatch[1].replace(/<[^>]+>/g, "").trim() : "Futebol Geral";
+    const faseOuRodada = leagueMatch ? leagueMatch[2].replace(/<[^>]+>/g, "").replace(/^[\s-]+/, "").trim() : "";
+
+    // Times: <div class="m-team ...">...</div>
+    const teams = [];
+    const teamBlockRegex = /<div class="m-team\b[^"]*"[^>]*>([\s\S]*?)<\/div>\s*(?=<div class="m-team\b|<\/div>)/gi;
+    let tMatch;
+    while ((tMatch = teamBlockRegex.exec(body)) !== null) {
+      const tb = tMatch[1];
+      const imgM = /<img[^>]+src="([^"]+)"[^>]*alt="([^"]*)"/i.exec(tb);
+      const nameM = /<span class="m-name">([\s\S]*?)<\/span>/i.exec(tb);
+      const scoreM = /<span class="m-score">(\d+)<\/span>/i.exec(tb);
+
+      const tNome = nameM ? nameM[1].replace(/<[^>]+>/g, "").trim() : (imgM && imgM[2] ? imgM[2].trim() : "");
+      const tImg = imgM ? imgM[1].trim() : "";
+      const tPlacar = scoreM ? parseInt(scoreM[1], 10) : null;
+
+      teams.push({
+        nome: tNome,
+        escudoUrl: tImg,
+        placar: tPlacar,
+      });
+    }
+
+    let timeCasaNome = teams[0]?.nome || "";
+    let timeCasaEscudo = teams[0]?.escudoUrl || "";
+    let placarCasa = teams[0]?.placar ?? null;
+
+    let timeForaNome = teams[1]?.nome || "";
+    let timeForaEscudo = teams[1]?.escudoUrl || "";
+    let placarFora = teams[1]?.placar ?? null;
+
+    if ((!timeCasaNome || !timeForaNome) && ariaLabel) {
+      const separator = ariaLabel.includes(" x ") ? " x " : (ariaLabel.includes(" X ") ? " X " : null);
+      if (separator) {
+        const parts = ariaLabel.split(separator);
+        if (!timeCasaNome) timeCasaNome = parts[0].trim();
+        if (!timeForaNome) timeForaNome = parts.slice(1).join(separator).trim();
+      }
+    }
+
+    // Horário
+    const timeMatch = /<div class="m-time">([\s\S]*?)<\/div>/i.exec(body);
+    const rawTimeText = timeMatch ? timeMatch[1].replace(/<[^>]+>/g, " ").trim() : "";
+    const hhmmMatch = /\b(\d{1,2}:\d{2})\b/.exec(rawTimeText);
+    const horaJogo = hhmmMatch ? hhmmMatch[1] : "00:00";
+
+    // Data/Hora timestamptz
+    let dataHoraIso;
+    if (attrs.ts && !isNaN(parseInt(attrs.ts, 10))) {
+      const dateFromTs = new Date(parseInt(attrs.ts, 10) * 1000);
+      dataHoraIso = dateFromTs.toISOString();
+    } else {
+      dataHoraIso = buildTimestampBrasilia(dataJogoStr, horaJogo);
+    }
+
+    // Status
+    const statusRaw = (attrs.status || "").toLowerCase();
+    let status = "agendado";
+    if (statusRaw === "live" || statusRaw === "ao_vivo" || /'\b|AO VIVO|INTERVALO/i.test(rawTimeText)) {
+      status = "ao_vivo";
+    } else if (statusRaw === "final" || statusRaw === "finished" || /FIM|ENCERRADO/i.test(rawTimeText)) {
+      status = "finalizado";
+    }
+
+    // Canais de transmissão
     const canais = [];
-    const canaisContainerMatch = /<div class="mt-3 flex flex-wrap gap-1.5">([\s\S]*?)<\/div>/i.exec(cardHtml);
-    if (canaisContainerMatch) {
-      const canalBadgeRegex = /<span[^>]*>([\s\S]*?)<\/span>/gi;
+    const channelsContainer = /<div class="m-channels\b[^"]*">([\s\S]*?)<\/div>/i.exec(body);
+    if (channelsContainer) {
+      const canalRegex = /<b>([\s\S]*?)<\/b>/gi;
       let cMatch;
-      while ((cMatch = canalBadgeRegex.exec(canaisContainerMatch[1])) !== null) {
+      while ((cMatch = canalRegex.exec(channelsContainer[1])) !== null) {
         const cNome = cMatch[1].replace(/<[^>]+>/g, "").trim();
         if (cNome && !canais.includes(cNome)) {
           canais.push(cNome);
@@ -193,21 +254,104 @@ function parseMatchCards(html, dataJogoStr) {
       }
     }
 
-    const dataHoraIso = buildTimestampBrasilia(dataJogoStr, horaJogo);
+    if (fonteId && (timeCasaNome || timeForaNome)) {
+      matches.push({
+        fonteId,
+        urlOrigem,
+        relUrl,
+        timeCasaNome,
+        timeCasaEscudo,
+        timeForaNome,
+        timeForaEscudo,
+        ligaNome,
+        faseOuRodada,
+        horaJogo,
+        dataJogo: dataJogoStr,
+        dataHora: dataHoraIso,
+        status,
+        placarCasa,
+        placarFora,
+        descricao: faseOuRodada ? `${ligaNome} - ${faseOuRodada}` : null,
+        canais,
+      });
+    }
+  }
 
-    matches.push({
-      fonteId,
-      urlOrigem,
-      relUrl,
-      timeCasaNome,
-      timeForaNome,
-      ligaNome,
-      horaJogo,
-      dataJogo: dataJogoStr,
-      dataHora: dataHoraIso,
-      descricao,
-      canais,
-    });
+  // Padrão 2 (Legado): Se layout antigo for servido
+  if (matches.length === 0) {
+    const articleRegex = /<article\b[^>]*>([\s\S]*?)<\/article>/gi;
+    let match;
+
+    while ((match = articleRegex.exec(html)) !== null) {
+      const cardHtml = match[1];
+
+      const linkMatch = /<a\s+href="(\/aovivo\/([^"]+)\.html)"/i.exec(cardHtml);
+      if (!linkMatch) continue;
+
+      const relUrl = linkMatch[1];
+      const fonteId = linkMatch[2];
+      const urlOrigem = `${BASE_URL}${relUrl}`;
+
+      const titleMatch = /<h3[^>]*>[\s\S]*?<a[^>]*>([\s\S]*?)<\/a>/i.exec(cardHtml);
+      let rawTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, "").trim() : "";
+      rawTitle = rawTitle.replace(/^Onde assistir\s+/i, "").replace(/\s+ao vivo\??$/i, "").trim();
+
+      let timeCasaNome = "";
+      let timeForaNome = "";
+      if (rawTitle.includes(" x ")) {
+        const parts = rawTitle.split(" x ");
+        timeCasaNome = parts[0].trim();
+        timeForaNome = parts.slice(1).join(" x ").trim();
+      } else if (rawTitle.includes(" X ")) {
+        const parts = rawTitle.split(" X ");
+        timeCasaNome = parts[0].trim();
+        timeForaNome = parts.slice(1).join(" X ").trim();
+      }
+
+      const ligaMatch = /<div class="mt-2[^>]*>[\s\S]*?<span class="font-medium[^>]*>([\s\S]*?)<\/span>/i.exec(cardHtml);
+      const ligaNome = ligaMatch ? ligaMatch[1].replace(/<[^>]+>/g, "").trim() : "Futebol Geral";
+
+      const horaMatch = /<span class="tabular-nums">⏱\s*(\d{1,2}:\d{2})h?<\/span>/i.exec(cardHtml);
+      const horaJogo = horaMatch ? horaMatch[1].trim() : "00:00";
+
+      const descMatch = /<p class="mt-3 text-sm[^>]*>([\s\S]*?)<\/p>/i.exec(cardHtml);
+      const descricao = descMatch ? descMatch[1].replace(/<[^>]+>/g, "").trim() : null;
+
+      const canais = [];
+      const canaisContainerMatch = /<div class="mt-3 flex flex-wrap gap-1.5">([\s\S]*?)<\/div>/i.exec(cardHtml);
+      if (canaisContainerMatch) {
+        const canalBadgeRegex = /<span[^>]*>([\s\S]*?)<\/span>/gi;
+        let cMatch;
+        while ((cMatch = canalBadgeRegex.exec(canaisContainerMatch[1])) !== null) {
+          const cNome = cMatch[1].replace(/<[^>]+>/g, "").trim();
+          if (cNome && !canais.includes(cNome)) {
+            canais.push(cNome);
+          }
+        }
+      }
+
+      const dataHoraIso = buildTimestampBrasilia(dataJogoStr, horaJogo);
+
+      matches.push({
+        fonteId,
+        urlOrigem,
+        relUrl,
+        timeCasaNome,
+        timeCasaEscudo: "",
+        timeForaNome,
+        timeForaEscudo: "",
+        ligaNome,
+        faseOuRodada: "",
+        horaJogo,
+        dataJogo: dataJogoStr,
+        dataHora: dataHoraIso,
+        status: "agendado",
+        placarCasa: null,
+        placarFora: null,
+        descricao,
+        canais,
+      });
+    }
   }
 
   return matches;
@@ -543,31 +687,38 @@ async function main() {
       const card = cardsToProcess[i];
       console.log(`\n[${i + 1}/${cardsToProcess.length}] ${card.timeCasaNome} x ${card.timeForaNome} (${card.horaJogo})`);
 
-      // 1. Busca detalhes da partida para ter escudos e IDs
-      await sleep(180); // rate limiting respeitoso
-      const details = await fetchMatchDetails(card.relUrl);
+      // 1. Otimização: Só consulta página de detalhes se faltar escudo ou time no card da listagem
+      let details = null;
+      const precisaDetalhes =
+        (!card.timeCasaEscudo || !card.timeForaEscudo || !card.timeCasaNome || !card.timeForaNome) &&
+        card.relUrl;
 
-      // 2. Prepara times com dados enriquecidos
+      if (precisaDetalhes) {
+        await sleep(150);
+        details = await fetchMatchDetails(card.relUrl);
+      }
+
+      // 2. Prepara times com dados enriquecidos (prioriza dados completos extraídos do card)
       const casaData = {
-        nome: details?.timeCasa?.nome || card.timeCasaNome,
-        slug: details?.timeCasa?.slug,
-        fonteId: details?.timeCasa?.fonteId,
-        urlOrigem: details?.timeCasa?.href ? `${BASE_URL}${details.timeCasa.href}` : null,
-        escudoUrl: details?.timeCasa?.escudoUrl,
+        nome: card.timeCasaNome || details?.timeCasa?.nome,
+        slug: details?.timeCasa?.slug || null,
+        fonteId: details?.timeCasa?.fonteId || null,
+        urlOrigem: details?.timeCasa?.href ? `${BASE_URL}${details.timeCasa.href}` : (card.relUrl ? `${BASE_URL}${card.relUrl}` : null),
+        escudoUrl: card.timeCasaEscudo || details?.timeCasa?.escudoUrl || null,
       };
 
       const foraData = {
-        nome: details?.timeFora?.nome || card.timeForaNome,
-        slug: details?.timeFora?.slug,
-        fonteId: details?.timeFora?.fonteId,
-        urlOrigem: details?.timeFora?.href ? `${BASE_URL}${details.timeFora.href}` : null,
-        escudoUrl: details?.timeFora?.escudoUrl,
+        nome: card.timeForaNome || details?.timeFora?.nome,
+        slug: details?.timeFora?.slug || null,
+        fonteId: details?.timeFora?.fonteId || null,
+        urlOrigem: details?.timeFora?.href ? `${BASE_URL}${details.timeFora.href}` : (card.relUrl ? `${BASE_URL}${card.relUrl}` : null),
+        escudoUrl: card.timeForaEscudo || details?.timeFora?.escudoUrl || null,
       };
 
       const ligaData = {
-        nome: details?.liga?.nome || card.ligaNome,
-        slug: details?.liga?.slug,
-        fonteId: details?.liga?.fonteId,
+        nome: card.ligaNome || details?.liga?.nome || "Futebol Geral",
+        slug: details?.liga?.slug || null,
+        fonteId: details?.liga?.fonteId || null,
       };
 
       // 3. Upsert de Times e Liga
@@ -586,7 +737,7 @@ async function main() {
       }
 
       // 4. Upsert do Jogo (focado em grade, horários e canais de transmissão)
-      const statusFinal = details?.status || "agendado";
+      const statusFinal = card.status || details?.status || "agendado";
 
       const { data: jogoRecord, error: jogoError } = await supabase
         .from("futebol_jogos")
@@ -601,8 +752,8 @@ async function main() {
             data_jogo: card.dataJogo,
             hora_jogo: card.horaJogo,
             status: statusFinal,
-            placar_casa: null,
-            placar_fora: null,
+            placar_casa: card.placarCasa ?? details?.placarCasa ?? null,
+            placar_fora: card.placarFora ?? details?.placarFora ?? null,
             descricao: card.descricao,
             atualizado_em: new Date().toISOString(),
           },

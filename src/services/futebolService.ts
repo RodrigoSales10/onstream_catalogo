@@ -36,6 +36,42 @@ export function getBrasiliaDateStr(offsetDays = 0): string {
   }).format(date);
 }
 
+interface RawFutebolJogo {
+  id: number;
+  fonte_id: string;
+  url_origem: string;
+  data_hora: string;
+  data_jogo: string;
+  hora_jogo: string;
+  status: string;
+  placar_casa: number | null;
+  placar_fora: number | null;
+  descricao: string | null;
+  time_casa: {
+    id: number;
+    nome: string;
+    slug?: string | null;
+    escudo_storage_path?: string | null;
+    escudo_url_origem?: string | null;
+  } | null;
+  time_fora: {
+    id: number;
+    nome: string;
+    slug?: string | null;
+    escudo_storage_path?: string | null;
+    escudo_url_origem?: string | null;
+  } | null;
+  liga: {
+    id: number;
+    nome: string;
+  } | null;
+  transmissoes: Array<{
+    canal: {
+      nome: string;
+    } | null;
+  }> | null;
+}
+
 /**
  * Busca partidas de futebol no Supabase
  */
@@ -75,28 +111,28 @@ export async function fetchFutebolJogos(params?: {
 
     const ligasSet = new Set<string>();
 
-    const jogos: FutebolJogo[] = (data || []).map((raw: any) => {
+    const jogos: FutebolJogo[] = (data as unknown as RawFutebolJogo[] || []).map((raw) => {
       const tc = raw.time_casa;
       const tf = raw.time_fora;
       const ligaNome = raw.liga?.nome || "Futebol Geral";
       ligasSet.add(ligaNome);
 
       const canais = (raw.transmissoes || [])
-        .map((t: any) => t.canal?.nome)
-        .filter(Boolean);
+        .map((t) => t.canal?.nome)
+        .filter((nome): nome is string => Boolean(nome));
 
       return {
         id: raw.id,
         fonteId: raw.fonte_id,
         urlOrigem: raw.url_origem,
         timeCasa: {
-          id: tc?.id,
+          id: tc?.id ?? 0,
           nome: tc?.nome || "Time Casa",
           slug: tc?.slug,
           escudoUrl: getAssetUrl(tc?.escudo_storage_path, tc?.escudo_url_origem),
         },
         timeFora: {
-          id: tf?.id,
+          id: tf?.id ?? 0,
           nome: tf?.nome || "Time Fora",
           slug: tf?.slug,
           escudoUrl: getAssetUrl(tf?.escudo_storage_path, tf?.escudo_url_origem),
@@ -105,7 +141,7 @@ export async function fetchFutebolJogos(params?: {
         dataHora: raw.data_hora,
         dataJogo: raw.data_jogo,
         horaJogo: raw.hora_jogo,
-        status: raw.status,
+        status: (raw.status as FutebolJogo["status"]) || "agendado",
         placarCasa: raw.placar_casa,
         placarFora: raw.placar_fora,
         descricao: raw.descricao,
