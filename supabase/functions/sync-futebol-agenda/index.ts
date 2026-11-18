@@ -4,7 +4,7 @@
  * Agenda e sincronização periódica de jogos do Futebol na TV:
  * - Consulta as páginas de ontem, hoje e amanhã (ou via query param ?dia=hoje|ontem|amanha|todos)
  * - Extrai times, ligas, canais de transmissão e horários (timestamptz America/Sao_Paulo)
- * - Executa upsert idempotente nas tabelas futebol_*
+ * - Executa upsert seguro e resiliente nas tabelas futebol_*
  * - Registra logs de execução em futebol_sync_logs
  */
 
@@ -12,7 +12,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 
 const BASE_URL = "https://www.futebolnatv.com.br";
-const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
+const USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
 
 function normalizarNome(nome: string): string {
   if (!nome) return "";
@@ -48,6 +49,116 @@ function buildTimestampBrasilia(dateStr: string, timeStr: string): string {
   const hPad = String(parseInt(hh || "0", 10)).padStart(2, "0");
   const mPad = String(parseInt(mm || "0", 10)).padStart(2, "0");
   return `${dateStr}T${hPad}:${mPad}:00-03:00`;
+}
+
+// Upsert seguro de Time (sem depender de constraint unique em nome_normalizado)
+async function upsertTime(
+  supabase: any,
+  timeData: {
+    nome: string;
+    slug?: string | null;
+    fonteId?: string | null;
+    escudoUrl?: string | null;
+    urlOrigem?: string | null;
+  }
+): Promise<number | null> {
+  const nome = timeData.nome.trim();
+  const nomeNorm = normalizarNome(nome);
+  const fonteId = timeData.fonteId || null;
+
+  let query = supabase.from("futebol_times").select("id, escudo_storage_path, status_imagem");
+  if (fonteId) {
+    query = query.eq("fonte_id", fonteId);
+  } else {
+    query = query.eq("nome_normalizado", nomeNorm);
+  }
+
+  const { data: existing } = await query.maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("futebol_times")
+      .update({
+        nome,
+        slug: timeData.slug || undefined,
+        url_origem: timeData.urlOrigem || undefined,
+        escudo_url_origem: timeData.escudoUrl || undefined,
+        atualizado_em: new Date().toISOString(),
+      })
+      .eq("id", existing.id);
+    return existing.id;
+  } else {
+    const { data: inserted, error } = await supabase
+      .from("futebol_times")
+      .insert({
+        nome,
+        nome_normalizado: nomeNorm,
+        slug: timeData.slug || null,
+        fonte_id: fonteId,
+        url_origem: timeData.urlOrigem || null,
+        escudo_url_origem: timeData.escudoUrl || null,
+        status_imagem: "pendente",
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      const { data: retry } = await supabase
+        .from("futebol_times")
+        .select("id")
+        .eq("nome_normalizado", nomeNorm)
+        .maybeSingle();
+      return retry?.id || null;
+    }
+    return inserted?.id || null;
+  }
+}
+
+// Upsert seguro de Liga (sem depender de constraint unique em nome_normalizado)
+async function upsertLiga(
+  supabase: any,
+  ligaData: {
+    nome: string;
+    slug?: string | null;
+    fonteId?: string | null;
+    urlOrigem?: string | null;
+  }
+): Promise<number | null> {
+  const nome = (ligaData.nome || "Futebol Geral").trim();
+  const nomeNorm = normalizarNome(nome);
+  const fonteId = ligaData.fonteId || null;
+
+  let query = supabase.from("futebol_ligas").select("id");
+  if (fonteId) {
+    query = query.eq("fonte_id", fonteId);
+  } else {
+    query = query.eq("nome_normalizado", nomeNorm);
+  }
+
+  const { data: existing } = await query.maybeSingle();
+  if (existing) return existing.id;
+
+  const { data: inserted, error } = await supabase
+    .from("futebol_ligas")
+    .insert({
+      nome,
+      nome_normalizado: nomeNorm,
+      slug: ligaData.slug || null,
+      fonte_id: fonteId,
+      url_origem: ligaData.urlOrigem || null,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    const { data: retry } = await supabase
+      .from("futebol_ligas")
+      .select("id")
+      .eq("nome_normalizado", nomeNorm)
+      .maybeSingle();
+    return retry?.id || null;
+  }
+  return inserted?.id || null;
 }
 
 serve(async (req) => {
@@ -216,213 +327,45 @@ serve(async (req) => {
         }
       }
 
-      // Padrão 2 (Legado)
-      if (matches.length === 0) {
-        const articleRegex = /<article\b[^>]*>([\s\S]*?)<\/article>/gi;
-        let legacyMatch;
-        while ((legacyMatch = articleRegex.exec(html)) !== null) {
-          const cardHtml = legacyMatch[1];
-          const linkMatch = /<a\s+href="(\/aovivo\/([^"]+)\.html)"/i.exec(cardHtml);
-          if (!linkMatch) continue;
-
-          const relUrl = linkMatch[1];
-          const fonteId = linkMatch[2];
-          const urlOrigem = `${BASE_URL}${relUrl}`;
-
-          const titleMatch = /<h3[^>]*>[\s\S]*?<a[^>]*>([\s\S]*?)<\/a>/i.exec(cardHtml);
-          let rawTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, "").trim() : "";
-          rawTitle = rawTitle.replace(/^Onde assistir\s+/i, "").replace(/\s+ao vivo\??$/i, "").trim();
-
-          let timeCasaNome = "";
-          let timeForaNome = "";
-          if (rawTitle.includes(" x ")) {
-            const parts = rawTitle.split(" x ");
-            timeCasaNome = parts[0].trim();
-            timeForaNome = parts.slice(1).join(" x ").trim();
-          }
-
-          const ligaMatch = /<div class="mt-2[^>]*>[\s\S]*?<span class="font-medium[^>]*>([\s\S]*?)<\/span>/i.exec(cardHtml);
-          const ligaNome = ligaMatch ? ligaMatch[1].replace(/<[^>]+>/g, "").trim() : "Futebol Geral";
-
-          const horaMatch = /<span class="tabular-nums">⏱\s*(\d{1,2}:\d{2})h?<\/span>/i.exec(cardHtml);
-          const horaJogo = horaMatch ? horaMatch[1].trim() : "00:00";
-
-          const descMatch = /<p class="mt-3 text-sm[^>]*>([\s\S]*?)<\/p>/i.exec(cardHtml);
-          const descricao = descMatch ? descMatch[1].replace(/<[^>]+>/g, "").trim() : null;
-
-          const canais: string[] = [];
-          const canaisContainerMatch = /<div class="mt-3 flex flex-wrap gap-1.5">([\s\S]*?)<\/div>/i.exec(cardHtml);
-          if (canaisContainerMatch) {
-            const canalBadgeRegex = /<span[^>]*>([\s\S]*?)<\/span>/gi;
-            let cMatch;
-            while ((cMatch = canalBadgeRegex.exec(canaisContainerMatch[1])) !== null) {
-              const cNome = cMatch[1].replace(/<[^>]+>/g, "").trim();
-              if (cNome && !canais.includes(cNome)) canais.push(cNome);
-            }
-          }
-
-          matches.push({
-            fonteId,
-            urlOrigem,
-            relUrl,
-            timeCasaNome,
-            timeCasaEscudo: "",
-            timeForaNome,
-            timeForaEscudo: "",
-            ligaNome,
-            faseOuRodada: "",
-            horaJogo,
-            dataJogo: dataJogoStr,
-            dataHora: buildTimestampBrasilia(dataJogoStr, horaJogo),
-            status: "agendado",
-            placarCasa: null,
-            placarFora: null,
-            descricao,
-            canais,
-          });
-        }
-      }
-
       const cardsToProcess = limitParam > 0 ? matches.slice(0, limitParam) : matches;
 
       for (const card of cardsToProcess) {
-        // Detalhe da partida para obter IDs e URLs de escudos se não vieram do card
-        let details: Record<string, any> | null = null;
-        const precisaDetalhes =
-          (!card.timeCasaEscudo || !card.timeForaEscudo || !card.timeCasaNome || !card.timeForaNome) &&
-          card.relUrl;
+        // 1. Upsert seguro dos times
+        const timeCasaId = await upsertTime(supabase, {
+          nome: card.timeCasaNome,
+          escudoUrl: card.timeCasaEscudo,
+          urlOrigem: card.relUrl ? `${BASE_URL}${card.relUrl}` : null,
+        });
 
-        if (precisaDetalhes) {
-          try {
-            const detailRes = await fetch(`${BASE_URL}${card.relUrl}`, {
-              headers: { "User-Agent": USER_AGENT },
-            });
-            if (detailRes.ok) {
-              const detailHtml = await detailRes.text();
-              const teamRegex = /<a\s+href="(\/time\/([^"]+))"[^>]*>([\s\S]*?)<\/a>/gi;
-              const teamLinks = [];
-              let tMatch;
-              while ((tMatch = teamRegex.exec(detailHtml)) !== null) {
-                const href = tMatch[1];
-                const fullSlug = tMatch[2];
-                const inner = tMatch[3];
-                const lastHyphen = fullSlug.lastIndexOf("-");
-                const slug = lastHyphen !== -1 ? fullSlug.slice(0, lastHyphen) : fullSlug;
-                const fonteId = lastHyphen !== -1 ? fullSlug.slice(lastHyphen + 1) : fullSlug;
-                const imgMatch = /<img[^>]+src="([^">]+(?:upload\/teams|upload|teams)[^">]+)"/i.exec(inner);
-                const escudoUrl = imgMatch ? imgMatch[1] : "";
-                const nameMatch = /<p[^>]*>([\s\S]*?)<\/p>/i.exec(inner);
-                const nome = nameMatch ? nameMatch[1].replace(/<[^>]+>/g, "").trim() : slug;
-                teamLinks.push({ href, slug, fonteId, escudoUrl, nome });
-              }
+        const timeForaId = await upsertTime(supabase, {
+          nome: card.timeForaNome,
+          escudoUrl: card.timeForaEscudo,
+          urlOrigem: card.relUrl ? `${BASE_URL}${card.relUrl}` : null,
+        });
 
-              const allTeamImgs = Array.from(detailHtml.matchAll(/<img[^>]+src="([^">]+upload\/teams\/[^">]+)"/gi)).map((m) => m[1]);
-              if (teamLinks.length >= 2) {
-                if (!teamLinks[0].escudoUrl && allTeamImgs[0]) teamLinks[0].escudoUrl = allTeamImgs[0];
-                if (!teamLinks[1].escudoUrl && allTeamImgs[1]) teamLinks[1].escudoUrl = allTeamImgs[1];
-              }
+        // 2. Upsert seguro da liga
+        const ligaId = await upsertLiga(supabase, {
+          nome: card.ligaNome,
+        });
 
-              const ligaRegex = /<a\s+href="(\/liga\/([^"]+))"[^>]*>([\s\S]*?)<\/a>/i.exec(detailHtml);
-              const fullLigaSlug = ligaRegex ? ligaRegex[2] : "";
-              const lastLigaHyphen = fullLigaSlug.lastIndexOf("-");
-              const ligaSlug = lastLigaHyphen !== -1 ? fullLigaSlug.slice(0, lastLigaHyphen) : fullLigaSlug;
-              const ligaFonteId = lastLigaHyphen !== -1 ? fullLigaSlug.slice(lastLigaHyphen + 1) : fullLigaSlug;
-
-              let status = "agendado";
-              const statusBadgeMatch = /id="status-badge"[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/i.exec(detailHtml);
-              const statusBadgeContent = statusBadgeMatch ? statusBadgeMatch[0] : "";
-
-              if (/FIM DE JOGO|ENCERRADO/i.test(statusBadgeContent)) {
-                status = "finalizado";
-              } else if (/bullet|animate-pulse|\b\d+'\b|INTERVALO|EM ANDAMENTO/i.test(statusBadgeContent)) {
-                status = "ao_vivo";
-              } else {
-                status = "agendado";
-              }
-
-              details = {
-                teamLinks,
-                ligaSlug,
-                ligaFonteId,
-                status,
-              };
-            }
-          } catch {
-            // fallback para dados do card
-          }
+        if (!timeCasaId || !timeForaId) {
+          continue;
         }
 
-        // Upsert Time Casa
-        const casaNome = card.timeCasaNome || details?.teamLinks?.[0]?.nome;
-        const casaNorm = normalizarNome(casaNome);
-        const { data: tc } = await supabase
-          .from("futebol_times")
-          .upsert(
-            {
-              nome: casaNome,
-              nome_normalizado: casaNorm,
-              slug: details?.teamLinks?.[0]?.slug || null,
-              fonte_id: details?.teamLinks?.[0]?.fonteId || null,
-              url_origem: details?.teamLinks?.[0]?.href ? `${BASE_URL}${details.teamLinks[0].href}` : (card.relUrl ? `${BASE_URL}${card.relUrl}` : null),
-              escudo_url_origem: card.timeCasaEscudo || details?.teamLinks?.[0]?.escudoUrl || null,
-            },
-            { onConflict: "nome_normalizado" }
-          )
-          .select("id")
-          .single();
-
-        // Upsert Time Fora
-        const foraNome = card.timeForaNome || details?.teamLinks?.[1]?.nome;
-        const foraNorm = normalizarNome(foraNome);
-        const { data: tf } = await supabase
-          .from("futebol_times")
-          .upsert(
-            {
-              nome: foraNome,
-              nome_normalizado: foraNorm,
-              slug: details?.teamLinks?.[1]?.slug || null,
-              fonte_id: details?.teamLinks?.[1]?.fonteId || null,
-              url_origem: details?.teamLinks?.[1]?.href ? `${BASE_URL}${details.teamLinks[1].href}` : (card.relUrl ? `${BASE_URL}${card.relUrl}` : null),
-              escudo_url_origem: card.timeForaEscudo || details?.teamLinks?.[1]?.escudoUrl || null,
-            },
-            { onConflict: "nome_normalizado" }
-          )
-          .select("id")
-          .single();
-
-        // Upsert Liga
-        const ligaNorm = normalizarNome(card.ligaNome);
-        const { data: tl } = await supabase
-          .from("futebol_ligas")
-          .upsert(
-            {
-              nome: card.ligaNome,
-              nome_normalizado: ligaNorm,
-              slug: details?.ligaSlug || null,
-              fonte_id: details?.ligaFonteId || null,
-            },
-            { onConflict: "nome_normalizado" }
-          )
-          .select("id")
-          .single();
-
-        if (!tc?.id || !tf?.id) continue;
-
-        // Upsert Jogo
-        const statusFinal = card.status || details?.status || "agendado";
-        const { data: tjogo } = await supabase
+        // 3. Upsert do Jogo
+        const { data: tjogo, error: jogoError } = await supabase
           .from("futebol_jogos")
           .upsert(
             {
               fonte_id: card.fonteId,
               url_origem: card.urlOrigem,
-              time_casa_id: tc.id,
-              time_fora_id: tf.id,
-              liga_id: tl?.id || null,
+              time_casa_id: timeCasaId,
+              time_fora_id: timeForaId,
+              liga_id: ligaId,
               data_hora: card.dataHora,
               data_jogo: card.dataJogo,
               hora_jogo: card.horaJogo,
-              status: statusFinal,
+              status: card.status,
               placar_casa: card.placarCasa ?? null,
               placar_fora: card.placarFora ?? null,
               descricao: card.descricao,
@@ -433,20 +376,31 @@ serve(async (req) => {
           .select("id")
           .single();
 
+        if (jogoError) {
+          console.error("Erro ao salvar jogo:", jogoError.message);
+          continue;
+        }
+
         if (tjogo?.id) {
-          // Canais
+          // 4. Canais de Transmissão
           for (const canalNome of card.canais) {
             const cNorm = normalizarNome(canalNome);
             const { data: tcanal } = await supabase
               .from("futebol_canais")
-              .upsert({ nome: canalNome, nome_normalizado: cNorm }, { onConflict: "nome_normalizado" })
+              .upsert(
+                { nome: canalNome, nome_normalizado: cNorm },
+                { onConflict: "nome_normalizado" }
+              )
               .select("id")
               .single();
 
             if (tcanal?.id) {
               await supabase
                 .from("futebol_jogo_canais")
-                .upsert({ jogo_id: tjogo.id, canal_id: tcanal.id }, { onConflict: "jogo_id,canal_id" });
+                .upsert(
+                  { jogo_id: tjogo.id, canal_id: tcanal.id },
+                  { onConflict: "jogo_id,canal_id" }
+                );
             }
           }
           totalJogosProcessados++;
